@@ -67,7 +67,7 @@ namespace ElCorki
 
         public static void Game_OnGameLoad(EventArgs args)
         {
-            if (ObjectManager.Player.CharData.BaseSkinName != "Corki")
+            if (ObjectManager.Player.ChampionName != "Corki")
                 return;
 
             Console.WriteLine("Injected");
