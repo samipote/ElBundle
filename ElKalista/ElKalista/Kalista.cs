@@ -168,18 +168,18 @@ namespace ElKalista
             if (target == null || !target.IsValidTarget())
                 return;
 
-            var getEstacks =
-                target.Buffs.Find(b => b.Caster.IsMe && b.IsValidBuff() && b.DisplayName == "KalistaExpungeMarker");
+            /*var getEstacks =
+                target.Buffs.Find(b => b.Caster.IsMe && b.IsValidBuff() && b.DisplayName == "kalistaexpungemarker");
 
             if (getEstacks == null)
             {
                 return;
-            }
+            }*/
 
             var useE = ElKalistaMenu._menu.Item("ElKalista.E.Auto").GetValue<bool>();
             var useEStacks = ElKalistaMenu._menu.Item("ElKalista.E.Stacks").GetValue<Slider>().Value;
 
-            if (spells[Spells.E].IsReady() && useE && getEstacks.Count >= useEStacks)
+            if (spells[Spells.E].IsReady() && useE && target.Buffs.Count(buf => buf.Name == "kalistaexpungemarker") >= useEStacks)
             {
                 if (target.IsRendKillable())
                 {
@@ -431,15 +431,8 @@ namespace ElKalista
                     spells[Spells.Q].Cast(qtarget);
             }
 
-            var getEstacks = target.Buffs.Find(b => b.Caster.IsMe && b.IsValidBuff() && b.DisplayName == "KalistaExpungeMarker");
-            if (getEstacks == null)
-            {
-                return;
-            }
 
             var useE = ElKalistaMenu._menu.Item("ElKalista.ComboE.Auto").GetValue<bool>();
-           // var useEStacks = ElKalistaMenu._menu.Item("ElKalista.E.Stacks").GetValue<Slider>().Value;
-
             if (useE && comboE && spells[Spells.E].IsReady())
             {
                 if (spells[Spells.E].IsInRange(target)
@@ -456,12 +449,7 @@ namespace ElKalista
                 {
                     if (comboEDisable)
                     {
-                        /*if (getEstacks.Count >= useEStacks)
-                        {
-                        }*/
-                        if (target.IsRendKillable() 
-                        && !target.HasBuffOfType(BuffType.Invulnerability) 
-                        && !target.HasBuffOfType(BuffType.SpellShield))
+                        if (target.IsRendKillable()  && !target.HasBuffOfType(BuffType.Invulnerability)  && !target.HasBuffOfType(BuffType.SpellShield))
                         {
                             spells[Spells.E].Cast(true);
                         }               
