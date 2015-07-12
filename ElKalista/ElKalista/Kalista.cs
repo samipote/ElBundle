@@ -109,7 +109,7 @@ namespace ElKalista
 
         public static void Game_OnGameLoad(EventArgs args)
         {
-            if (ObjectManager.Player.CharData.BaseSkinName != "Kalista") return;
+            if (ObjectManager.Player.ChampionName != "Kalista") return;
            
             Console.WriteLine("Injected");
 
