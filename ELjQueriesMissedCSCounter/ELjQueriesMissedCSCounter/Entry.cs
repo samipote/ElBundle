@@ -19,7 +19,7 @@ namespace ELjQueriesMissedCSCounter
             get { return ObjectManager.Player; }
         }
 
-        private static int playerMinionsKilled = 0;
+        private static Notification notification;
         private static int totalMinionsThatDied = 0;
         private static int missedCreeps = 0;
         private static int minionsInMyRange = 0;
@@ -38,12 +38,12 @@ namespace ELjQueriesMissedCSCounter
 
         private static void OnUpdate(EventArgs args)
         {
-            playerMinionsKilled = Player.MinionsKilled;
             foreach (var minion in MinionList)
             {
                 if (!minion.IsValid<Obj_AI_Minion>())
                 {
-                    MinionList.RemoveAll(m => minion.NetworkId == m.NetworkId);
+                    MinionList.RemoveAll(m => m.NetworkId == minion.NetworkId);
+                    break;
                 }
                 else
                 {
@@ -56,18 +56,25 @@ namespace ELjQueriesMissedCSCounter
 
             foreach (var minion in MinionsCloseToMeList)
             {
-                if (!minion.IsValid)
+                if (!minion.IsValid<Obj_AI_Minion>())
                 {
                     totalMinionsThatDied++;
-                    MinionsCloseToMeList.RemoveAll(m => minion.NetworkId == m.NetworkId);
+                    MinionsCloseToMeList.RemoveAll(m => m.NetworkId == minion.NetworkId);
+                    break;
                 }
             }
-            missedCreeps = totalMinionsThatDied - playerMinionsKilled;
-            Console.WriteLine(missedCreeps);
+
+            //patented
+            missedCreeps += (totalMinionsThatDied - Player.MinionsKilled) > missedCreeps
+                                ? (missedCreeps - (totalMinionsThatDied - Player.MinionsKilled)) * -1
+                                : 0;
             Console.WriteLine("DEBUG:");
-            /*Console.WriteLine("ALLMINIONSCOUNT: " + MinionList.Count);
+            Console.WriteLine("ALLMINIONSCOUNT: " + MinionList.Count);
             Console.WriteLine("CLOSESTMINIONSCOUNT: " + MinionsCloseToMeList.Count);
-            Console.WriteLine("DED MINIONS: " + totalMinionsThatDied);*/
+            Console.WriteLine("DED MINIONS: " + totalMinionsThatDied);
+            Console.WriteLine("CS: " + Player.MinionsKilled);
+            Console.WriteLine("MISSED CS: " + (totalMinionsThatDied - Player.MinionsKilled));
+
         }
 
         private static void OnCreate(GameObject sender, EventArgs args)
