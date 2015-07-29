@@ -86,6 +86,7 @@ namespace ELjQueriesMissedCSCounter
         }
 
         //Myo is better than jQuery at last hitting.
+        //fuck whiteboi
         private static void OnDraw(EventArgs args)
         {
             var minionList = MinionManager.GetMinions(Player.Position, Player.AttackRange + 500, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
