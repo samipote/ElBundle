@@ -7,7 +7,7 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
-
+/*༼ つ ◕_◕ ༽つ I RITO ༼ つ ◕_◕ ༽つ*/
 namespace ELjQueriesMissedCSCounter
 {
     internal class Entry
