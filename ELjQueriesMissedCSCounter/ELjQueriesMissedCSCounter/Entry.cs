@@ -18,58 +18,58 @@ namespace ELjQueriesMissedCSCounter
         }
 
         private static Notification notification;
-        private static int totalMinionsThatDied = 0;
-        private static int missedCreeps = 0;
-        private static int minionsInMyRange = 0;
-        public static List<GameObject> MinionList { get; private set; }
-        public static List<GameObject> MinionsCloseToMeList { get; private set; }
+        private static int siwyyOpensATopicAndHisContentContainsTheWordTitle = 0;
+        private static int creepAdminOnGoSMeme = 0;
+        private static int lastTimeScreederWarnedYouForSpamInDevChat = 0;
+        public static List<GameObject> iStole14CreepsFromMyoAndHeBlockedMyOneSkype { get; private set; }
+        public static List<GameObject> NerdyILikeItAsunaIsAFuckingWeebo { get; private set; }
 
         public static void Game_OnGameLoad(EventArgs args)
         {
-            MinionList = new List<GameObject>();
-            MinionsCloseToMeList = new List<GameObject>();
+            iStole14CreepsFromMyoAndHeBlockedMyOneSkype = new List<GameObject>();
+            NerdyILikeItAsunaIsAFuckingWeebo = new List<GameObject>();
             Notifications.AddNotification("jQueriesMissedCSCounter", 5000);
-            Game.OnUpdate += OnUpdate;
-            Drawing.OnDraw += OnDraw;
-            GameObject.OnCreate += OnCreate;
-            Game.OnNotify += Game_OnNotify;
+            Game.OnUpdate += KurisuAndL33TAreBadAtLeagueAndCoreyIsGayWithZezzy;
+            Drawing.OnDraw += ImehDrawsACatForAsuna;
+            GameObject.OnCreate += DetuksYasuoSource;
+            Game.OnNotify += TreesStillFightingWithPlebsInPredictionTopic;
         }
 
-        private static void Game_OnNotify(GameNotifyEventArgs args)
+        private static void TreesStillFightingWithPlebsInPredictionTopic(GameNotifyEventArgs args)
         {
             if (args.EventId != GameEventId.OnMinionKill)
             {
                 return;
             }
 
-            MinionsCloseToMeList.RemoveAll(x => x.NetworkId == args.NetworkId);
+            NerdyILikeItAsunaIsAFuckingWeebo.RemoveAll(x => x.NetworkId == args.NetworkId);
         }
 
-        private static void OnUpdate(EventArgs args)
+        private static void KurisuAndL33TAreBadAtLeagueAndCoreyIsGayWithZezzy(EventArgs args)
         {
-            foreach (var minion in MinionList)
+            foreach (var minion in iStole14CreepsFromMyoAndHeBlockedMyOneSkype)
             {
                 if (!minion.IsValid<Obj_AI_Minion>())
                 {
-                    MinionList.RemoveAll(m => m.NetworkId == minion.NetworkId);
+                    iStole14CreepsFromMyoAndHeBlockedMyOneSkype.RemoveAll(m => m.NetworkId == minion.NetworkId);
                     break;
                 }
 
-                if (minion.Position.Distance(Player.Position) < 0x1f4 && MinionsCloseToMeList.All(m => m.NetworkId != minion.NetworkId))
+                if (minion.Position.Distance(Player.Position) < 0x1f4 && NerdyILikeItAsunaIsAFuckingWeebo.All(m => m.NetworkId != minion.NetworkId))
                 {
-                    MinionsCloseToMeList.Add(minion);
+                    NerdyILikeItAsunaIsAFuckingWeebo.Add(minion);
                 }
             }
 
-            foreach (var minion in MinionsCloseToMeList.Where(minion => minion.IsDead))
+            foreach (var minion in NerdyILikeItAsunaIsAFuckingWeebo.Where(minion => minion.IsDead))
             {
-                totalMinionsThatDied++;
-                MinionsCloseToMeList.RemoveAll(m => m.NetworkId == minion.NetworkId);
+                siwyyOpensATopicAndHisContentContainsTheWordTitle++;
+                NerdyILikeItAsunaIsAFuckingWeebo.RemoveAll(m => m.NetworkId == minion.NetworkId);
             }
 
             //patented
-            missedCreeps += (totalMinionsThatDied - Player.MinionsKilled) > missedCreeps
-                                ? Math.Abs(missedCreeps - (totalMinionsThatDied - Player.MinionsKilled))
+            creepAdminOnGoSMeme += (siwyyOpensATopicAndHisContentContainsTheWordTitle - Player.MinionsKilled) > creepAdminOnGoSMeme
+                                ? Math.Abs(creepAdminOnGoSMeme - (siwyyOpensATopicAndHisContentContainsTheWordTitle - Player.MinionsKilled))
                                 : 0x0;
 
             /*Console.WriteLine("DEBUG:");
@@ -91,23 +91,23 @@ namespace ELjQueriesMissedCSCounter
                 Notifications.AddNotification(notification);
             }
 
-            notification.Text = missedCreeps + " missed creeps" + text;
+            notification.Text = creepAdminOnGoSMeme + " missed creeps" + text;
         }
 
-        private static void OnCreate(GameObject sender, EventArgs args)
+        private static void DetuksYasuoSource(GameObject sender, EventArgs args)
         {
             if (sender is Obj_AI_Minion && sender.IsEnemy)
             {
-                MinionList.Add(sender);
+                iStole14CreepsFromMyoAndHeBlockedMyOneSkype.Add(sender);
             }
         }
 
         //Myo is better than jQuery at last hitting.
         //fuck whiteboi
-        private static void OnDraw(EventArgs args)
+        private static void ImehDrawsACatForAsuna(EventArgs args)
         {
             var minionList = MinionManager.GetMinions(Player.Position, Player.AttackRange + 0x1f4, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
-            foreach (var minion in minionList.Where(minion => minion.IsValidTarget(Player.AttackRange + 0x1f4)).Where(minion => minion.Health <= Player.GetAutoAttackDamage(minion, true)))
+            foreach (var minion in minionList.Where(minion => minion.IsValidTarget(Player.AttackRange + 0x1f4)).Where(minion => minion.Health <= Player.GetAutoAttackDamage(minion, true)))//.Where().Where().Where().Where()
             {
                 Render.Circle.DrawCircle(minion.Position, minion.BoundingRadius, Color.LawnGreen);
             }
