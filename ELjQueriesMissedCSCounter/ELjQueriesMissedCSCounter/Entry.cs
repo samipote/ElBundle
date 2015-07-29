@@ -72,6 +72,13 @@ namespace ELjQueriesMissedCSCounter
                                 ? Math.Abs(missedCreeps - (totalMinionsThatDied - Player.MinionsKilled))
                                 : 0x0;
 
+            /*Console.WriteLine("DEBUG:");
+            Console.WriteLine("ALLMINIONSCOUNT: " + MinionList.Count);
+            Console.WriteLine("CLOSESTMINIONSCOUNT: " + MinionsCloseToMeList.Count);
+            Console.WriteLine("DED MINIONS: " + totalMinionsThatDied);
+            Console.WriteLine("CS: " + Player.MinionsKilled);
+            Console.WriteLine("MISSED CS: " + Math.Abs(totalMinionsThatDied - Player.MinionsKilled));*/
+
             var text = "";
 
             if (notification == null)
