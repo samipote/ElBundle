@@ -169,14 +169,6 @@ namespace ElKalista
             if (target == null || !target.IsValidTarget())
                 return;
 
-            /*var getEstacks =
-                target.Buffs.Find(b => b.Caster.IsMe && b.IsValidBuff() && b.DisplayName == "kalistaexpungemarker");
-
-            if (getEstacks == null)
-            {
-                return;
-            }*/
-
             var useE = ElKalistaMenu._menu.Item("ElKalista.E.Auto").GetValue<bool>();
             var useEStacks = ElKalistaMenu._menu.Item("ElKalista.E.Stacks").GetValue<Slider>().Value;
 

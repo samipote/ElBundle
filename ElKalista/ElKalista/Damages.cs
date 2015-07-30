@@ -56,14 +56,11 @@ namespace ElKalista
         }
 
         public static float GetRawRendDamage(Obj_AI_Base target, int customStacks = -1)
-        {
-            var buff =
-                target.Buffs.Find(b => b.Caster.IsMe && b.IsValidBuff() && b.DisplayName == "kalistaexpungemarker");
-
-            if (buff != null || customStacks > -1)
+        {     
+            if (target.GetBuffCount("kalistaexpungemarker") != 0 || customStacks > -1)
             {
                 return (_rawRendDamage[Kalista.spells[Spells.E].Level - 1] + _rawRendDamageMultiplier[Kalista.spells[Spells.E].Level - 1] * player.TotalAttackDamage()) + 
-                       ((customStacks < 0 ? buff.Count : customStacks) - 1) * 
+                       ((customStacks < 0 ? target.GetBuffCount("kalistaexpungemarker") : customStacks) - 1) * 
                        (_rawRendDamagePerSpear[Kalista.spells[Spells.E].Level - 1] + _rawRendDamagePerSpearMultiplier[Kalista.spells[Spells.E].Level - 1] * player.TotalAttackDamage()); 
             }
 
