@@ -45,8 +45,9 @@ namespace ElKalista
             { Spells.E, new Spell(SpellSlot.E, 1000) },
             { Spells.R, new Spell(SpellSlot.R, 1400) }
         };
+
         #region autoW
-        private static void AutoW()
+        /*private static void AutoW()
         {
             var useW = ElKalistaMenu._menu.Item("ElKalista.misc.autow").GetValue<bool>();
             if (useW)
@@ -76,7 +77,7 @@ namespace ElKalista
                     spells[Spells.W].Cast(SummonersRift.Jungle.Red_RedBuff, true);
                 }
             }
-        }
+        }*/
         #endregion
 
         #region hitchance
@@ -154,7 +155,7 @@ namespace ElKalista
             SaveMode();
             SemiUltMode();
             AutoCastEMode();
-            AutoW();
+            //AutoW();
         }
 
         #endregion
