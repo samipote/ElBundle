@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
 using Color = System.Drawing.Color;
-/*༼ つ ◕_◕ ༽つ I RITO ༼ つ ◕_◕ ༽つ*/
+//http://base64myass.com/AMK/images/9ihe5.png
+/*
+-- ###################################################################################################### --
+-- #                                                                                                    # --
+-- #                                        Sida's Missed CS Counter                                    # --
+-- #                                                by Sida                                             # --
+-- #                                                                                                    # --
+-- ###################################################################################################### --
+*/
+/*༼ つ ◕_◕ ༽つ I RITO ༼ つ ◕_◕ ༽つ -T R I G G E R E D */
 namespace ELjQueriesMissedCSCounter
 {
     internal class Entry
@@ -18,9 +25,8 @@ namespace ELjQueriesMissedCSCounter
         }
 
         private static Notification notification;
-        private static int siwyyOpensATopicAndHisContentContainsTheWordTitle = 0;
-        private static int creepAdminOnGoSMeme = 0;
         private static int lastTimeScreederWarnedYouForSpamInDevChat = 0;
+        private static int creepAdminOnGoSMeme = 0;
         public static List<GameObject> iStole14CreepsFromMyoAndHeBlockedMyOneSkype { get; private set; }
         public static List<GameObject> NerdyILikeItAsunaIsAFuckingWeebo { get; private set; }
 
@@ -28,7 +34,7 @@ namespace ELjQueriesMissedCSCounter
         {
             iStole14CreepsFromMyoAndHeBlockedMyOneSkype = new List<GameObject>();
             NerdyILikeItAsunaIsAFuckingWeebo = new List<GameObject>();
-            Notifications.AddNotification("jQueriesMissedCSCounter", 5000);
+            Notifications.AddNotification("jQueriesMissedCSCounter", 10000);
             Game.OnUpdate += KurisuAndL33TAreBadAtLeagueAndCoreyIsGayWithZezzy;
             Drawing.OnDraw += ImehDrawsACatForAsuna;
             GameObject.OnCreate += DetuksYasuoSource;
@@ -49,35 +55,29 @@ namespace ELjQueriesMissedCSCounter
         {
             foreach (var minion in iStole14CreepsFromMyoAndHeBlockedMyOneSkype)
             {
-                if (!minion.IsValid<Obj_AI_Minion>())
+                if (minion == null || !minion.IsValid)
                 {
                     iStole14CreepsFromMyoAndHeBlockedMyOneSkype.RemoveAll(m => m.NetworkId == minion.NetworkId);
                     break;
                 }
 
-                if (minion.Position.Distance(Player.Position) < 0x1f4 && NerdyILikeItAsunaIsAFuckingWeebo.All(m => m.NetworkId != minion.NetworkId))
+                if (minion.IsVisible && minion.Position.Distance(Player.Position) < 0x1f4 && NerdyILikeItAsunaIsAFuckingWeebo.All(m => m.NetworkId != minion.NetworkId))
                 {
                     NerdyILikeItAsunaIsAFuckingWeebo.Add(minion);
                 }
             }
 
-            foreach (var minion in NerdyILikeItAsunaIsAFuckingWeebo.Where(minion => minion.IsDead))
+            foreach (var minion in NerdyILikeItAsunaIsAFuckingWeebo.Where(minion => !iStole14CreepsFromMyoAndHeBlockedMyOneSkype.Contains(minion)))
             {
-                siwyyOpensATopicAndHisContentContainsTheWordTitle++;
                 NerdyILikeItAsunaIsAFuckingWeebo.RemoveAll(m => m.NetworkId == minion.NetworkId);
+                lastTimeScreederWarnedYouForSpamInDevChat += 1 + 1 - 1; //meme? No.
+                break;
             }
 
             //patented
-            creepAdminOnGoSMeme += (siwyyOpensATopicAndHisContentContainsTheWordTitle - Player.MinionsKilled) > creepAdminOnGoSMeme
-                                ? Math.Abs(creepAdminOnGoSMeme - (siwyyOpensATopicAndHisContentContainsTheWordTitle - Player.MinionsKilled))
-                                : 0x0;
-
-            /*Console.WriteLine("DEBUG:");
-            Console.WriteLine("ALLMINIONSCOUNT: " + MinionList.Count);
-            Console.WriteLine("CLOSESTMINIONSCOUNT: " + MinionsCloseToMeList.Count);
-            Console.WriteLine("DED MINIONS: " + totalMinionsThatDied);
-            Console.WriteLine("CS: " + Player.MinionsKilled);
-            Console.WriteLine("MISSED CS: " + Math.Abs(totalMinionsThatDied - Player.MinionsKilled));*/
+            creepAdminOnGoSMeme += (lastTimeScreederWarnedYouForSpamInDevChat - Player.MinionsKilled) > creepAdminOnGoSMeme
+                                ? Math.Abs(creepAdminOnGoSMeme - (lastTimeScreederWarnedYouForSpamInDevChat - Player.MinionsKilled))
+                                : 0;
 
             var text = "";
 
@@ -91,7 +91,7 @@ namespace ELjQueriesMissedCSCounter
                 Notifications.AddNotification(notification);
             }
 
-            notification.Text = creepAdminOnGoSMeme + " missed creeps" + text;
+            notification.Text = lastTimeScreederWarnedYouForSpamInDevChat + " missed creeps" + text;
         }
 
         private static void DetuksYasuoSource(GameObject sender, EventArgs args)
@@ -106,8 +106,8 @@ namespace ELjQueriesMissedCSCounter
         //fuck whiteboi
         private static void ImehDrawsACatForAsuna(EventArgs args)
         {
-            var minionList = MinionManager.GetMinions(Player.Position, Player.AttackRange + 0x1f4, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
-            foreach (var minion in minionList.Where(minion => minion.IsValidTarget(Player.AttackRange + 0x1f4)).Where(minion => minion.Health <= Player.GetAutoAttackDamage(minion, true)))//.Where().Where().Where().Where()
+            var minionList = NerdyILikeItAsunaIsAFuckingWeebo.Select(m => (Obj_AI_Minion)m);
+            foreach (var minion in minionList.Where(minion => minion.IsValidTarget(Player.AttackRange)).Where(minion => minion.Health <= Player.GetAutoAttackDamage(minion, true)))
             {
                 Render.Circle.DrawCircle(minion.Position, minion.BoundingRadius, Color.LawnGreen);
             }
