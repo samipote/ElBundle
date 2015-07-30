@@ -115,7 +115,7 @@ namespace ElKalista
             Console.WriteLine("Injected");
 
             Notifications.AddNotification(String.Format("ElKalista by jQuery v{0}", ScriptVersion), 10000);
-            spells[Spells.Q].SetSkillshot(0.25f, 30f, 1700f, true, SkillshotType.SkillshotLine);
+            spells[Spells.Q].SetSkillshot(0.25f, 40f, 1700f, true, SkillshotType.SkillshotLine);
 
             ElKalistaMenu.Initialize();
             Game.OnUpdate += OnGameUpdate;
