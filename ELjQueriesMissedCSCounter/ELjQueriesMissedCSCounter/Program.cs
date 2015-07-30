@@ -13,7 +13,7 @@ namespace ELjQueriesMissedCSCounter
     {
         private static void Main(string[] args)
         {
-            CustomEvents.Game.OnGameLoad += Entry.Game_OnGameLoad;
+            CustomEvents.Game.OnGameLoad += EntryBROKEN.Game_OnGameLoad;
         }
     }
 }
