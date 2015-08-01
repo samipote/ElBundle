@@ -146,12 +146,7 @@ namespace ElEasy.Plugins
             var useI = _menu.Item("ElEasy.Leona.Combo.Ignite").GetValue<bool>();
             var countEnemies = _menu.Item("ElEasy.Leona.Combo.Count.Enemies").GetValue<Slider>().Value;
 
-   
-            if (useQ && spells[Spells.Q].IsReady() && 
-                !target.HasBuff("BlackShield") || 
-                !target.HasBuff("SivirShield") || 
-                !target.HasBuff("BansheesVeil") || 
-                !target.HasBuff("ShroudofDarkness"))
+            if (useQ && spells[Spells.Q].IsReady() && !target.HasBuff("BlackShield") ||  !target.HasBuff("SivirShield") || !target.HasBuff("BansheesVeil") || !target.HasBuff("ShroudofDarkness"))
              {
                  spells[Spells.Q].Cast();
              }
@@ -173,9 +168,10 @@ namespace ElEasy.Plugins
                 && spells[Spells.R].IsInRange(target) 
                 && Player.CountEnemiesInRange(spells[Spells.R].Range) >= countEnemies)
             {
-                var pred = spells[Spells.R].GetPrediction(target).Hitchance;
-                if(pred >= CustomHitChance)
-                    spells[Spells.R].Cast(target);
+                var pred = spells[Spells.R].GetPrediction(target);
+                if(pred.Hitchance >= CustomHitChance)
+                    spells[Spells.R].Cast(pred.CastPosition);
+                    //spells[Spells.R].Cast(target);
             }
 
             if (Player.Distance(target) <= 600 && IgniteDamage(target) >= target.Health && useI)
