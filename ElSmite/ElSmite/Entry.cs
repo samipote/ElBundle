@@ -112,8 +112,8 @@ namespace ElSmite
 
             if (minions == null) return;
             if (!InitializeMenu.Menu.Item(minions.CharData.BaseSkinName).GetValue<bool>()) return;
-
-            if (smite != SpellSlot.Unknown && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready && SmiteDamage() > minions.Health)
+            //Player.Spellbook.CanUseSpell(smite) == SpellState.Ready && 
+            if (smite != SpellSlot.Unknown && SmiteDamage() > minions.Health)
             {
                 Player.Spellbook.CastSpell(smite, minions);
             }
