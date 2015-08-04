@@ -49,6 +49,29 @@ namespace ElSmite
 
         #endregion
 
+        #region InitializeSmite
+
+        static void InitializeSmite()
+        {
+            if (BlueSmite.Any(id => Items.HasItem(id)))
+            {
+                smite = Player.GetSpellSlot("s5_summonersmiteplayerganker");
+                return;
+            }
+
+            if (RedSmite.Any(id => Items.HasItem(id)))
+            {
+                smite = Player.GetSpellSlot("s5_summonersmiteduel");
+                return;
+            }
+
+            smite = Player.GetSpellSlot("summonersmite");
+        }
+
+        #endregion
+
+
+
         #region OnLoad
 
         public static void OnLoad(EventArgs args)
@@ -61,6 +84,7 @@ namespace ElSmite
 
             try
             {
+                smite = Player.GetSpellSlot("summonersmite");
                 Notifications.AddNotification(String.Format("ElSmite by jQuery v{0}", ScriptVersion), 10000);
                 InitializeMenu.Load();
                 Game.OnUpdate += OnUpdate;
@@ -123,26 +147,6 @@ namespace ElSmite
 
         #endregion
 
-        #region SmiteKillSteal
-
-        static void InitializeSmite()
-        {
-            if (BlueSmite.Any(id => Items.HasItem(id)))
-            {
-                smite = Player.GetSpellSlot("s5_summonersmiteplayerganker");
-                return;
-            }
-
-            if (RedSmite.Any(id => Items.HasItem(id)))
-            {
-                smite = Player.GetSpellSlot("s5_summonersmiteduel");
-                return;
-            }
-
-            smite = Player.GetSpellSlot("summonersmite");
-        }
-
-        #endregion
 
         #region SmiteKill
 
@@ -198,14 +202,14 @@ namespace ElSmite
             if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.White);
 
-            /*if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);*/
+            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);
 
             if (drawText && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready)
                 Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.GhostWhite, "Smite active");
 
-            /*if (drawText && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
-                Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.Red, "Smite cooldown");*/
+            if (drawText && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
+                Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.Red, "Smite cooldown");
         }
         #endregion
     }
