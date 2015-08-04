@@ -111,12 +111,14 @@ namespace ElSmite
             }
 
             if (minions == null) return;
-            if (!InitializeMenu.Menu.Item(minions.CharData.BaseSkinName).GetValue<bool>()) return;
-            //Player.Spellbook.CanUseSpell(smite) == SpellState.Ready && 
-            if (smite != SpellSlot.Unknown && SmiteDamage() > minions.Health)
+            if (InitializeMenu.Menu.Item(minions.CharData.BaseSkinName).GetValue<bool>())
             {
-                Player.Spellbook.CastSpell(smite, minions);
+                if (smite != SpellSlot.Unknown && SmiteDamage() > minions.Health)
+                {
+                    Player.Spellbook.CastSpell(smite, minions);
+                }
             }
+            //Player.Spellbook.CanUseSpell(smite) == SpellState.Ready && 
         }
 
         #endregion
@@ -196,14 +198,14 @@ namespace ElSmite
             if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.White);
 
-            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);
+            /*if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);*/
 
             if (drawText && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready)
                 Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.GhostWhite, "Smite active");
 
-            if (drawText && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
-                Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.Red, "Smite cooldown");
+            /*if (drawText && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
+                Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.Red, "Smite cooldown");*/
         }
         #endregion
     }
