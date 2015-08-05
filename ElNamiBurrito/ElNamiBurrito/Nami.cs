@@ -258,13 +258,15 @@ namespace ElNamiBurrito
             if (useE && spells[Spells.E].IsReady())
             {
                 var selectedAlly =
-                       HeroManager.Allies.Where(hero => hero.IsAlly && ElNamiMenu._menu.Item("ElNamiReborn.Settings.E1" + hero.BaseSkinName).GetValue<bool>())
+                       HeroManager.Allies.Where(hero => hero.IsAlly && ElNamiMenu._menu.Item("ElNamiReborn.Settings.E1" + hero.CharData.BaseSkinName).GetValue<bool>())
                            .OrderBy(closest => closest.Distance(target))
                            .FirstOrDefault();
 
                 if (spells[Spells.E].IsInRange(selectedAlly) && spells[Spells.E].IsReady()) 
                 {
                     spells[Spells.E].Cast(selectedAlly);
+                } else {
+                    spells[Spells.E].Cast();
                 }
             }
 
