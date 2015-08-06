@@ -53,7 +53,7 @@ namespace ElXerath
         {
             get
             {
-                return ObjectManager.Player.HasBuff("XerathLocusOfPower2", true) ||
+                return ObjectManager.Player.HasBuff("XerathLocusOfPower2") ||
                        (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" &&
                         Environment.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
             }
@@ -122,9 +122,9 @@ namespace ElXerath
             ElXerathMenu.Initialize();
             Game.OnUpdate += OnUpdate;
             Drawing.OnDraw += Drawings.Drawing_OnDraw;
-            Obj_AI_Hero.OnIssueOrder += Obj_AI_Hero_OnIssueOrder;
+            Obj_AI_Base.OnIssueOrder += Obj_AI_Hero_OnIssueOrder;
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
-            Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+            Obj_AI_Base.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
             Game.OnWndProc += Game_OnWndProc;
         }
 
@@ -166,8 +166,6 @@ namespace ElXerath
                     lastNotification = Environment.TickCount;
                 }
             }
-
-            var target = TargetSelector.GetTarget(spells[Spells.Q].Range, TargetSelector.DamageType.Magical);
 
             AutoHarassMode();
             KsMode();
@@ -262,14 +260,19 @@ namespace ElXerath
                         spells[Spells.Q].StartCharging();
                         return;
                     }
-                    else if (spells[Spells.Q].IsCharging)
+
+                    if (spells[Spells.Q].IsCharging)
                     {
-                        spells[Spells.Q].CastIfHitchanceEquals(target, CustomHitChance);
+                        var pred = spells[Spells.Q].GetPrediction(target);
+                        if (pred.Hitchance >= CustomHitChance)
+                            spells[Spells.Q].Cast(target);
                     }
                 }
                 if (wTarget != null && w && spells[Spells.W].IsReady())
                 {
-                    spells[Spells.W].CastIfHitchanceEquals(wTarget, CustomHitChance);
+                    var pred = spells[Spells.W].GetPrediction(wTarget);
+                    if (pred.Hitchance >= CustomHitChance)
+                        spells[Spells.W].Cast(wTarget);
                 }
             }
         }
@@ -292,33 +295,7 @@ namespace ElXerath
             {
                 return;
             }
-
-            /*if (spells[Spells.Q].IsCharging)
-                 {
-                     if (minions.Max(x => x.Distance(Player, true)) < spells[Spells.Q].RangeSqr)
-                     {
-                         if (minions.Max(x => x.Distance(Player, true)) < spells[Spells.Q].RangeSqr)
-                         {
-                             spells[Spells.Q].Cast(spells[Spells.Q].GetLineFarmLocation(minions).Position);
-                         }
-                     }
-                 }
-
-                if (spells[Spells.Q].IsCharging)
-                 {
-                     return;
-                 }
-
-                 if (spells[Spells.Q].IsReady() && clearQ)
-                 {
-                     if (spells[Spells.Q].GetLineFarmLocation(minions).MinionsHit >= 0)
-                     {
-                         spells[Spells.Q].StartCharging();
-                         return;
-                     }
-                 }
-                 */
-
+ 
             if (clearQ && spells[Spells.Q].IsReady())
             {
                 if (spells[Spells.Q].IsCharging)
@@ -444,7 +421,6 @@ namespace ElXerath
         private static void Combo()
         {
             var target = TargetSelector.GetTarget(spells[Spells.Q].ChargedMaxRange, TargetSelector.DamageType.Magical);
-            var eTarget = TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Magical);
             var wTarget = TargetSelector.GetTarget(spells[Spells.W].Range + spells[Spells.W].Width * 0.5f, TargetSelector.DamageType.Magical);
 
             if (target == null || !target.IsValidTarget())
@@ -459,9 +435,9 @@ namespace ElXerath
                 spells[Spells.W].CastIfHitchanceEquals(wTarget, CustomHitChance);
             }
 
-            if (eTarget != null && comboE && spells[Spells.E].IsReady() && Player.Distance(target) < spells[Spells.E].Range)
+            if (comboE && spells[Spells.E].IsReady() && Player.Distance(target) < spells[Spells.E].Range)
             {
-                spells[Spells.E].Cast(eTarget);
+                spells[Spells.E].Cast(target);
             }
 
             if (comboQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
@@ -474,7 +450,9 @@ namespace ElXerath
 
                 if (spells[Spells.Q].IsCharging)
                 {
-                    spells[Spells.Q].CastIfHitchanceEquals(target, CustomHitChance);
+                    var pred = spells[Spells.Q].GetPrediction(target);
+                    if (pred.Hitchance >= HitChance.VeryHigh)
+                        spells[Spells.Q].Cast(target);
                 }
             }
 
@@ -520,17 +498,6 @@ namespace ElXerath
                 }
             }
 
-
-            /*var orb = ItemData.Scrying_Orb_Trinket.GetItem();
-            if ((orb.IsOwned() && orb.IsReady()))
-            {
-                if (orb.IsOwned() && orb.IsReady() && (Player.Level >= 9 ? 3500f : orb.Range) >= Player.Distance(target))
-                {
-                    orb.Cast(target.Position);
-                    Console.WriteLine("Cast ORB");
-                }
-            }*/
-
             switch (ultType)
             {
                 case 0:
@@ -541,20 +508,20 @@ namespace ElXerath
                     var d = ElXerathMenu._menu.Item("Delay" + (RCombo._index + 1)).GetValue<Slider>().Value;
                     if (Utils.TickCount - RCombo.CastSpell > d)
                     {
-                        spells[Spells.R].Cast(target, true);
+                        spells[Spells.R].Cast(target);
                     }
                     break;
 
                 case 2:
                     //if (tapkey)
                         if (RCombo._tapKey)
-                            spells[Spells.R].Cast(target, true);
+                            spells[Spells.R].Cast(target);
                     break;
 
                 case 3:
                     if (spells[Spells.R].GetPrediction(target).Hitchance >= CustomHitChance)
                     {
-                        spells[Spells.R].Cast(target, true);
+                        spells[Spells.R].Cast(target);
                     }
 
                     break;
@@ -564,7 +531,7 @@ namespace ElXerath
                     if (Game.CursorPos.Distance(target.ServerPosition) < ultRadius
                         && ObjectManager.Player.Distance(target.ServerPosition) < spells[Spells.R].Range)
                     {
-                        spells[Spells.R].Cast(target, true);
+                        spells[Spells.R].Cast(target);
                     }
 
                     if (drawROn)
@@ -577,7 +544,6 @@ namespace ElXerath
         }
 
         #endregion
-
 
         private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
@@ -593,22 +559,6 @@ namespace ElXerath
                 spells[Spells.E].Cast(gapcloser.Sender);
             }
         }
-
-        #region GetComboDamage   
-
-        private static float GetComboDamage(Obj_AI_Base enemy)
-        {
-            var damage = 0d;
-
-            if (spells[Spells.R].IsReady())
-            {
-                damage += Player.GetSpellDamage(enemy, SpellSlot.R);
-            }
-
-            return (float) damage;
-        }
-
-        #endregion
 
         //Thanks to Esk0r for the R
         static void Game_OnWndProc(WndEventArgs args)
