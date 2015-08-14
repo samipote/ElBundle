@@ -45,11 +45,16 @@ namespace ElSmite
         static SpellDataInst slot2;
 
         static Spell smite;
+        //
+
 
         static readonly int[] PurpleSmite = { 3713, 3726, 3725, 3724, 3723, 3933 };
         static readonly int[] GreySmite = { 3711, 3722, 3721, 3720, 3719, 3932 };
-        static readonly int[] RedSmite = { 3715, 3718, 3717, 3716, 3714 };
-        static readonly int[] BlueSmite = { 3706, 3710, 3709, 3708, 3707 };
+        static readonly int[] RedSmite = { 3715, 3718, 3717, 3716, 3714, 3931 };
+        static readonly int[] BlueSmite = { 3706, 3710, 3709, 3708, 3707, 3930 };
+
+        //static readonly int[] DevourerSmite = { 3930, 3710, 3722, 3726, 3930, 3931, 3932, 3933 };
+
         static readonly string[] BuffsThatActuallyMakeSenseToSmite =
         {
             "SRU_Red", "SRU_Blue", "SRU_Dragon", "SRU_Baron"
