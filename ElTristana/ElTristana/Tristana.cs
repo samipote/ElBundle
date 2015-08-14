@@ -8,6 +8,7 @@ using LeagueSharp.Common;
 using SharpDX;
 using LeagueSharp.Common.Data;
 using ItemData = LeagueSharp.Common.Data.ItemData;
+using Color = System.Drawing.Color;
 
 namespace ElTristana
 {
@@ -55,10 +56,9 @@ namespace ElTristana
         public static Orbwalking.Orbwalker Orbwalker;
         public static Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>()
         {
-            { Spells.Q, new Spell(SpellSlot.Q, 0)},
-            { Spells.W, new Spell(SpellSlot.W, 900)},
-            { Spells.E, new Spell(SpellSlot.E, 630)},
-            { Spells.R, new Spell(SpellSlot.R, 630)},
+            { Spells.Q, new Spell(SpellSlot.Q, 550)},
+            { Spells.E, new Spell(SpellSlot.E, 625)},
+            { Spells.R, new Spell(SpellSlot.R, 700)},
         };
 
 
@@ -75,7 +75,9 @@ namespace ElTristana
             {
                 MenuInit.Initialize();
                 Game.OnUpdate += OnUpdate;
-                //Drawing.OnDraw += Drawings.Drawing_OnDraw;
+                Drawing.OnDraw += OnDraw;
+                AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+                Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             }
             catch (Exception e)
             {
@@ -100,14 +102,19 @@ namespace ElTristana
                         OnCombo();
                         break;
                     case Orbwalking.OrbwalkingMode.LaneClear:
+                        OnLaneClear();
+                        OnJungleClear();
                         break;
                     case Orbwalking.OrbwalkingMode.Mixed:
+                        OnHarass();
                         break;
                 }
 
-                spells[Spells.Q].Range = 541 + 9 * (Player.Level - 1);
-                spells[Spells.E].Range = 541 + 9 * (Player.Level - 1);
-                spells[Spells.R].Range = 541 + 9 * (Player.Level - 1);
+
+                // Tristana increases her autoattack range and the range of Explosive Shot by 9 every time she levels up (does not include level one). At level 18, the bonus is 153 (703 total range).
+                spells[Spells.Q].Range = 550 + 9 * (Player.Level - 1);
+                spells[Spells.E].Range = 625 + 9 * (Player.Level - 1);
+                spells[Spells.R].Range = 517 + 9 * (Player.Level - 1);
             }
             catch (Exception e)
             {
@@ -129,7 +136,7 @@ namespace ElTristana
             // * TristanaECharge
             // * TristanaEChargesound
 
-            if (spells[Spells.E].IsReady() && IsActive("ElTristana.Combo.E"))
+            if (spells[Spells.E].IsReady() && IsActive("ElTristana.Combo.E") && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.Combo.E.Mana").GetValue<Slider>().Value)
             {
                 foreach (var enemy in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsEnemy ) let getEnemies = MenuInit.Menu.Item("ElTristana.E.On" + enemy.CharData.BaseSkinName) where getEnemies != null && getEnemies.GetValue<bool>() select enemy)
                 {
@@ -146,6 +153,7 @@ namespace ElTristana
 
             if (spells[Spells.R].IsReady() && IsActive("ElTristana.Combo.R"))
             {
+                //check if target has E buff
                 if (IsECharged(target))
                 {
                     if (!IsBusterShotable(target)) return;
@@ -158,6 +166,95 @@ namespace ElTristana
                     if (GetExecuteDamage(target) > target.Health) return; 
 
                     spells[Spells.R].Cast(target);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 
+
+        private static void OnHarass()
+        {
+            var target = TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Physical);
+            if (target == null || !target.IsValidTarget())
+                return;
+
+            if (spells[Spells.E].IsReady() && IsActive("ElTristana.Harass.E") && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.Harass.E.Mana").GetValue<Slider>().Value)
+            {
+                foreach (var enemy in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsEnemy) let getEnemies = MenuInit.Menu.Item("ElTristana.E.On.Harass" + enemy.CharData.BaseSkinName) where getEnemies != null && getEnemies.GetValue<bool>() select enemy)
+                {
+                    spells[Spells.E].Cast(enemy);
+                }
+            }
+
+            if (spells[Spells.Q].IsReady() && IsActive("ElTristana.Harass.Q") && target.IsValidTarget(spells[Spells.E].Range))
+            {
+                if (IsECharged(target) && IsActive("ElTristana.Harass.QE"))
+                {
+                    spells[Spells.Q].Cast();
+                }
+                else if (!IsActive("ElTristana.Harass.QE"))
+                {
+                    spells[Spells.Q].Cast();
+                }
+            }
+        }
+
+        #endregion
+
+        #region 
+
+        private static void OnLaneClear()
+        {
+            var minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, spells[Spells.E].Range, MinionTypes.All, MinionTeam.NotAlly, MinionOrderTypes.MaxHealth);
+            if (minions.Count <= 0)  return;
+
+            //70 E AoE radius //
+
+            if (spells[Spells.E].IsReady() && IsActive("ElTristana.LaneClear.E") && minions.Count > 2 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.LaneClear.E.Mana").GetValue<Slider>().Value)
+            {
+                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.Health > spells[Spells.E].GetDamage(minion) + Player.TotalAttackDamage && minion.IsValidTarget() && minion.Distance(Player.ServerPosition) < spells[Spells.E].Range))
+                {
+                    spells[Spells.E].Cast(minion);
+                }
+            }
+
+            if (spells[Spells.Q].IsReady() && IsActive("ElTristana.LaneClear.Q"))
+            {
+                var eMob = minions.FindAll(x => x.IsValidTarget() && x.HasBuff("TristanaECharge"));
+                if (eMob.Any())
+                {
+                    spells[Spells.Q].Cast();
+                }
+            }
+        }
+
+        #endregion
+
+        #region 
+
+        private static void OnJungleClear()
+        {
+            var minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, 700, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+            if (minions.Count <= 0) return;
+
+            //70 E AoE radius
+
+            if (spells[Spells.E].IsReady() && IsActive("ElTristana.JungleClear.E") && minions.Count > 2 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.JungleClear.E.Mana").GetValue<Slider>().Value)
+            {
+                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.Health > spells[Spells.E].GetDamage(minion) + Player.TotalAttackDamage && minion.IsValidTarget() && minion.Distance(Player.ServerPosition) < spells[Spells.E].Range))
+                {
+                    spells[Spells.E].Cast(minion);
+                }
+            }
+
+            if (spells[Spells.Q].IsReady() && IsActive("ElTristana.JungleClear.Q"))
+            {
+                var eMob = minions.FindAll(x => x.IsValidTarget() && x.HasBuff("TristanaECharge"));
+                if (eMob.Any())
+                {
+                    spells[Spells.Q].Cast();
                 }
             }
         }
@@ -204,6 +301,57 @@ namespace ElTristana
 
         #region 
 
+        private static void OnDraw(EventArgs args)
+        {
+            if (IsActive("ElTristana.Draw.off")) return;
+
+            if (MenuInit.Menu.Item("ElTristana.Draw.Q").GetValue<Circle>().Active) if (spells[Spells.Q].Level > 0) Render.Circle.DrawCircle(ObjectManager.Player.Position, spells[Spells.Q].Range, Color.White);
+
+            if (MenuInit.Menu.Item("ElTristana.Draw.E").GetValue<Circle>().Active) if (spells[Spells.E].Level > 0) Render.Circle.DrawCircle(ObjectManager.Player.Position, spells[Spells.E].Range, Color.White);
+
+            if (MenuInit.Menu.Item("ElTristana.Draw.R").GetValue<Circle>().Active) if (spells[Spells.R].Level > 0) Render.Circle.DrawCircle(ObjectManager.Player.Position, spells[Spells.R].Range, Color.White);
+        }
+
+        #endregion
+
+        #region 
+
+        private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            /*if (!IsActive("ElTristana.Antigapcloser")) return;
+            if (!gapcloser.Sender.IsValidTarget(spells[Spells.R].Range)
+                || gapcloser.Sender.Distance(ObjectManager.Player) > spells[Spells.R].Range)
+            {
+                return;
+            }
+        
+            if (gapcloser.Sender.IsValidTarget(spells[Spells.R].Range)
+                && spells[Spells.R].IsReady())
+            {
+                spells[Spells.R].Cast(gapcloser.Sender);
+            }*/
+        }
+
+        #endregion
+
+        #region 
+
+        private static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero sender, Interrupter2.InterruptableTargetEventArgs args)
+        {
+            if (!IsActive("ElTristana.Interrupter")) return;
+                if (args.DangerLevel != Interrupter2.DangerLevel.High || sender.Distance(Player) > spells[Spells.R].Range) return;
+
+            if (spells[Spells.R].CanCast(sender)
+                && args.DangerLevel >= Interrupter2.DangerLevel.High)
+            {
+                spells[Spells.R].Cast(sender);
+            }
+        }
+
+        #endregion
+
+        #region 
+
         private static bool IsActive(string menuItem)
         {
             return MenuInit.Menu.Item(menuItem).GetValue<bool>();
@@ -232,7 +380,7 @@ namespace ElTristana
         {
             if (target.GetBuffCount("TristanaECharge") != 0)
             {
-                return (spells[Spells.E].GetDamage(target) * ((0.30 * target.GetBuffCount("TristanaECharge") + 1)) * (Player.TotalAttackDamage()));
+                return (spells[Spells.E].GetDamage(target) * ((0.3 * target.GetBuffCount("TristanaECharge") + 1)) + (Player.TotalAttackDamage()) + (Player.TotalMagicalDamage * 0.5));
             }
 
             return 0;
