@@ -35,7 +35,18 @@ namespace ElTristana
             cMenu.AddItem(new MenuItem("ElTristana.Combo.E", "Use E").SetValue(true));
             cMenu.AddItem(new MenuItem("ElTristana.Combo.R", "Use R").SetValue(true));
 
+            foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsEnemy))
+                cMenu.SubMenu("Use E on").AddItem(new MenuItem("ElTristana.E.On" + hero.CharData.BaseSkinName, hero.CharData.BaseSkinName).SetValue(true));
+
             Menu.AddSubMenu(cMenu);
+
+            var itemMenu = new Menu("Items", "Items");
+            itemMenu.AddItem(new MenuItem("ElTristana.Items.Youmuu", "Use Youmuu's Ghostblade").SetValue(true));
+            itemMenu.AddItem(new MenuItem("ElTristana.Items.Blade", "Use Blade of the Ruined King").SetValue(true));
+            itemMenu.AddItem(new MenuItem("ElTristana.Items.Blade.EnemyEHP", "Enemy HP Percentage").SetValue(new Slider(80, 100, 0)));
+            itemMenu.AddItem(new MenuItem("ElTristana.Items.Blade.EnemyMHP", "My HP Percentage").SetValue(new Slider(80, 100, 0)));
+
+            Menu.AddSubMenu(itemMenu);
 
             var credits = new Menu("Credits", "jQuery");
             credits.AddItem(new MenuItem("ElTristana.Paypal", "if you would like to donate via paypal:"));
@@ -43,8 +54,7 @@ namespace ElTristana
             Menu.AddSubMenu(credits);
 
             Menu.AddItem(new MenuItem("422442fsaafs4242f", ""));
-
-            Menu.AddItem(new MenuItem("422442fsaafsf", ($"ElTristana by jQuery v{Tristana.ScriptVersion}")));
+            Menu.AddItem(new MenuItem("422442fsaafsf", (string.Format("ElTristana by jQuery v{0}", Tristana.ScriptVersion))));
             Menu.AddItem(new MenuItem("fsasfafsfsafsa", "Made By jQuery"));
 
             Menu.AddToMainMenu();
