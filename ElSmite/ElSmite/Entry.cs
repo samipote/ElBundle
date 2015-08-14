@@ -13,7 +13,7 @@ namespace ElSmite
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class Entry
     {
-        static SpellSlot smite;
+        static SpellSlot smiteSlot;
         static Obj_AI_Hero Player
         {
             get
@@ -40,6 +40,14 @@ namespace ElSmite
 
         #region Smite
 
+
+        static SpellDataInst slot1;
+        static SpellDataInst slot2;
+
+        static Spell smite;
+
+        static readonly int[] PurpleSmite = { 3713, 3726, 3725, 3724, 3723, 3933 };
+        static readonly int[] GreySmite = { 3711, 3722, 3721, 3720, 3719, 3932 };
         static readonly int[] RedSmite = { 3715, 3718, 3717, 3716, 3714 };
         static readonly int[] BlueSmite = { 3706, 3710, 3709, 3708, 3707 };
         static readonly string[] BuffsThatActuallyMakeSenseToSmite =
@@ -53,24 +61,31 @@ namespace ElSmite
 
         static void InitializeSmite()
         {
-            if (BlueSmite.Any(id => Items.HasItem(id)))
+            if (BlueSmite.Any(x => Items.HasItem(x)))
             {
-                smite = Player.GetSpellSlot("s5_summonersmiteplayerganker");
-                return;
+                smiteSlot = ObjectManager.Player.GetSpellSlot("s5_summonersmiteplayerganker");
             }
-
-            if (RedSmite.Any(id => Items.HasItem(id)))
+            else if (RedSmite.Any(x => Items.HasItem(x)))
             {
-                smite = Player.GetSpellSlot("s5_summonersmiteduel");
-                return;
+                smiteSlot = ObjectManager.Player.GetSpellSlot("s5_summonersmiteduel");
             }
-
-            smite = Player.GetSpellSlot("summonersmite");
+            else if (GreySmite.Any(x => Items.HasItem(x)))
+            {
+                smiteSlot = ObjectManager.Player.GetSpellSlot("s5_summonersmitequick");
+            }
+            else if (PurpleSmite.Any(x => Items.HasItem(x)))
+            {
+                smiteSlot = ObjectManager.Player.GetSpellSlot("itemsmiteaoe");
+            }
+            else
+            {
+                smiteSlot = ObjectManager.Player.GetSpellSlot("summonersmite");
+            }
+   
+            smite.Slot = smiteSlot;
         }
 
         #endregion
-
-
 
         #region OnLoad
 
@@ -84,7 +99,19 @@ namespace ElSmite
 
             try
             {
-                smite = Player.GetSpellSlot("summonersmite");
+                slot1 = Player.Spellbook.GetSpell(SpellSlot.Summoner1);
+                slot2 = Player.Spellbook.GetSpell(SpellSlot.Summoner2);
+
+                if (new[] { "s5_summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(slot1.Name))
+                {
+                    smite = new Spell(SpellSlot.Summoner1, 500f);
+                }
+
+                if (new[] { "s5summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(slot2.Name))
+                {
+                    smite = new Spell(SpellSlot.Summoner2, 500f);
+                }
+
                 Notifications.AddNotification(String.Format("ElSmite by jQuery v{0}", ScriptVersion), 10000);
                 InitializeMenu.Load();
                 Game.OnUpdate += OnUpdate;
@@ -137,12 +164,11 @@ namespace ElSmite
             if (minions == null) return;
             if (InitializeMenu.Menu.Item(minions.CharData.BaseSkinName).GetValue<bool>())
             {
-                if (smite != SpellSlot.Unknown && SmiteDamage() > minions.Health)
+                if (SmiteDamage() > minions.Health)
                 {
-                    Player.Spellbook.CastSpell(smite, minions);
+                    Player.Spellbook.CastSpell(smite.Slot, minions);
                 }
             }
-            //Player.Spellbook.CanUseSpell(smite) == SpellState.Ready && 
         }
 
         #endregion
@@ -156,7 +182,7 @@ namespace ElSmite
 
             foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.Distance(Player) <= 500 && hero.IsEnemy && !hero.IsDead && hero.IsValidTarget() && SmiteChampDamage() > hero.Health))
             {
-                Player.Spellbook.CastSpell(smite, enemy);
+                Player.Spellbook.CastSpell(smite.Slot, enemy);
             }
         }
         #endregion
@@ -167,21 +193,21 @@ namespace ElSmite
         {
             var damage = new int[] { 20 * Player.Level + 370, 30 * Player.Level + 330, 40 *+ Player.Level + 240, 50 * Player.Level + 100 };
 
-            return Player.Spellbook.CanUseSpell(smite) == SpellState.Ready ? damage.Max() : 0;
+            return Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready ? damage.Max() : 0;
         }
 
         static double SmiteChampDamage()
         {
-            if (smite == Player.GetSpellSlot("s5_summonersmiteduel"))
+            if (smite.Slot == Player.GetSpellSlot("s5_summonersmiteduel"))
             {
                 var damage = new int[] { 54 + 6 * Player.Level };
-                return Player.Spellbook.CanUseSpell(smite) == SpellState.Ready ? damage.Max() : 0;
+                return Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready ? damage.Max() : 0;
             }
 
-            if (smite == Player.GetSpellSlot("s5_summonersmiteplayerganker"))
+            if (smite.Slot == Player.GetSpellSlot("s5_summonersmiteplayerganker"))
             {
                 var damage = new int[] { 20 + 8 * Player.Level };
-                return Player.Spellbook.CanUseSpell(smite) == SpellState.Ready ? damage.Max() : 0;
+                return Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready ? damage.Max() : 0;
             }
 
             return 0;
@@ -199,16 +225,16 @@ namespace ElSmite
 
             if (!smiteActive) return;
            
-            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready)
+            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.White);
 
-            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
+            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);
 
-            if (drawText && Player.Spellbook.CanUseSpell(smite) == SpellState.Ready)
+            if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready)
                 Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.GhostWhite, "Smite active");
 
-            if (drawText && Player.Spellbook.CanUseSpell(smite) != SpellState.Ready)
+            if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
                 Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.Red, "Smite cooldown");
         }
         #endregion
