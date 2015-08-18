@@ -57,7 +57,9 @@ namespace ElSmite
 
         static readonly string[] BuffsThatActuallyMakeSenseToSmite =
         {
-            "SRU_Red", "SRU_Blue", "SRU_Dragon", "SRU_Baron"
+            "SRU_Red", "SRU_Blue", "SRU_Dragon", "SRU_Baron",
+            "SRU_Gromp", "SRU_Murkwolf", "SRU_Razorbeak",
+            "SRU_Krug",  "Sru_Crab"
         };
 
         #endregion
@@ -109,12 +111,12 @@ namespace ElSmite
 
                 if (new[] { "s5_summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(slot1.Name))
                 {
-                    smite = new Spell(SpellSlot.Summoner1, 500f);
+                    smite = new Spell(SpellSlot.Summoner1, 550f);
                 }
 
                 if (new[] { "s5summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(slot2.Name))
                 {
-                    smite = new Spell(SpellSlot.Summoner2, 500f);
+                    smite = new Spell(SpellSlot.Summoner2, 550f);
                 }
 
                 Notifications.AddNotification(String.Format("ElSmite by jQuery v{0}", ScriptVersion), 10000);
@@ -185,7 +187,7 @@ namespace ElSmite
         {
             if (!InitializeMenu.Menu.Item("ElSmite.KS.Activated").GetValue<bool>()) return;
 
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.Distance(Player) <= 500 && hero.IsEnemy && !hero.IsDead && hero.IsValidTarget() && SmiteChampDamage() > hero.Health))
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.Distance(Player) <= 550 && hero.IsEnemy && !hero.IsDead && hero.IsValidTarget() && SmiteChampDamage() > hero.Health))
             {
                 Player.Spellbook.CastSpell(smite.Slot, enemy);
             }
@@ -227,20 +229,32 @@ namespace ElSmite
             var smiteActive = InitializeMenu.Menu.Item("ElSmite.Activated").GetValue<KeyBind>().Active;
             var drawSmite = InitializeMenu.Menu.Item("ElSmite.Draw.Range").GetValue<Circle>();
             var drawText = InitializeMenu.Menu.Item("ElSmite.Draw.Text").GetValue<bool>();
+            var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
 
-            if (!smiteActive) return;
-           
-            if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready)
-                Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.White);
+            //if (!smiteActive) return;
+
+            if (smiteActive)
+            {
+                if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready)
+                {
+                    Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.GhostWhite, "Smite active");
+                }
+
+                if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
+                    Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.Red, "Smite cooldown");
+            }
+            else
+            {
+                if(drawText)
+                    Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.Red, "Smite not active");
+            }
+            
+
+            if (smiteActive && drawSmite.Active && Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready)
+                Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Green);
 
             if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);
-
-            if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready)
-                Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.GhostWhite, "Smite active");
-
-            if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
-                Drawing.DrawText(Player.HPBarPosition.X + 40, Player.HPBarPosition.Y - 10, Color.Red, "Smite cooldown");
         }
         #endregion
     }

@@ -24,6 +24,13 @@ namespace ElSmite
                 mainMenu.AddItem(new MenuItem("SRU_Baron", "Baron").SetValue(true));
                 mainMenu.AddItem(new MenuItem("SRU_Red", "Red buff").SetValue(true));
                 mainMenu.AddItem(new MenuItem("SRU_Blue", "Blue buff").SetValue(true));
+
+                //Bullshit smites
+                mainMenu.AddItem(new MenuItem("SRU_Gromp", "Gromp").SetValue(false));
+                mainMenu.AddItem(new MenuItem("SRU_Murkwolf", "Wolves").SetValue(false));
+                mainMenu.AddItem(new MenuItem("SRU_Krug", "Krug").SetValue(false));
+                mainMenu.AddItem(new MenuItem("SRU_Razorbeak", "Chicken camp").SetValue(false));
+                mainMenu.AddItem(new MenuItem("Sru_Crab", "Crab").SetValue(false));
             }
 
             var combatMenu = Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
