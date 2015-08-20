@@ -18,7 +18,7 @@ namespace ElTristana
 
         public static void Initialize()
         {
-            Menu = new Menu("ElTristana WIP", "menu", true);
+            Menu = new Menu("ElTristana", "menu", true);
 
             var orbwalkerMenu = new Menu("Orbwalker", "orbwalker");
             Tristana.Orbwalker = new Orbwalking.Orbwalker(orbwalkerMenu);
@@ -36,6 +36,8 @@ namespace ElTristana
             comboMenu.AddItem(new MenuItem("ElTristana.Combo.Q", "Use Q").SetValue(true));
             comboMenu.AddItem(new MenuItem("ElTristana.Combo.E", "Use E").SetValue(true));
             comboMenu.AddItem(new MenuItem("ElTristana.Combo.R", "Use R").SetValue(true));
+            comboMenu.AddItem(new MenuItem("ElTristana.Combo.Always.RE", "Use E + R finisher").SetValue(true));
+            comboMenu.AddItem(new MenuItem("ElTristana.Combo.Always.R", "Always use R").SetValue(true));
             comboMenu.AddItem(new MenuItem("ElTristana.Combo.E.Mana", "Minimum mana for E")).SetValue(new Slider(25));
 
             foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsEnemy))
@@ -86,6 +88,7 @@ namespace ElTristana
             var laneClearMenu = new Menu("Laneclear", "Laneclear");
             laneClearMenu.AddItem(new MenuItem("ElTristana.LaneClear.Q", "Use Q").SetValue(true));
             laneClearMenu.AddItem(new MenuItem("ElTristana.LaneClear.E", "Use E").SetValue(true));
+            laneClearMenu.AddItem(new MenuItem("ElTristana.LaneClear.Tower", "Use E on tower").SetValue(true));
             laneClearMenu.AddItem(new MenuItem("ElTristana.LaneClear.E.Mana", "Minimum mana for E")).SetValue(new Slider(25));
 
             Menu.AddSubMenu(laneClearMenu);

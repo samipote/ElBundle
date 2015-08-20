@@ -154,18 +154,33 @@ namespace ElTristana
             if (spells[Spells.R].IsReady() && IsActive("ElTristana.Combo.R"))
             {
                 //check if target has E buff
-                if (IsECharged(target))
+                if (IsECharged(target) && IsActive("ElTristana.Combo.Always.RE"))
                 {
-                    if (!IsBusterShotable(target)) return;
-
-                    spells[Spells.R].Cast(target);
+                    Console.WriteLine("E Charged");
+                    //Credits to ScienceArk for the - 2 * target.Level broscience 
+                    if (IsBusterShotable(target) - 2 * target.Level > target.Health) 
+                    {
+                        spells[Spells.R].Cast(target);
+                        Console.WriteLine("Cast R1");
+                    }
                 }
-                else if (spells[Spells.R].GetDamage(target) > target.Health)
-                {
-                    // check if E + stacks is gonna kill target, if so don't cast R.
-                    if (GetExecuteDamage(target) > target.Health) return; 
 
-                    spells[Spells.R].Cast(target);
+                if (GetExecuteDamage(target) > target.Health)
+                {
+                    if (IsActive("ElTristana.Combo.Always.R") && GetExecuteDamage(target) > target.Health)
+                    {
+                        spells[Spells.R].Cast(target);
+                    }
+
+                    if (IsECharged(target) && GetExecuteDamage(target) > target.Health)
+                    {
+                        spells[Spells.R].Cast(target);
+                    }
+
+                    if (spells[Spells.R].GetDamage(target) > target.Health || GetExecuteDamage(target) > target.Health)
+                    {
+                        spells[Spells.R].Cast(target);
+                    }
                 }
             }
         }
@@ -207,6 +222,18 @@ namespace ElTristana
 
         private static void OnLaneClear()
         {
+            if (IsActive("ElTristana.LaneClear.Tower"))
+            {
+                foreach (Obj_AI_Turret tower in ObjectManager.Get<Obj_AI_Turret>())
+                {
+                    if (!tower.IsDead && tower.IsEnemy && tower.IsValidTarget() &&
+                        Player.ServerPosition.Distance(tower.ServerPosition) < Orbwalking.GetRealAutoAttackRange(Player))
+                    {
+                        spells[Spells.E].Cast(tower);
+                    }
+                }
+            }
+
             var minions = MinionManager.GetMinions(ObjectManager.Player.ServerPosition, spells[Spells.E].Range, MinionTypes.All, MinionTeam.NotAlly, MinionOrderTypes.MaxHealth);
             if (minions.Count <= 0)  return;
 
@@ -228,6 +255,7 @@ namespace ElTristana
                     spells[Spells.Q].Cast();
                 }
             }
+
         }
 
         #endregion
@@ -361,9 +389,9 @@ namespace ElTristana
 
         #region
 
-        private static bool IsBusterShotable(this Obj_AI_Base target)
+        private static double IsBusterShotable(this Obj_AI_Base target)
         {
-            return GetExecuteDamage(target) + spells[Spells.R].GetDamage(target) > target.Health;
+            return GetExecuteDamage(target) + spells[Spells.R].GetDamage(target);
         }
 
         private static BuffInstance GetECharge(this Obj_AI_Base target)
