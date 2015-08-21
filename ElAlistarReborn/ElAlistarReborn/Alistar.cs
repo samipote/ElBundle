@@ -185,7 +185,8 @@ namespace ElAlistarReborn
             if (useQ && useW && spells[Spells.Q].IsReady() && spells[Spells.W].IsReady() && Player.Mana > qmana.ManaCost + wmana.ManaCost)
             {
                 spells[Spells.W].Cast(target);
-                var comboTime = Math.Max(0, Player.Distance(target) - 500) * 10 / 25 + 25;
+                //var comboTime = Math.Max(0, Player.Distance(target) - 500) * 10 / 25 + 25;
+                var comboTime = Math.Max(0, Player.Distance(target) - 365) / 1.2f - 25;
 
                 Utility.DelayAction.Add((int)comboTime, () => spells[Spells.Q].Cast());
             }
