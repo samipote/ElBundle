@@ -65,7 +65,7 @@ namespace ElSmite
         #endregion
 
         #region InitializeSmite
-
+        /**
         static void InitializeSmite()
         {
             if (BlueSmite.Any(x => Items.HasItem(x)))
@@ -91,7 +91,7 @@ namespace ElSmite
    
             smite.Slot = smiteSlot;
         }
-
+        */
         #endregion
 
         #region OnLoad
@@ -117,9 +117,11 @@ namespace ElSmite
                 if (smiteNames.Contains(slot1.Name))
                 {
                     smite = new Spell(SpellSlot.Summoner1, 550f);
+                    smiteSlot = SpellSlot.Summoner1;
                 }else if (smiteNames.Contains(slot2.Name))
                 {
                     smite = new Spell(SpellSlot.Summoner2, 550f);
+                    smiteSlot = SpellSlot.Summoner2;
                 }
                 else
                 {
@@ -148,7 +150,7 @@ namespace ElSmite
 
             try
             {
-                InitializeSmite();
+                //InitializeSmite();
                 JungleSmite();
                 SmiteKill();
             }
@@ -166,22 +168,18 @@ namespace ElSmite
         {
             if (!InitializeMenu.Menu.Item("ElSmite.Activated").GetValue<KeyBind>().Active) return;
 
-            Obj_AI_Minion minions = null;
-            foreach (var buff in ObjectManager.Get<Obj_AI_Minion>())
+            Obj_AI_Minion minion = (Obj_AI_Minion) MinionManager.GetMinions(ObjectManager.Player.ServerPosition, 500, MinionTypes.All, MinionTeam.Neutral).ToList().FirstOrDefault(buff => buff.IsValidTarget() && BuffsThatActuallyMakeSenseToSmite.Contains(buff.CharData.BaseSkinName));
+
+            if (minion == null)
             {
-                if (buff.Distance(Player) <= 500 && BuffsThatActuallyMakeSenseToSmite.Contains(buff.CharData.BaseSkinName))
-                {
-                    minions = buff;
-                    break;
-                }
+                return;
             }
 
-            if (minions == null) return;
-            if (InitializeMenu.Menu.Item(minions.CharData.BaseSkinName).GetValue<bool>())
+            if (InitializeMenu.Menu.Item(minion.CharData.BaseSkinName).GetValue<bool>())
             {
-                if (SmiteDamage() > minions.Health)
+                if (SmiteDamage() > minion.Health + 10)
                 {
-                    Player.Spellbook.CastSpell(smite.Slot, minions);
+                    Player.Spellbook.CastSpell(smite.Slot, minion);
                 }
             }
         }
@@ -195,11 +193,16 @@ namespace ElSmite
         {
             if (!InitializeMenu.Menu.Item("ElSmite.KS.Activated").GetValue<bool>()) return;
 
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.Distance(Player) <= 550 && hero.IsEnemy && !hero.IsDead && hero.IsValidTarget() && SmiteChampDamage() > hero.Health))
+            var KSableEnemy =
+                HeroManager.Enemies.FirstOrDefault(
+                    hero => hero.IsValidTarget(550) &&
+                        SmiteChampDamage() >= hero.Health);
+            if (KSableEnemy != null)
             {
-                Player.Spellbook.CastSpell(smite.Slot, enemy);
+                Player.Spellbook.CastSpell(smite.Slot, KSableEnemy);
             }
-        }
+         }
+        
         #endregion
 
         #region SmiteDamages
