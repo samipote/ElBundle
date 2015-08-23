@@ -108,15 +108,23 @@ namespace ElSmite
             {
                 slot1 = Player.Spellbook.GetSpell(SpellSlot.Summoner1);
                 slot2 = Player.Spellbook.GetSpell(SpellSlot.Summoner2);
+                var smiteNames = new[]
+                {
+                    "s5_summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel",
+                    "summonersmite"
+                };
 
-                if (new[] { "s5_summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(slot1.Name))
+                if (smiteNames.Contains(slot1.Name))
                 {
                     smite = new Spell(SpellSlot.Summoner1, 550f);
-                }
-
-                if (new[] { "s5summonersmiteplayerganker", "itemsmiteaoe", "s5_summonersmitequick", "s5_summonersmiteduel", "summonersmite" }.Contains(slot2.Name))
+                }else if (smiteNames.Contains(slot2.Name))
                 {
                     smite = new Spell(SpellSlot.Summoner2, 550f);
+                }
+                else
+                {
+                    Console.WriteLine("You don't have smite faggot");
+                    return;
                 }
 
                 Notifications.AddNotification(String.Format("ElSmite by jQuery v{0}", ScriptVersion), 10000);
