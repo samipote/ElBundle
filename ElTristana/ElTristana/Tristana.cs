@@ -346,18 +346,13 @@ namespace ElTristana
 
         private static void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
         {
-            /*if (!IsActive("ElTristana.Antigapcloser")) return;
-            if (!gapcloser.Sender.IsValidTarget(spells[Spells.R].Range)
-                || gapcloser.Sender.Distance(ObjectManager.Player) > spells[Spells.R].Range)
+            if (IsActive("ElTristana.Antigapcloser"))
             {
-                return;
+                if (gapcloser.Sender.IsValidTarget(spells[Spells.R].Range) && spells[Spells.R].IsReady())
+                {
+                    spells[Spells.R].Cast(gapcloser.Sender);
+                }
             }
-        
-            if (gapcloser.Sender.IsValidTarget(spells[Spells.R].Range)
-                && spells[Spells.R].IsReady())
-            {
-                spells[Spells.R].Cast(gapcloser.Sender);
-            }*/
         }
 
         #endregion
