@@ -241,6 +241,7 @@ namespace ElSmite
             var drawSmite = InitializeMenu.Menu.Item("ElSmite.Draw.Range").GetValue<Circle>();
             var drawText = InitializeMenu.Menu.Item("ElSmite.Draw.Text").GetValue<bool>();
             var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
+            var DrawDamage  = InitializeMenu.Menu.Item("ElSmite.Draw.Damage").GetValue<bool>();
 
             //if (!smiteActive) return;
 
@@ -252,7 +253,73 @@ namespace ElSmite
                 }
 
                 if (drawText && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
+                {
                     Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.Red, "Smite cooldown");
+                }
+
+                if (DrawDamage && Entry.SmiteDamage() != 0)
+                {
+                    var Minions =
+                        ObjectManager.Get<Obj_AI_Minion>()
+                            .Where(
+                                m =>
+                                    m.Team == GameObjectTeam.Neutral && m.IsValidTarget() &&
+                                    BuffsThatActuallyMakeSenseToSmite.Contains(m.CharData.BaseSkinName));
+                    
+                    foreach (var Minion in Minions.Where(m => m.IsHPBarRendered))
+                    {
+                        var HPBarPosition = Minion.HPBarPosition;
+                        var MaxHealth = Minion.MaxHealth;
+                        var SmiteDamage = Entry.SmiteDamage();
+                        //SmiteDamage : MaxHealth = x : 100
+                        //Ratio math for this ^
+                        var x = Entry.SmiteDamage() / MaxHealth;
+                        var barWidth = 0;
+
+                        switch (Minion.CharData.BaseSkinName)
+                        {
+                            case "SRU_Red":
+                            case "SRU_Blue":
+                            case "SRU_Dragon":
+                                barWidth = 145;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X + 3 + (float)(barWidth * x), HPBarPosition.Y + 18), new Vector2(HPBarPosition.X + 3 + (float)(barWidth * x), HPBarPosition.Y + 28), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X - 22 + (float)(barWidth * x), HPBarPosition.Y, Color.Chartreuse, SmiteDamage.ToString());
+                                break; 
+                            case "SRU_Baron":
+                                barWidth = 194;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X - 22 + (float)(barWidth * x), HPBarPosition.Y + 13), new Vector2(HPBarPosition.X - 22 + (float)(barWidth * x), HPBarPosition.Y + 29), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X - 22 + (float)(barWidth * x), HPBarPosition.Y - 3, Color.Chartreuse, SmiteDamage.ToString());
+                                break;
+                            case "Sru_Crab":
+                                barWidth = 61;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X + 45 + (float)(barWidth * x), HPBarPosition.Y + 34), new Vector2(HPBarPosition.X  + 45 + (float)(barWidth * x), HPBarPosition.Y + 37), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X + 40 + (float)(barWidth * x), HPBarPosition.Y + 16, Color.Chartreuse, SmiteDamage.ToString());
+                                break;
+                            case "SRU_Murkwolf":
+                                barWidth = 75;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X + 54 + (float)(barWidth * x), HPBarPosition.Y + 19), new Vector2(HPBarPosition.X + 54 + (float)(barWidth * x), HPBarPosition.Y + 23), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X + 50 + (float)(barWidth * x), HPBarPosition.Y, Color.Chartreuse, SmiteDamage.ToString());
+                                break;
+                            case "SRU_Razorbeak":
+                                barWidth = 75;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X + 54 + (float)(barWidth * x), HPBarPosition.Y + 18), new Vector2(HPBarPosition.X + 54 + (float)(barWidth * x), HPBarPosition.Y + 22), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X + 54 + (float)(barWidth * x), HPBarPosition.Y, Color.Chartreuse, SmiteDamage.ToString());
+                                break;
+                            case "SRU_Krug":
+                                barWidth = 81;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X + 58 + (float)(barWidth * x), HPBarPosition.Y + 18), new Vector2(HPBarPosition.X + 58 + (float)(barWidth * x), HPBarPosition.Y + 22), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X + 54 + (float)(barWidth * x), HPBarPosition.Y, Color.Chartreuse, SmiteDamage.ToString());
+                                break;
+                            case "SRU_Gromp":
+                                barWidth = 87;
+                                Drawing.DrawLine(new Vector2(HPBarPosition.X + 62 + (float)(barWidth * x), HPBarPosition.Y + 18), new Vector2(HPBarPosition.X + 62 + (float)(barWidth * x), HPBarPosition.Y + 22), 2f, Color.Chartreuse);
+                                Drawing.DrawText(HPBarPosition.X + 58 + (float)(barWidth * x), HPBarPosition.Y, Color.Chartreuse, SmiteDamage.ToString());
+                                break;
+
+                        }
+                        
+                    }
+                }
             }
             else
             {
@@ -266,6 +333,7 @@ namespace ElSmite
 
             if (drawSmite.Active && Player.Spellbook.CanUseSpell(smite.Slot) != SpellState.Ready)
                 Render.Circle.DrawCircle(ObjectManager.Player.Position, 500, Color.Red);
+
         }
         #endregion
     }

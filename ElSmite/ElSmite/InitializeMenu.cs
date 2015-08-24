@@ -42,6 +42,7 @@ namespace ElSmite
             {
                 drawMenu.AddItem(new MenuItem("ElSmite.Draw.Range", "Draw smite Range").SetValue(new Circle()));
                 drawMenu.AddItem(new MenuItem("ElSmite.Draw.Text", "Draw smite text").SetValue(true));
+                drawMenu.AddItem(new MenuItem("ElSmite.Draw.Damage", "Draw smite Damage").SetValue(true));
             }
 
             var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
