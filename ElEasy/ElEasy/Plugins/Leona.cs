@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 using Color = System.Drawing.Color;
+using SharpDX;
+
 
 namespace ElEasy.Plugins
 {
@@ -78,14 +80,14 @@ namespace ElEasy.Plugins
                     break;
             }
 
-            AutoUlt();
+            //AutoUlt();
         }
 
         #endregion
 
         #region AutoUlt
 
-        private static void AutoUlt()
+        /*private static void AutoUlt()
         {
             var rTarget = TargetSelector.GetTarget(spells[Spells.R].Range, TargetSelector.DamageType.Magical);
             if (rTarget == null || !rTarget.IsValid)
@@ -100,7 +102,7 @@ namespace ElEasy.Plugins
                 if (pred >= CustomHitChance)
                     spells[Spells.R].CastIfWillHit(rTarget, countEnemies);
             }
-        }
+        }*/
 
         #endregion
 
@@ -146,14 +148,14 @@ namespace ElEasy.Plugins
             var useI = _menu.Item("ElEasy.Leona.Combo.Ignite").GetValue<bool>();
             var countEnemies = _menu.Item("ElEasy.Leona.Combo.Count.Enemies").GetValue<Slider>().Value;
 
-            if (useQ && spells[Spells.Q].IsReady() && !target.HasBuff("BlackShield") ||  !target.HasBuff("SivirShield") || !target.HasBuff("BansheesVeil") || !target.HasBuff("ShroudofDarkness"))
+            if (useQ && InAutoAttackRange(target) && spells[Spells.Q].IsReady() && !target.HasBuff("BlackShield") ||  !target.HasBuff("SivirShield") || !target.HasBuff("BansheesVeil") || !target.HasBuff("ShroudofDarkness"))
              {
                  spells[Spells.Q].Cast();
              }
 
              if (useW && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target))
              {
-                 spells[Spells.W].Cast(Player);
+                 spells[Spells.W].Cast();
              }
 
             if (useE && spells[Spells.E].IsReady())
@@ -170,8 +172,8 @@ namespace ElEasy.Plugins
             {
                 var pred = spells[Spells.R].GetPrediction(target);
                 if(pred.Hitchance >= CustomHitChance)
-                    spells[Spells.R].Cast(pred.CastPosition);
-                    //spells[Spells.R].Cast(target);
+                    spells[Spells.R].CastIfHitchanceEquals(target, HitChance.Immobile);
+                //spells[Spells.R].Cast(target);
             }
 
             if (Player.Distance(target) <= 600 && IgniteDamage(target) >= target.Health && useI)
@@ -261,7 +263,7 @@ namespace ElEasy.Plugins
             cMenu.AddItem(new MenuItem("ElEasy.Leona.Combo.Q", "Use Q").SetValue(true));
             cMenu.AddItem(new MenuItem("ElEasy.Leona.Combo.W", "Use W").SetValue(true));
             cMenu.AddItem(new MenuItem("ElEasy.Leona.Combo.E", "Use E").SetValue(true));
-            cMenu.AddItem(new MenuItem("ElEasy.Leona.Combo.R", "Use R").SetValue(true));
+            cMenu.AddItem(new MenuItem("ElEasy.Leona.Combo.R", "Use R").SetValue(false));
             cMenu.AddItem(
                 new MenuItem("ElEasy.Leona.Combo.Count.Enemies", "Enemies in range for R").SetValue(new Slider(2, 1, 5)));
             cMenu.AddItem(new MenuItem("ElEasy.Leona.Hitchance", "Hitchance").SetValue(new StringList(new[] { "Low", "Medium", "High", "Very High" }, 3)));
@@ -281,8 +283,8 @@ namespace ElEasy.Plugins
             settingsMenu.AddItem(new MenuItem("xxx", ""));
             settingsMenu.AddItem(new MenuItem("ElEasy.Leona.Interrupt.Activated", "Interrupt spells").SetValue(true));
             settingsMenu.AddItem(new MenuItem("ElEasy.Leona.GapCloser.Activated", "Anti gapcloser").SetValue(true));
-            settingsMenu.SubMenu("Automatic ult").AddItem(new MenuItem("ElEasy.Leona.AutoUlt.Activated", "Auto ult").SetValue(false));
-            settingsMenu.SubMenu("Automatic ult").AddItem(new MenuItem("ElEasy.Leona.AutoUlt.Count", "Min targets for R").SetValue(new Slider(3, 1, 5)));
+            //settingsMenu.SubMenu("Automatic ult").AddItem(new MenuItem("ElEasy.Leona.AutoUlt.Activated", "Auto ult").SetValue(false));
+            //settingsMenu.SubMenu("Automatic ult").AddItem(new MenuItem("ElEasy.Leona.AutoUlt.Count", "Min targets for R").SetValue(new Slider(3, 1, 5)));
 
             _menu.AddSubMenu(settingsMenu);
 
@@ -308,6 +310,35 @@ namespace ElEasy.Plugins
         }
 
         #endregion
+
+        private static float GetAutoAttackRange(Obj_AI_Base source = null, Obj_AI_Base target = null)
+        {
+            if (source == null)
+            {
+                source = Player;
+            }
+
+            var ret = source.AttackRange + Player.BoundingRadius;
+            if (target != null)
+            {
+                ret += target.BoundingRadius;
+            }
+
+            return ret;
+        }
+
+        private static bool InAutoAttackRange(Obj_AI_Base target)
+        {
+            if (target == null)
+            {
+                return false;
+            }
+
+            var myRange = GetAutoAttackRange(Player, target);
+            return Vector2.DistanceSquared(target.ServerPosition.To2D(), Player.ServerPosition.To2D())
+                   <= myRange * myRange;
+        }
+
 
         #region Ignite
 
