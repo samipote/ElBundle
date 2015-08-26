@@ -158,16 +158,16 @@ namespace ElTristana
                 {
                     Console.WriteLine("E Charged");
                     //Credits to ScienceArk for the - 2 * target.Level broscience 
-                    if (IsBusterShotable(target) - 2 * target.Level > target.Health + 20) 
+                    if (IsBusterShotable(target) - 2 * target.Level > target.Health + 50) 
                     {
                         spells[Spells.R].Cast(target);
                         Console.WriteLine("Cast R1");
                     }
                 }
 
-                if (GetExecuteDamage(target) > target.Health + 20)
+                if (GetExecuteDamage(target) > target.Health + 50)
                 {
-                    if (IsActive("ElTristana.Combo.Always.R") && GetExecuteDamage(target) > target.Health + 20)
+                    if (IsActive("ElTristana.Combo.Always.R") && GetExecuteDamage(target) > target.Health + 50)
                     {
                         spells[Spells.R].Cast(target);
                     }
@@ -177,7 +177,7 @@ namespace ElTristana
                         spells[Spells.R].Cast(target);
                     }
 
-                    if (spells[Spells.R].GetDamage(target) > target.Health + 20 || GetExecuteDamage(target) > target.Health + 20)
+                    if (spells[Spells.R].GetDamage(target) > target.Health + 50 || GetExecuteDamage(target) > target.Health + 50)
                     {
                         spells[Spells.R].Cast(target);
                     }
