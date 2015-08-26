@@ -62,7 +62,7 @@ namespace ElAlistarReborn
                 return;
 
             //float.MaxValue
-            //spells[Spells.W].SetTargetted(0.5f, 1.5f);
+            spells[Spells.W].SetTargetted(0.5f, 1.5f);
 
             Notifications.AddNotification("ElAlistarReborn by jQuery", 5000);
             _ignite = Player.GetSpellSlot("summonerdot");
