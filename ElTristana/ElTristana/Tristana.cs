@@ -16,8 +16,6 @@ using Color = System.Drawing.Color;
 
 namespace ElTristana
 {
-    using System.Dynamic;
-    using System.Runtime.Remoting.Messaging;
 
     #region
 
