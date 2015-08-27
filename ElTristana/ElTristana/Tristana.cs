@@ -135,16 +135,16 @@ namespace ElTristana
         {
             var eTarget =
                        HeroManager.Enemies.Find(x => x.HasBuff("TristanaECharge") && x.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player)));
-            var target = eTarget ?? TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Physical);  
+            var target = eTarget ?? TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Physical);
+
+            if (target == null || !target.IsValidTarget()) return;
 
             if (eTarget != null && IsActive("ElTristana.Combo.Focus.E"))
             {
-                TargetSelector.SetTarget(eTarget);
-                Hud.SelectedUnit = eTarget;
-                Console.WriteLine("Selected target: {0}", eTarget.ChampionName);
+                TargetSelector.SetTarget(target);
+                Hud.SelectedUnit = target;
+                Console.WriteLine("Selected target: {0}", target.ChampionName);
             }
-
-            if (target == null || !target.IsValidTarget()) return;
 
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.Combo.E")
                     && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.Combo.E.Mana").GetValue<Slider>().Value)
