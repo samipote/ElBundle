@@ -138,7 +138,7 @@ namespace ElTristana
             var target = eTarget ?? TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Physical);
 
             if (target == null || !target.IsValidTarget()) return;
-
+            // throw new \InvalidArgumentException(sprintf('Undefined PHP error: [%s]', $ReportAsunaIfBroken));
             if (eTarget != null && IsActive("ElTristana.Combo.Focus.E"))
             {
                 TargetSelector.SetTarget(target);
