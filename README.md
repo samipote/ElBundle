@@ -13,6 +13,8 @@
 - Katarina
 - Vi
 - Ekko
+- Rengar
+- ElSmite
 
 # ElEasy AiO
 
