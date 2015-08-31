@@ -60,6 +60,12 @@
                     .AddItem(new MenuItem("Jungle.Save.Ferocity", "Save ferocity").SetValue(false));
             }
 
+            var healMenu = Menu.AddSubMenu(new Menu("Heal", "heal"));
+            {
+                healMenu.AddItem(new MenuItem("Heal.AutoHeal", "Auto heal yourself").SetValue(true));
+                healMenu.AddItem(new MenuItem("Heal.HP", "Self heal at >= ").SetValue(new Slider(25, 1, 100)));
+            }
+
             var miscMenu = Menu.AddSubMenu(new Menu("Misc", "Misc"));
             {
                 miscMenu.AddItem(new MenuItem("Misc.Drawings.Off", "Turn drawings off").SetValue(false));

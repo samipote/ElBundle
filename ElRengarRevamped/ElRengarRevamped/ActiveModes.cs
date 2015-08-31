@@ -249,8 +249,8 @@
                 UseHydra();
                 spells[Spells.W].Cast();
             }
-
-            if (IsActive("Jungle.Use.E") && spells[Spells.E].GetDamage(minion) > minion.Health
+            //&& spells[Spells.E].GetDamage(minion) > minion.Health
+            if (IsActive("Jungle.Use.E") 
                 && spells[Spells.E].IsReady()
                 && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.E].Range)
             {

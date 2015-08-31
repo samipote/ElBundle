@@ -150,6 +150,7 @@
             {
                 SwitchCombo();
                 SmiteCombo();
+                Heal();
                 switch (Orbwalker.ActiveMode)
                 {
                     case Orbwalking.OrbwalkingMode.Combo:
@@ -200,5 +201,18 @@
         }
 
         #endregion
+
+        private static void Heal()
+        {
+            if (Player.IsRecalling() || Player.InFountain() || Player.Mana <= 4)
+            {
+                return;
+            }
+
+            if (IsActive("Heal.AutoHeal") && (Player.Health / Player.MaxHealth) * 100 <= MenuInit.Menu.Item("Heal.HP").GetValue<Slider>().Value && spells[Spells.W].IsReady())
+            {
+                spells[Spells.W].Cast();
+            }
+        }
     }
 }
