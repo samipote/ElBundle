@@ -478,9 +478,7 @@ namespace ElTristana
 
         private static float GetHealth(Obj_AI_Base target)
         {
-            return target.AttackShield > 0
-                       ? target.Health + target.AttackShield
-                       : target.MagicShield > 0 ? target.Health + target.MagicShield : target.Health;
+            return target.Health;
         }
 
         private static BuffInstance GetECharge(this Obj_AI_Base target)
