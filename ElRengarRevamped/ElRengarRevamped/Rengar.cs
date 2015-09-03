@@ -59,12 +59,18 @@
                 return;
             }
 
-            if (sender.IsMe)
+            if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
                 if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
                 {
                     spells[Spells.E].Cast(target);
                     Console.WriteLine("E Ondash cast");
+                }
+
+                if (IsListActive("Combo.Prio").SelectedIndex == 1 && spells[Spells.Q].IsReady())
+                {
+                    spells[Spells.Q].Cast();
+                    Console.WriteLine("Q Ondash cast");
                 }
             }
         }
