@@ -276,6 +276,16 @@ namespace ElSmite
                         var x = Entry.SmiteDamage() / MaxHealth;
                         var barWidth = 0;
 
+                        /*
+                        * DON'T STEAL THE OFFSETS FOUND BY ASUNA DON'T STEAL THEM JUST GET OUT WTF MAN.
+                        * EL SMITE IS THE BEST SMITE ASSEMBLY ON LEAGUESHARP AND YOU WILL NOT FIND A BETTER ONE.
+                        * THE DRAWINGS ACTUALLY MAKE FUCKING SENSE AND THEY ARE FUCKING GOOD
+                        * GTFO HERE SERIOUSLY OR I CALL DETUKS FOR YOU GUYS
+                        * NO STEAL OR DMC FUCKING A REPORT.
+                        * HELLO COPYRIGHT BY ASUNA 2015 ALL AUSTRALIAN RIGHTS RESERVED BY UNIVERSAL GTFO SERIOUSLY THO
+                        * NO ALSO NO CREDITS JUST GET OUT DUDE GET OUTTTTTTTTTTTTTTTTTTTTTTT
+                        */
+                        
                         switch (Minion.CharData.BaseSkinName)
                         {
                             case "SRU_Red":
