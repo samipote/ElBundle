@@ -11,6 +11,8 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     public class ActiveModes : Standards
     {
+        #region Public Methods and Operators
+
         public static void Combo()
         {
             var target = TargetSelector.GetSelectedTarget();
@@ -25,7 +27,7 @@
                 {
                     target = TargetSelector.GetSelectedTarget();
                     TargetSelector.SetTarget(target);
-                    Hud.SelectedUnit = target;
+                    //Hud.SelectedUnit = target;
                     Console.WriteLine("Selected target: {0}", target.ChampionName);
                 }
             }
@@ -55,11 +57,19 @@
                         break;
 
                     case 1:
-                        if (IsActive("Combo.Use.Q") && !ObjectManager.Player.Spellbook.IsAutoAttacking
-                            && !Player.IsWindingUp
-                            && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.Q].Range)
+
+                        if (IsActive("Combo.Use.Q"))
                         {
-                            spells[Spells.Q].Cast();
+                            if (sendTime + Game.Ping + 700 - TickCount > 0)
+                            {
+                                spells[Spells.Q].Cast();
+                            }
+                            else if (Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                                     <= spells[Spells.Q].Range)
+                                // !ObjectManager.Player.Spellbook.IsAutoAttacking && !Player.IsWindingUp &&
+                            {
+                                spells[Spells.Q].Cast();
+                            }
                         }
                         break;
                 }
@@ -67,7 +77,8 @@
 
             if (Ferocity <= 4)
             {
-                if (IsActive("Combo.Use.Q") && !ObjectManager.Player.Spellbook.IsAutoAttacking && !Player.IsWindingUp
+                // !ObjectManager.Player.Spellbook.IsAutoAttacking && 
+                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp
                     && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.Q].Range)
                 {
                     spells[Spells.Q].Cast();
@@ -118,6 +129,8 @@
 
             #endregion
         }
+
+        #endregion
 
         #endregion
 
@@ -250,8 +263,7 @@
                 spells[Spells.W].Cast();
             }
             //&& spells[Spells.E].GetDamage(minion) > minion.Health
-            if (IsActive("Jungle.Use.E") 
-                && spells[Spells.E].IsReady()
+            if (IsActive("Jungle.Use.E") && spells[Spells.E].IsReady()
                 && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.E].Range)
             {
                 spells[Spells.E].Cast(minion.Position);

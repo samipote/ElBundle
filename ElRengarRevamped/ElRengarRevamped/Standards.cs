@@ -33,9 +33,20 @@
 
         protected static SpellSlot Smite;
 
+        protected static int sendTime = 0;
+
+
         #endregion
 
         #region Public Properties
+
+        public static int TickCount
+        {
+            get
+            {
+                return (int)(Game.Time * 0x3e8);
+            }
+        }
 
         public static int Ferocity
         {

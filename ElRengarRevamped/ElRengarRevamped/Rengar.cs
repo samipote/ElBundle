@@ -61,6 +61,9 @@
 
             if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
+
+                sendTime = TickCount;
+
                 if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
                 {
                     spells[Spells.E].Cast(target);
