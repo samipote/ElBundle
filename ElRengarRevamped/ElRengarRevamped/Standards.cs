@@ -1,6 +1,5 @@
 ﻿namespace ElRengarRevamped
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -17,7 +16,7 @@
 
         private static readonly int[] RedSmite = { 3715, 3718, 3717, 3716, 3714 };
 
-        protected static readonly Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>()
+        protected static readonly Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>
                                                                          {
                                                                              {
                                                                                  Spells.Q,
@@ -46,7 +45,7 @@
 
         #region Public Properties
 
-        public static String ScriptVersion
+        public static string ScriptVersion
         {
             get
             {
@@ -82,19 +81,19 @@
             }
         }
 
-        protected static bool RengarQ
-        {
-            get
-            {
-                return Player.Buffs.Any(x => x.Name.Contains("rengarq"));
-            }
-        }
-
         protected static bool RengarE
         {
             get
             {
                 return Player.Buffs.Any(x => x.Name.Contains("rengare"));
+            }
+        }
+
+        protected static bool RengarQ
+        {
+            get
+            {
+                return Player.Buffs.Any(x => x.Name.Contains("rengarq"));
             }
         }
 

@@ -1,7 +1,5 @@
 ﻿namespace ElRengarRevamped
 {
-    using System;
-
     using LeagueSharp.Common;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -82,7 +80,7 @@
             }
 
             Menu.AddItem(new MenuItem("sep1", ""));
-            Menu.AddItem(new MenuItem("sep2", String.Format("Version: {0}", Standards.ScriptVersion)));
+            Menu.AddItem(new MenuItem("sep2", string.Format("Version: {0}", Standards.ScriptVersion)));
             Menu.AddItem(new MenuItem("sep3", "Made By jQuery"));
 
             Menu.AddToMainMenu();

@@ -137,11 +137,11 @@
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, (Color)Color.White, "Prioritized spell: E");
+                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: E");
 
                         break;
                     case 1:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, (Color)Color.White, "Prioritized spell: Q");
+                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: Q");
                         break;
                 }
             }

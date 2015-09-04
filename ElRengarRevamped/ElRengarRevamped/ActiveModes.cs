@@ -73,11 +73,13 @@
                             if (SendTime + Game.Ping + 700 - TickCount > 0)
                             {
                                 spells[Spells.Q].Cast();
+                                Broscience(target);
                             }
                             else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 // !ObjectManager.Player.Spellbook.IsAutoAttacking && !Player.IsWindingUp &&
                             {
                                 spells[Spells.Q].Cast();
+                                Broscience(target);
                             }
                         }
                         break;
@@ -91,6 +93,7 @@
                     && target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                 {
                     spells[Spells.Q].Cast();
+                    Broscience(target);
                 }
 
                 if (RengarR)
@@ -141,6 +144,27 @@
         }
 
         #endregion
+
+        #endregion
+
+        #region Methods
+
+        private static void Broscience(AttackableUnit target)
+        {
+            Utility.DelayAction.Add(
+                (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f),
+                () =>
+                    {
+                        if (target.IsValidTarget() && !Player.IsWindingUp)
+                        {
+                            Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+                        }
+
+                        Utility.DelayAction.Add(
+                            (int)(Game.Ping / 2f + Player.AttackDelay * 1000 + 250 + 50),
+                            () => { Player.IssueOrder(GameObjectOrder.AttackUnit, target); });
+                    });
+        }
 
         #endregion
 
