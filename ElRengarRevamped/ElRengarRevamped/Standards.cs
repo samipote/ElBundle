@@ -19,7 +19,12 @@
 
         public static readonly Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>()
                                                                       {
-                                                                          { Spells.Q, new Spell(SpellSlot.Q, 250) },
+                                                                          {
+                                                                              Spells.Q,
+                                                                              new Spell(
+                                                                              SpellSlot.Q,
+                                                                              Player.AttackRange + 100)
+                                                                          },
                                                                           { Spells.W, new Spell(SpellSlot.W, 500) },
                                                                           { Spells.E, new Spell(SpellSlot.E, 1000) },
                                                                           { Spells.R, new Spell(SpellSlot.R, 2000) }
@@ -31,22 +36,15 @@
 
         protected static int LastSwitch;
 
-        protected static SpellSlot Smite;
-
         protected static int sendTime = 0;
 
+        protected static SpellSlot Smite;
+
+        protected static Items.Item Youmuu;
 
         #endregion
 
         #region Public Properties
-
-        public static int TickCount
-        {
-            get
-            {
-                return (int)(Game.Time * 0x3e8);
-            }
-        }
 
         public static int Ferocity
         {
@@ -93,6 +91,14 @@
             get
             {
                 return typeof(Rengar).Assembly.GetName().Version.ToString();
+            }
+        }
+
+        public static int TickCount
+        {
+            get
+            {
+                return (int)(Game.Time * 0x3e8);
             }
         }
 

@@ -30,6 +30,8 @@
 
             try
             {
+                Youmuu = new Items.Item(3142, 0f);
+
                 Ignite = Player.GetSpellSlot("summonerdot");
                 Notifications.AddNotification(string.Format("ElRengarRevamped by jQuery v{0}", ScriptVersion), 6000);
                 spells[Spells.E].SetSkillshot(0.25f, 70f, 1500f, true, SkillshotType.SkillshotLine);
@@ -51,6 +53,21 @@
 
         #region Methods
 
+        private static void Heal()
+        {
+            if (Player.IsRecalling() || Player.InFountain() || Player.Mana <= 4)
+            {
+                return;
+            }
+
+            if (IsActive("Heal.AutoHeal")
+                && (Player.Health / Player.MaxHealth) * 100 <= MenuInit.Menu.Item("Heal.HP").GetValue<Slider>().Value
+                && spells[Spells.W].IsReady())
+            {
+                spells[Spells.W].Cast();
+            }
+        }
+
         private static void OnDash(Obj_AI_Base sender, Dash.DashItem args)
         {
             var target = TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Magical);
@@ -61,7 +78,6 @@
 
             if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
-
                 sendTime = TickCount;
 
                 if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
@@ -210,18 +226,5 @@
         }
 
         #endregion
-
-        private static void Heal()
-        {
-            if (Player.IsRecalling() || Player.InFountain() || Player.Mana <= 4)
-            {
-                return;
-            }
-
-            if (IsActive("Heal.AutoHeal") && (Player.Health / Player.MaxHealth) * 100 <= MenuInit.Menu.Item("Heal.HP").GetValue<Slider>().Value && spells[Spells.W].IsReady())
-            {
-                spells[Spells.W].Cast();
-            }
-        }
     }
 }

@@ -38,6 +38,16 @@
                 return;
             }
 
+            if (Player.IsWindingUp)
+            {
+                return;
+            }
+
+            if (Youmuu.IsReady() && Player.Distance(target) <= spells[Spells.Q].Range)
+            {
+                Youmuu.Cast(Player);
+            }
+
             #region RengarR
 
             if (Ferocity == 5)
@@ -60,12 +70,11 @@
 
                         if (IsActive("Combo.Use.Q"))
                         {
-                            if (sendTime + Game.Ping + 700 - TickCount > 0)
+                            if (sendTime + Game.Ping + 700 - TickCount > 0 && !Player.IsWindingUp)
                             {
                                 spells[Spells.Q].Cast();
                             }
-                            else if (Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                     <= spells[Spells.Q].Range)
+                            else if (Player.Distance(target) <= spells[Spells.Q].Range && !Player.IsWindingUp)
                                 // !ObjectManager.Player.Spellbook.IsAutoAttacking && !Player.IsWindingUp &&
                             {
                                 spells[Spells.Q].Cast();
@@ -77,20 +86,20 @@
 
             if (Ferocity <= 4)
             {
-                // !ObjectManager.Player.Spellbook.IsAutoAttacking && 
-                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp
-                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.Q].Range)
+                // !ObjectManager.Player.Spellbook.IsAutoAttacking &&  // && Player.Distance(target) <= spells[Spells.Q].Range
+                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp && Player.Distance(target) <= spells[Spells.W].Range)
                 {
                     spells[Spells.Q].Cast();
                 }
 
-                if (RengarR)
+                if (RengarR)    
                 {
                     return;
                 }
 
                 if (!HasPassive && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
-                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range)
+                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range
+                    && !ObjectManager.Player.Spellbook.IsAutoAttacking)
                 {
                     var prediction = spells[Spells.E].GetPrediction(target);
                     if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
@@ -251,7 +260,7 @@
                 return;
             }
 
-            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
+            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady() && !Player.IsWindingUp)
             {
                 spells[Spells.Q].Cast();
             }
@@ -287,7 +296,7 @@
                 return;
             }
 
-            if (IsActive("Clear.Use.Q") && spells[Spells.Q].IsReady())
+            if (IsActive("Clear.Use.Q") && spells[Spells.Q].IsReady() && !Player.IsWindingUp)
             {
                 if (spells[Spells.Q].GetDamage(minion) > minion.Health)
                 {
