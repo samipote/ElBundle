@@ -94,7 +94,7 @@
 
         private static Menu OrbwalkingMenu()
         {
-            return Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker"));
+            return Menu.AddSubMenu(new Menu("Swagwalker", "Orbwalker"));
         }
 
         private static Menu TargetSelectorMenu()

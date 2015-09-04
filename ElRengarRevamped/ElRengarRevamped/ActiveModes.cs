@@ -28,7 +28,7 @@
                     target = TargetSelector.GetSelectedTarget();
                     TargetSelector.SetTarget(target);
                     //Hud.SelectedUnit = target;
-                    Console.WriteLine("Selected target: {0}", target.ChampionName);
+                    //Console.WriteLine("Selected target: {0}", target.ChampionName);
                 }
             }
 
@@ -68,13 +68,13 @@
 
                     case 1:
 
-                        if (IsActive("Combo.Use.Q"))
+                        if (IsActive("Combo.Use.Q") && !Player.IsWindingUp)
                         {
-                            if (sendTime + Game.Ping + 700 - TickCount > 0 && !Player.IsWindingUp)
+                            if (sendTime + Game.Ping + 700 - TickCount > 0)
                             {
                                 spells[Spells.Q].Cast();
                             }
-                            else if (Player.Distance(target) <= spells[Spells.Q].Range && !Player.IsWindingUp)
+                            else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 // !ObjectManager.Player.Spellbook.IsAutoAttacking && !Player.IsWindingUp &&
                             {
                                 spells[Spells.Q].Cast();
@@ -87,12 +87,12 @@
             if (Ferocity <= 4)
             {
                 // !ObjectManager.Player.Spellbook.IsAutoAttacking &&  // && Player.Distance(target) <= spells[Spells.Q].Range
-                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp && Player.Distance(target) <= spells[Spells.W].Range)
+                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp && target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                 {
                     spells[Spells.Q].Cast();
                 }
 
-                if (RengarR)    
+                if (RengarR)
                 {
                     return;
                 }
