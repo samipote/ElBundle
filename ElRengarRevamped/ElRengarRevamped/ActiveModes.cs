@@ -149,10 +149,11 @@
 
         #region Methods
 
+        //This is BroScience by Asuna
         private static void Broscience(AttackableUnit target)
         {
             Utility.DelayAction.Add(
-                (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f),
+                (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f), //this works jajaja
                 () =>
                     {
                         if (target.IsValidTarget() && !Player.IsWindingUp)
