@@ -1,10 +1,13 @@
 ﻿namespace ElRengarRevamped
 {
     using System;
-    using System.Drawing;
 
     using LeagueSharp;
     using LeagueSharp.Common;
+
+    using SharpDX;
+
+    using Color = System.Drawing.Color;
 
     public enum Spells
     {
@@ -34,7 +37,8 @@
 
                 Ignite = Player.GetSpellSlot("summonerdot");
                 Notifications.AddNotification(string.Format("ElRengarRevamped by jQuery v{0}", ScriptVersion), 6000);
-                Game.PrintChat("<font color='#CC0000'>Stutter?</font> Please try to put your windup, holdzone, farmdelay and so on higher than what it is now!");
+                Game.PrintChat(
+                    "<font color='#CC0000'>Stutter?</font> Please try to put your windup, holdzone, farmdelay and so on higher than what it is now!");
                 spells[Spells.E].SetSkillshot(0.25f, 70f, 1500f, true, SkillshotType.SkillshotLine);
 
                 MenuInit.Initialize();
@@ -79,7 +83,7 @@
 
             if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
-                sendTime = TickCount;
+                SendTime = TickCount;
 
                 if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
                 {
@@ -87,10 +91,16 @@
                     Console.WriteLine("E Ondash cast");
                 }
 
-                if (IsListActive("Combo.Prio").SelectedIndex == 1 && spells[Spells.Q].IsReady())
+                if (IsListActive("Combo.Prio").SelectedIndex == 1 && spells[Spells.Q].IsReady()
+                    && Player.Distance(target) < spells[Spells.Q].Range + 50)
                 {
                     spells[Spells.Q].Cast();
                     Console.WriteLine("Q Ondash cast");
+                }
+
+                if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
+                {
+                    UseHydra();
                 }
             }
         }
@@ -127,11 +137,11 @@
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: E");
+                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, (Color)Color.White, "Prioritized spell: E");
 
                         break;
                     case 1:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: Q");
+                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, (Color)Color.White, "Prioritized spell: Q");
                         break;
                 }
             }
@@ -154,7 +164,7 @@
         {
             if (sender.IsMe)
             {
-                if (RengarQ)
+                if (RengarQ || RengarE)
                 {
                     Orbwalking.ResetAutoAttackTimer();
                 }
@@ -162,6 +172,24 @@
                 if (args.SData.Name == "RengarR" && Items.CanUseItem(3142))
                 {
                     Utility.DelayAction.Add(1500, () => Items.UseItem(3142));
+                }
+
+                if (args.SData.Name.Contains("Attack") && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+                {
+                    //Tiamat Hydra cast after AA  - Credits to Kurisu 
+                    Utility.DelayAction.Add(
+                        50 + (int)(Player.AttackDelay * 100) + Game.Ping / 2 + 10,
+                        delegate
+                            {
+                                if (Items.CanUseItem(3077))
+                                {
+                                    Items.UseItem(3077);
+                                }
+                                if (Items.CanUseItem(3074))
+                                {
+                                    Items.UseItem(3074);
+                                }
+                            });
                 }
             }
         }

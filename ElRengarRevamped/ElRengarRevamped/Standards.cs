@@ -13,30 +13,30 @@
     {
         #region Static Fields
 
-        public static readonly int[] BlueSmite = { 3706, 3710, 3709, 3708, 3707 };
+        private static readonly int[] BlueSmite = { 3706, 3710, 3709, 3708, 3707 };
 
-        public static readonly int[] RedSmite = { 3715, 3718, 3717, 3716, 3714 };
+        private static readonly int[] RedSmite = { 3715, 3718, 3717, 3716, 3714 };
 
-        public static readonly Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>()
-                                                                      {
-                                                                          {
-                                                                              Spells.Q,
-                                                                              new Spell(
-                                                                              SpellSlot.Q,
-                                                                              Player.AttackRange + 100)
-                                                                          },
-                                                                          { Spells.W, new Spell(SpellSlot.W, 500) },
-                                                                          { Spells.E, new Spell(SpellSlot.E, 1000) },
-                                                                          { Spells.R, new Spell(SpellSlot.R, 2000) }
-                                                                      };
+        protected static readonly Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>()
+                                                                         {
+                                                                             {
+                                                                                 Spells.Q,
+                                                                                 new Spell(
+                                                                                 SpellSlot.Q,
+                                                                                 Player.AttackRange + 100)
+                                                                             },
+                                                                             { Spells.W, new Spell(SpellSlot.W, 500) },
+                                                                             { Spells.E, new Spell(SpellSlot.E, 1000) },
+                                                                             { Spells.R, new Spell(SpellSlot.R, 2000) }
+                                                                         };
 
-        public static Orbwalking.Orbwalker Orbwalker;
+        protected internal static Orbwalking.Orbwalker Orbwalker;
 
         protected static SpellSlot Ignite;
 
         protected static int LastSwitch;
 
-        protected static int sendTime = 0;
+        protected static int SendTime = 0;
 
         protected static SpellSlot Smite;
 
@@ -46,46 +46,6 @@
 
         #region Public Properties
 
-        public static int Ferocity
-        {
-            get
-            {
-                return (int)ObjectManager.Player.Mana;
-            }
-        }
-
-        public static bool HasPassive
-        {
-            get
-            {
-                return Player.HasBuff("rengarpassivebuff");
-            }
-        }
-
-        public static Obj_AI_Hero Player
-        {
-            get
-            {
-                return ObjectManager.Player;
-            }
-        }
-
-        public static bool RengarQ
-        {
-            get
-            {
-                return Player.Buffs.Any(x => x.Name.Contains("rengarq"));
-            }
-        }
-
-        public static bool RengarR
-        {
-            get
-            {
-                return Player.Buffs.Any(x => x.Name.Contains("RengarR"));
-            }
-        }
-
         public static String ScriptVersion
         {
             get
@@ -94,21 +54,64 @@
             }
         }
 
-        public static int TickCount
+        #endregion
+
+        #region Properties
+
+        protected static int Ferocity
+        {
+            get
+            {
+                return (int)ObjectManager.Player.Mana;
+            }
+        }
+
+        protected static bool HasPassive
+        {
+            get
+            {
+                return Player.HasBuff("rengarpassivebuff");
+            }
+        }
+
+        protected static Obj_AI_Hero Player
+        {
+            get
+            {
+                return ObjectManager.Player;
+            }
+        }
+
+        protected static bool RengarQ
+        {
+            get
+            {
+                return Player.Buffs.Any(x => x.Name.Contains("rengarq"));
+            }
+        }
+
+        protected static bool RengarE
+        {
+            get
+            {
+                return Player.Buffs.Any(x => x.Name.Contains("rengare"));
+            }
+        }
+
+        protected static bool RengarR
+        {
+            get
+            {
+                return Player.Buffs.Any(x => x.Name.Contains("RengarR"));
+            }
+        }
+
+        protected static int TickCount
         {
             get
             {
                 return (int)(Game.Time * 0x3e8);
             }
-        }
-
-        #endregion
-
-        #region Public Methods and Operators
-
-        public static StringList IsListActive(string menuItem)
-        {
-            return MenuInit.Menu.Item(menuItem).GetValue<StringList>();
         }
 
         #endregion
@@ -127,6 +130,11 @@
         protected static bool IsActive(string menuItem)
         {
             return MenuInit.Menu.Item(menuItem).GetValue<bool>();
+        }
+
+        protected static StringList IsListActive(string menuItem)
+        {
+            return MenuInit.Menu.Item(menuItem).GetValue<StringList>();
         }
 
         protected static void SmiteCombo()

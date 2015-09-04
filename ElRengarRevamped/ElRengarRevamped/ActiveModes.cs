@@ -70,7 +70,7 @@
 
                         if (IsActive("Combo.Use.Q") && !Player.IsWindingUp)
                         {
-                            if (sendTime + Game.Ping + 700 - TickCount > 0)
+                            if (SendTime + Game.Ping + 700 - TickCount > 0)
                             {
                                 spells[Spells.Q].Cast();
                             }
@@ -87,7 +87,8 @@
             if (Ferocity <= 4)
             {
                 // !ObjectManager.Player.Spellbook.IsAutoAttacking &&  // && Player.Distance(target) <= spells[Spells.Q].Range
-                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp && target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
+                if (IsActive("Combo.Use.Q") && !Player.IsWindingUp
+                    && target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                 {
                     spells[Spells.Q].Cast();
                 }
