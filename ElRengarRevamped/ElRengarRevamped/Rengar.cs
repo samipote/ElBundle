@@ -34,6 +34,7 @@
 
                 Ignite = Player.GetSpellSlot("summonerdot");
                 Notifications.AddNotification(string.Format("ElRengarRevamped by jQuery v{0}", ScriptVersion), 6000);
+                Game.PrintChat("<font color='#CC0000'>Stutter?</font> Please try to put your windup, holdzone, farmdelay and so on higher than what it is now!");
                 spells[Spells.E].SetSkillshot(0.25f, 70f, 1500f, true, SkillshotType.SkillshotLine);
 
                 MenuInit.Initialize();
