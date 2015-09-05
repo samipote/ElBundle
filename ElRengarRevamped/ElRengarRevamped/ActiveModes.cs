@@ -61,7 +61,7 @@
                             var prediction = spells[Spells.E].GetPrediction(target);
                             if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                             {
-                                spells[Spells.E].Cast(target.ServerPosition);
+                                spells[Spells.E].Cast(target);
                             }
                         }
                         break;
@@ -108,7 +108,7 @@
                     var prediction = spells[Spells.E].GetPrediction(target);
                     if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                     {
-                        spells[Spells.E].Cast(target.ServerPosition);
+                        spells[Spells.E].Cast(target);
                     }
                 }
 
@@ -133,7 +133,7 @@
                 var prediction = spells[Spells.E].GetPrediction(target);
                 if (prediction.Hitchance >= HitChance.VeryHigh && prediction.CollisionObjects.Count == 0)
                 {
-                    spells[Spells.E].Cast(target.ServerPosition);
+                    spells[Spells.E].Cast(target);
                 }
             }
 
