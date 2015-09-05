@@ -30,6 +30,8 @@
                 comboMenu.SubMenu("Combo").AddItem(new MenuItem("Combo.Use.W", "Use W").SetValue(true));
                 comboMenu.SubMenu("Combo").AddItem(new MenuItem("Combo.Use.E", "Use E").SetValue(true));
                 comboMenu.SubMenu("Combo")
+                    .AddItem(new MenuItem("Combo.Use.E.OutOfRange", "Use E when out of range").SetValue(false));
+                comboMenu.SubMenu("Combo")
                     .AddItem(new MenuItem("Combo.Prio", "Prioritize").SetValue(new StringList(new[] { "E", "Q" }, 1)));
                 comboMenu.SubMenu("Combo")
                     .AddItem(

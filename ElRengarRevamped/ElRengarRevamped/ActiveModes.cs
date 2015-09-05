@@ -127,6 +127,16 @@
                 }
             }
 
+            if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100 && !RengarR
+                && Ferocity == 5)
+            {
+                var prediction = spells[Spells.E].GetPrediction(target);
+                if (prediction.Hitchance >= HitChance.VeryHigh && prediction.CollisionObjects.Count == 0)
+                {
+                    spells[Spells.E].Cast(target.ServerPosition);
+                }
+            }
+
             #region Summoner spells
 
             if (IsActive("Combo.Use.Ignite") && Player.Distance(target) <= 600 && IgniteDamage(target) >= target.Health)
@@ -152,22 +162,22 @@
         //This is BroScience by Asuna
         private static void Broscience(AttackableUnit target)
         {
-
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
-                    Utility.DelayAction.Add(
-                (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f), //this works jajaja
-                () =>
-                {
-                    if (target.IsValidTarget() && !Player.IsWindingUp)
-                    {
-                        Player.IssueOrder(GameObjectOrder.AttackUnit, target);
-                    }
+                Utility.DelayAction.Add(
+                    (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f),
+                    //this works jajaja
+                    () =>
+                        {
+                            if (target.IsValidTarget() && !Player.IsWindingUp)
+                            {
+                                Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+                            }
 
-                    Utility.DelayAction.Add(
-                            (int)(Game.Ping / 2f + Player.AttackDelay * 1000 + 250 + 50),
-                            () => { Player.IssueOrder(GameObjectOrder.AttackUnit, target); });
-                });
+                            Utility.DelayAction.Add(
+                                (int)(Game.Ping / 2f + Player.AttackDelay * 1000 + 250 + 50),
+                                () => { Player.IssueOrder(GameObjectOrder.AttackUnit, target); });
+                        });
             }
         }
 
