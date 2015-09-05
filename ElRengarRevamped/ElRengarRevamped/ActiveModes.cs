@@ -174,9 +174,9 @@
                                 Player.IssueOrder(GameObjectOrder.AttackUnit, target);
                             }
 
-                            Utility.DelayAction.Add(
+                            /*Utility.DelayAction.Add(
                                 (int)(Game.Ping / 2f + Player.AttackDelay * 1000 + 250 + 50),
-                                () => { Player.IssueOrder(GameObjectOrder.AttackUnit, target); });
+                                () => { Player.IssueOrder(GameObjectOrder.AttackUnit, target); });*/
                         });
             }
         }
