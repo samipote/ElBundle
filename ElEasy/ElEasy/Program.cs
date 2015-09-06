@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
-using LeagueSharp.Common;
-
-namespace ElEasy
+﻿namespace ElEasy
 {
-    class Program
+    using System;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
+    internal class Program
     {
-        static void Main(string[] args)
-         {
+        #region Methods
+
+        private static void Main(string[] args)
+        {
             CustomEvents.Game.OnGameLoad += OnLoad;
         }
 
-        static void OnLoad(EventArgs args)
+        private static void OnLoad(EventArgs args)
         {
             try
             {
@@ -27,5 +26,7 @@ namespace ElEasy
                 Console.WriteLine(e);
             }
         }
+
+        #endregion
     }
 }

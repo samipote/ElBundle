@@ -1,32 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
-using LeagueSharp.Common;
-
-namespace ElEasy
+﻿namespace ElEasy
 {
+    using System.Drawing;
+
+    using LeagueSharp;
+    using LeagueSharp.Common;
+
     public enum Spells
     {
         Q,
+
         W,
+
         E,
+
         R
-    } 
+    }
 
     public class Standards
     {
-        public static Menu _menu;
+        #region Static Fields
+
+        public static Menu Menu;
+
+        protected static SpellSlot Ignite;
+
+        protected static int LastNotification = 0;
+
         protected static Orbwalking.Orbwalker Orbwalker;
-        protected static SpellSlot _ignite;
-        protected static int lastNotification = 0;
-        protected static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
+        #endregion
 
-        #region Notifications 
+        #region Properties
+
+        protected static Obj_AI_Hero Player
+        {
+            get
+            {
+                return ObjectManager.Player;
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         protected static void ShowNotification(string message, Color color, int duration = -1, bool dispose = true)
         {

@@ -1,56 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
-using LeagueSharp.Common;
-
-namespace ElEasy
+﻿namespace ElEasy
 {
-    class Base
+    using ElEasy.Plugins;
+
+    internal class Base
     {
+        #region Methods
+
         internal static void Load(string champName)
         {
             switch (champName)
             {
                 case "Taric":
-                    Plugins.Taric.Load();
+                    Taric.Load();
                     break;
 
                 case "Leona":
-                    Plugins.Leona.Load();
+                    Leona.Load();
                     break;
 
                 case "Sona":
-                    Plugins.Sona.Load();
+                    Sona.Load();
                     break;
 
                 case "Nasus":
-                    Plugins.Nasus.Load();
+                    Nasus.Load();
                     break;
 
                 case "Malphite":
-                    Plugins.Malphite.Load();
+                    Malphite.Load();
                     break;
 
                 case "Darius":
-                    Plugins.Darius.Load();
+                    Darius.Load();
                     break;
 
                 case "Katarina":
-                    Plugins.Katarina.Load();
+                    Katarina.Load();
                     break;
 
                 case "Ryze":
-                    Plugins.Ryze.Load();
+                    Ryze.Load();
                     break;
 
-
                 case "Cassiopeia":
-                    Plugins.Cassiopeia.Load();
+                    Cassiopeia.Load();
                     break;
             }
         }
+
+        #endregion
     }
 }
