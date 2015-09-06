@@ -15,11 +15,11 @@ namespace ElLucian
         public static void OnDraw(EventArgs args)
         {
  
-            var drawOff = ElLucianMenu._menu.Item("ElLucian.Draw.off").GetValue<bool>();
-            var drawQ = ElLucianMenu._menu.Item("ElLucian.Draw.Q").GetValue<Circle>();
-            var drawW = ElLucianMenu._menu.Item("ElLucian.Draw.W").GetValue<Circle>();
-            var drawE = ElLucianMenu._menu.Item("ElLucian.Draw.E").GetValue<Circle>();
-            var drawR = ElLucianMenu._menu.Item("ElLucian.Draw.R").GetValue<Circle>();
+            var drawOff = ElLucianMenu.Menu.Item("ElLucian.Draw.off").GetValue<bool>();
+            var drawQ = ElLucianMenu.Menu.Item("ElLucian.Draw.Q").GetValue<Circle>();
+            var drawW = ElLucianMenu.Menu.Item("ElLucian.Draw.W").GetValue<Circle>();
+            var drawE = ElLucianMenu.Menu.Item("ElLucian.Draw.E").GetValue<Circle>();
+            var drawR = ElLucianMenu.Menu.Item("ElLucian.Draw.R").GetValue<Circle>();
 
             if (drawOff)
                 return;

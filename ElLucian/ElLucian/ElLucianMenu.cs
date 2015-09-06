@@ -11,49 +11,55 @@ namespace ElLucian
 {
     public class ElLucianMenu
     {
-        public static Menu _menu;
+        public static Menu Menu;
 
         public static void Initialize()
         {
-            _menu = new Menu("ElLucian", "menu", true);
+            Menu = new Menu("ElLucian", "menu", true);
 
             var orbwalkerMenu = new Menu("Orbwalker", "orbwalker");
             Lucian.Orbwalker = new Orbwalking.Orbwalker(orbwalkerMenu);
-            _menu.AddSubMenu(orbwalkerMenu);
+            Menu.AddSubMenu(orbwalkerMenu);
 
             var targetSelector = new Menu("Target Selector", "TargetSelector");
             TargetSelector.AddToMenu(targetSelector);
-            _menu.AddSubMenu(targetSelector);
+            Menu.AddSubMenu(targetSelector);
 
             var cMenu = new Menu("Combo", "Combo");
+            {
+                cMenu.AddItem(new MenuItem("ElLucian.Combo.Q", "Use Q").SetValue(true));
+                cMenu.AddItem(new MenuItem("ElLucian.Combo.W", "Use W").SetValue(true));
+            }
 
-            _menu.AddSubMenu(cMenu);
+            Menu.AddSubMenu(cMenu);
 
             var hMenu = new Menu("Harass", "Harass");
   
         
-            _menu.AddSubMenu(hMenu);
+            Menu.AddSubMenu(hMenu);
 
             var lMenu = new Menu("Lane clear", "Clear");
   
 
-            _menu.AddSubMenu(lMenu);
+            Menu.AddSubMenu(lMenu);
 
 
             var itemMenu = new Menu("Items", "Items");
-            itemMenu.AddItem(new MenuItem("ElLucian.Items.Youmuu", "Use Youmuu's Ghostblade").SetValue(true));
-            itemMenu.AddItem(new MenuItem("ElLucian.Items.Cutlass", "Use Cutlass").SetValue(true));
-            itemMenu.AddItem(new MenuItem("ElLucian.Items.Blade", "Use Blade of the Ruined King").SetValue(true));
-            itemMenu.AddItem(new MenuItem("ElLucian.Harasssfsddass.E", ""));
-            itemMenu.AddItem(new MenuItem("ElLucian.Items.Blade.EnemyEHP", "Enemy HP Percentage").SetValue(new Slider(80, 100, 0)));
-            itemMenu.AddItem(new MenuItem("ElLucian.Items.Blade.EnemyMHP", "My HP Percentage").SetValue(new Slider(80, 100, 0)));
-            _menu.AddSubMenu(itemMenu);
+            {
+                itemMenu.AddItem(new MenuItem("ElLucian.Items.Youmuu", "Use Youmuu's Ghostblade").SetValue(true));
+                itemMenu.AddItem(new MenuItem("ElLucian.Items.Cutlass", "Use Cutlass").SetValue(true));
+                itemMenu.AddItem(new MenuItem("ElLucian.Items.Blade", "Use Blade of the Ruined King").SetValue(true));
+                itemMenu.AddItem(new MenuItem("ElLucian.Harasssfsddass.E", ""));
+                itemMenu.AddItem(new MenuItem("ElLucian.Items.Blade.EnemyEHP", "Enemy HP Percentage").SetValue(new Slider(80, 100, 0)));
+                itemMenu.AddItem(new MenuItem("ElLucian.Items.Blade.EnemyMHP", "My HP Percentage").SetValue(new Slider(80, 100, 0)));
+            }
+            Menu.AddSubMenu(itemMenu);
 
 
             var setMenu = new Menu("Misc", "Misc");
   
 
-            _menu.AddSubMenu(setMenu);
+            Menu.AddSubMenu(setMenu);
 
             //ElKalista.Misc
             var miscMenu = new Menu("Drawings", "Misc");
@@ -63,19 +69,19 @@ namespace ElLucian
             miscMenu.AddItem(new MenuItem("ElLucian.Draw.E", "Draw E").SetValue(new Circle()));
             miscMenu.AddItem(new MenuItem("ElLucian.Draw.R", "Draw R").SetValue(new Circle()));
 
-            _menu.AddSubMenu(miscMenu);
+            Menu.AddSubMenu(miscMenu);
 
             //Here comes the moneyyy, money, money, moneyyyy
             var credits = new Menu("Credits", "jQuery");
             credits.AddItem(new MenuItem("ElKalista.Paypal", "if you would like to donate via paypal:"));
             credits.AddItem(new MenuItem("ElKalista.Email", "info@zavox.nl"));
-            _menu.AddSubMenu(credits);
+            Menu.AddSubMenu(credits);
 
-            _menu.AddItem(new MenuItem("422442fsaafs4242f", ""));
-            _menu.AddItem(new MenuItem("422442fsaafsf", (string.Format("ElKalista by jQuery v{0}", Lucian.ScriptVersion))));
-            _menu.AddItem(new MenuItem("fsasfafsfsafsa", "Made By jQuery"));
+            Menu.AddItem(new MenuItem("422442fsaafs4242f", ""));
+            Menu.AddItem(new MenuItem("422442fsaafsf", (string.Format("ElKalista by jQuery v{0}", Lucian.ScriptVersion))));
+            Menu.AddItem(new MenuItem("fsasfafsfsafsa", "Made By jQuery"));
 
-            _menu.AddToMainMenu();
+            Menu.AddToMainMenu();
 
             Console.WriteLine("Menu Loaded");
         }
