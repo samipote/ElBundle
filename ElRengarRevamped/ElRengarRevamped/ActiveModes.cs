@@ -281,7 +281,7 @@
             var minion =
                 MinionManager.GetMinions(
                     Player.ServerPosition,
-                    spells[Spells.Q].Range,
+                    spells[Spells.W].Range,
                     MinionTypes.All,
                     MinionTeam.Neutral,
                     MinionOrderTypes.MaxHealth).FirstOrDefault();

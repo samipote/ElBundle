@@ -282,7 +282,7 @@
                 {
                     if (Player.GetSpellDamage(target, SpellSlot.R) > hero.Health)
                     {
-                        spells[Spells.R].Cast(target);
+                        spells[Spells.R].CastOnUnit(target);
                     }
 
                     else if (Player.GetSpellDamage(target, SpellSlot.R) < hero.Health)
