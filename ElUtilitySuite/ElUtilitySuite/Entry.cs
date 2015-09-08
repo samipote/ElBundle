@@ -37,11 +37,19 @@
 
         #region Properties
 
-        private static bool IsSummonersRift
+        public static bool IsSummonersRift
         {
             get
             {
                 return Game.MapId == GameMapId.SummonersRift;
+            }
+        }
+
+        public static bool IsTwistedTreeline
+        {
+            get
+            {
+                return Game.MapId == GameMapId.TwistedTreeline;
             }
         }
 
