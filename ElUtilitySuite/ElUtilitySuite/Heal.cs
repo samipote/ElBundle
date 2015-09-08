@@ -73,16 +73,17 @@
                 return;
             }
 
-           /* if (targetName != Entry.Player.ChampionName && InitializeMenu.Menu.Item("Heal." + Entry.Player.ChampionName.ToLowerInvariant() + ".noult." + targetName).GetValue<bool>())
+            /* if (targetName != Entry.Player.ChampionName && InitializeMenu.Menu.Item("Heal." + Entry.Player.ChampionName.ToLowerInvariant() + ".noult." + targetName).GetValue<bool>())
             {
                 return;
             }*/
 
-            if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>() && InitializeMenu.Menu.Item("Heal.Predicted").GetValue<bool>())
+            if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>()
+                && InitializeMenu.Menu.Item("Heal.Predicted").GetValue<bool>())
             {
                 if (!Entry.Player.InFountain() || !Entry.Player.IsRecalling())
                 {
-                    Console.WriteLine("HEAL");  
+                    Console.WriteLine("HEAL");
                     Entry.Player.Spellbook.CastSpell(summonerHeal);
                 }
             }

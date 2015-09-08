@@ -48,8 +48,7 @@
                     return;
                 }
 
-                Game.PrintChat(
-                   "<font color='#CC0000'>Sorry!</font> Barrier is not supported yet");
+                Game.PrintChat("<font color='#CC0000'>Sorry!</font> Barrier is not supported yet");
 
                 //DamagePrediction.OnTargettedSpellWillKill += DamagePrediction_OnTargettedSpellWillKill;
             }

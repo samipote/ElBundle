@@ -1,10 +1,5 @@
 ﻿namespace ElUtilitySuite
 {
-    using System;
-    using System.Drawing;
-    using System.Linq;
-
-    using LeagueSharp;
     using LeagueSharp.Common;
 
     public class InitializeMenu
@@ -73,14 +68,14 @@
                 igniteMenu.AddItem(new MenuItem("Ignite.Activated", "Ignite").SetValue(true));
             }
 
-            var barrierMenu = Menu.AddSubMenu(new Menu("Barrier", "Barrier"));
+            /*var barrierMenu = Menu.AddSubMenu(new Menu("Barrier", "Barrier"));
             {
                 barrierMenu.AddItem(new MenuItem("Barrier.Activated", "Barrier").SetValue(true));
                 barrierMenu.AddItem(new MenuItem("Barrier.HP", "Health percentage").SetValue(new Slider(20, 1)));
-            }
+            }*/
 
             Menu.AddItem(new MenuItem("seperator", ""));
-            Menu.AddItem(new MenuItem("Versionnumber", String.Format("Version: {0}", Entry.ScriptVersion)));
+            Menu.AddItem(new MenuItem("Versionnumber", string.Format("Version: {0}", Entry.ScriptVersion)));
             Menu.AddItem(new MenuItem("by.jQuery", "Made By jQuery"));
 
             Menu.AddToMainMenu();
