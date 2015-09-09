@@ -108,7 +108,6 @@
                 }
             }*/
 
-
             var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
             {
                 credits.AddItem(new MenuItem("Paypal", "if you would like to donate via paypal:"));

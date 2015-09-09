@@ -65,7 +65,7 @@
                 Ignite.Load();
                 Barrier.Load();
                 Notifications.AddNotification(string.Format("El Utility Suite by jQuery v{0}", ScriptVersion), 10000);
-                Game.PrintChat("<font color='#CC0000'>ElUtilitySuite</font> Work in progress.");
+                //Game.PrintChat("<font color='#CC0000'>ElUtilitySuite</font> Work in progress.");
                 InitializeMenu.Load();
 
                 if (IsSummonersRift)
