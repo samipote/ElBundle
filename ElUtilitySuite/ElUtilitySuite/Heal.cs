@@ -16,7 +16,7 @@
 
         private static SpellDataInst slot2;
 
-        private static SpellSlot summonerHeal;
+        public static SpellSlot summonerHeal;
 
         #endregion
 

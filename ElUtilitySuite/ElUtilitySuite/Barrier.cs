@@ -10,7 +10,7 @@
     {
         #region Static Fields
 
-        private static Spell barrierSpell;
+        public static Spell barrierSpell;
 
         private static SpellDataInst slot1;
 

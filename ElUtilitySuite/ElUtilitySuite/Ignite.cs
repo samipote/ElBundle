@@ -11,13 +11,13 @@
     {
         #region Static Fields
 
-        private static Spell igniteSpell;
+        public static Spell igniteSpell;
 
         private static SpellDataInst slot1;
 
         private static SpellDataInst slot2;
 
-        private static SpellSlot summonerDot;
+        public static SpellSlot summonerDot;
 
         #endregion
 
@@ -35,12 +35,12 @@
 
                 if (igniteNames.Contains(slot1.Name))
                 {
-                    igniteSpell = new Spell(SpellSlot.Summoner1, 550f);
+                    igniteSpell = new Spell(SpellSlot.Summoner1);
                     summonerDot = SpellSlot.Summoner1;
                 }
                 else if (igniteNames.Contains(slot2.Name))
                 {
-                    igniteSpell = new Spell(SpellSlot.Summoner2, 550f);
+                    igniteSpell = new Spell(SpellSlot.Summoner2);
                     summonerDot = SpellSlot.Summoner2;
                 }
                 else
@@ -63,16 +63,26 @@
 
         private static bool IgniteCheck(this Obj_AI_Base hero)
         {
-            return hero.HasBuff("summonerdot") || hero.HasBuff("summonerbarrier") || hero.HasBuff("BlackShield")
-                   || hero.HasBuff("SivirShield") || hero.HasBuff("BansheesVeil") || hero.HasBuff("ShroudofDarkness");
+            if (InitializeMenu.Menu.Item("Ignite.shieldCheck").GetValue<bool>())
+            {
+                return !hero.HasBuff("summonerdot") || !hero.HasBuff("summonerbarrier") || !hero.HasBuff("BlackShield")
+                   || !hero.HasBuff("SivirShield") || !hero.HasBuff("BansheesVeil") || !hero.HasBuff("ShroudofDarkness");
+            }
+
+            return true;
         }
 
         private static void IgniteKs()
         {
+            if (!InitializeMenu.Menu.Item("Ignite.Activated").GetValue<bool>())
+            {
+                return;
+            }
+
             var kSableEnemy =
                 HeroManager.Enemies.FirstOrDefault(
                     hero =>
-                    hero.IsValidTarget(550) && !IgniteCheck(hero) && !hero.IsZombie
+                    hero.IsValidTarget(550) && IgniteCheck(hero) && !hero.IsZombie
                     && Entry.Player.GetSummonerSpellDamage(hero, Damage.SummonerSpell.Ignite) >= hero.Health);
 
             if (kSableEnemy != null)
