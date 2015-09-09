@@ -7,7 +7,7 @@
     using LeagueSharp.Common;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class Ignite
+    public static class Ignite
     {
         #region Static Fields
 
@@ -61,12 +61,18 @@
 
         #region Methods
 
+        private static bool IgniteCheck(this Obj_AI_Base hero)
+        {
+            return hero.HasBuff("summonerdot") || hero.HasBuff("summonerbarrier") || hero.HasBuff("BlackShield")
+                   || hero.HasBuff("SivirShield") || hero.HasBuff("BansheesVeil") || hero.HasBuff("ShroudofDarkness");
+        }
+
         private static void IgniteKs()
         {
             var kSableEnemy =
                 HeroManager.Enemies.FirstOrDefault(
                     hero =>
-                    hero.IsValidTarget(550)
+                    hero.IsValidTarget(550) && !IgniteCheck(hero) && !hero.IsZombie
                     && Entry.Player.GetSummonerSpellDamage(hero, Damage.SummonerSpell.Ignite) >= hero.Health);
 
             if (kSableEnemy != null)
