@@ -49,7 +49,7 @@
                     if (serverVersion == Version)
                     {
                         Game.PrintChat(
-                            "<font color='#0dd629'>ElUtilitySuite</font> You have the last version!");
+                            "<font color='#0dd629'>ElUtilitySuite</font> Your version is up-to-date, nice!");
                     }
                 }
             }
