@@ -49,7 +49,7 @@
                 }
 
                 Game.PrintChat("<font color='#CC0000'>Sorry!</font> Barrier is not supported yet");
-
+                //Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 //DamagePrediction.OnTargettedSpellWillKill += DamagePrediction_OnTargettedSpellWillKill;
             }
             catch (Exception e)
@@ -73,6 +73,13 @@
                 {
                     Entry.Player.Spellbook.CastSpell(summonerBarrier);
                 }
+            }
+        }
+
+        private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (!(sender is Obj_AI_Hero) || !(args.Target is Obj_AI_Hero) || sender.IsAlly)
+            {
             }
         }
 

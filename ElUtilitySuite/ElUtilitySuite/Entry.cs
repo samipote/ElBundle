@@ -17,6 +17,22 @@
             }
         }
 
+        public static bool IsSummonersRift
+        {
+            get
+            {
+                return Game.MapId == GameMapId.SummonersRift;
+            }
+        }
+
+        public static bool IsTwistedTreeline
+        {
+            get
+            {
+                return Game.MapId == GameMapId.TwistedTreeline;
+            }
+        }
+
         public static Obj_AI_Hero Player
         {
             get
@@ -35,26 +51,6 @@
 
         #endregion
 
-        #region Properties
-
-        public static bool IsSummonersRift
-        {
-            get
-            {
-                return Game.MapId == GameMapId.SummonersRift;
-            }
-        }
-
-        public static bool IsTwistedTreeline
-        {
-            get
-            {
-                return Game.MapId == GameMapId.TwistedTreeline;
-            }
-        }
-
-        #endregion
-
         #region Public Methods and Operators
 
         public static void OnLoad(EventArgs args)
@@ -64,8 +60,8 @@
                 Heal.Load();
                 Ignite.Load();
                 Barrier.Load();
+                Potions.Load();
                 Notifications.AddNotification(string.Format("El Utility Suite by jQuery v{0}", ScriptVersion), 10000);
-                //Game.PrintChat("<font color='#CC0000'>ElUtilitySuite</font> Work in progress.");
                 InitializeMenu.Load();
 
                 if (IsSummonersRift)

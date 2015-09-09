@@ -10,13 +10,13 @@
     {
         #region Static Fields
 
+        public static SpellSlot summonerHeal;
+
         private static Spell healSpell;
 
         private static SpellDataInst slot1;
 
         private static SpellDataInst slot2;
-
-        public static SpellSlot summonerHeal;
 
         #endregion
 

@@ -20,7 +20,8 @@
                 "SRU_Red", "SRU_Blue", "SRU_Dragon",
                 "SRU_Baron", "SRU_Gromp", "SRU_Murkwolf",
                 "SRU_Razorbeak", "SRU_Krug", "Sru_Crab",
-                "TT_Spiderboss", "TTNGolem", "TTNWolf", "TTNWraith"
+                "TT_Spiderboss", "TTNGolem", "TTNWolf",
+                "TTNWraith"
             };
 
         private static SpellDataInst slot1;
