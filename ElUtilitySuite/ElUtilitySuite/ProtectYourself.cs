@@ -80,6 +80,8 @@
                     return new Spell(SpellSlot.R, 1200);
                 case "Thresh":
                     return new Spell(SpellSlot.E, 400);
+                case "Urgot":
+                    return new Spell(SpellSlot.R, 700);
             }
 
             return null;
@@ -201,7 +203,7 @@
                    || Entry.Player.ChampionName == "Draven" || Entry.Player.ChampionName == "Ashe"
                    || Entry.Player.ChampionName == "Leesin" || Entry.Player.ChampionName == "Janna"
                    || Entry.Player.ChampionName == "Fiddlesticks" || Entry.Player.ChampionName == "Braum"
-                   || Entry.Player.ChampionName == "Thresh";
+                   || Entry.Player.ChampionName == "Thresh" || Entry.Player.ChampionName == "Urgot";
         }
 
         #endregion
