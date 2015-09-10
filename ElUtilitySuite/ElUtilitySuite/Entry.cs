@@ -61,6 +61,7 @@
                 Ignite.Load();
                 Barrier.Load();
                 Potions.Load();
+                ProtectYourself.Load();
                 Notifications.AddNotification(string.Format("El Utility Suite by jQuery v{0}", ScriptVersion), 10000);
                 InitializeMenu.Load();
 

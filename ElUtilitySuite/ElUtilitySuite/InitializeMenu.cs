@@ -117,6 +117,17 @@
                 potionsMenu.AddItem(new MenuItem("Potions.Player.Mana", "Mana percentage").SetValue(new Slider(20)));
             }
 
+            var protectMenu = Menu.AddSubMenu(new Menu("Protect yourself", "ProtectYourself"));
+            {
+                protectMenu.SubMenu("Rengar").AddItem(new MenuItem("Protect.Rengar", "Rengar antigapcloser").SetValue(true));
+                protectMenu.SubMenu("Rengar").AddItem(new MenuItem("Protect.Rengar.Lens", "Oracle's Lens").SetValue(true));
+                protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali", "Autopink Akali W").SetValue(true));
+                protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.PinkWard", "Pinkward").SetValue(true));
+                protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.Trinket", "Trinket").SetValue(true));
+                protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.Sweeping", "Oracle's Lens").SetValue(true));
+                protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.HP", "Pink when Akali's HP:").SetValue(new Slider(50)));
+            }
+
             var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
             {
                 credits.AddItem(new MenuItem("Paypal", "if you would like to donate via paypal:"));
