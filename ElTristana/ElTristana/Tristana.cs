@@ -249,7 +249,7 @@ namespace ElTristana
             {
                 foreach (Obj_AI_Turret tower in ObjectManager.Get<Obj_AI_Turret>())
                 {
-                    if (!tower.IsDead && tower.IsEnemy && tower.IsValidTarget()
+                    if (!tower.IsDead && tower.Health > 100 && tower.IsEnemy && tower.IsValidTarget()
                         && Player.ServerPosition.Distance(tower.ServerPosition)
                         < Orbwalking.GetRealAutoAttackRange(Player))
                     {
