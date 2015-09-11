@@ -30,7 +30,7 @@
 
         private static Spell smite;
 
-        private static SpellSlot smiteSlot;
+        public static SpellSlot smiteSlot;
 
         #endregion
 
