@@ -96,15 +96,18 @@
                 return;
             }
 
-            if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>()
-                && !InitializeMenu.Menu.Item("Heal.Predicted").GetValue<bool>())
+            if (sender.IsEnemy)
             {
-                if (Entry.Player.Health / Entry.Player.MaxHealth * 100
-                    <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value)
+                if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>()
+                    && !InitializeMenu.Menu.Item("Heal.Predicted").GetValue<bool>())
                 {
-                    if (!Entry.Player.InFountain() || !Entry.Player.IsRecalling())
+                    if (Entry.Player.Health / Entry.Player.MaxHealth * 100
+                        <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value)
                     {
-                        Entry.Player.Spellbook.CastSpell(summonerHeal);
+                        if (!Entry.Player.InFountain() || !Entry.Player.IsRecalling())
+                        {
+                            Entry.Player.Spellbook.CastSpell(summonerHeal);
+                        }
                     }
                 }
             }
