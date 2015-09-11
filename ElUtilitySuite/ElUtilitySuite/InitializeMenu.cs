@@ -23,7 +23,7 @@
         {
             Menu = new Menu("ElUtilitySuite", "ElUtilitySuite", true);
 
-            if (Entry.Player.GetSpellSlot("summonersmite") != SpellSlot.Unknown)
+            if (Smite.smiteSlot != SpellSlot.Unknown)
             {
                 var smiteMenu = Menu.AddSubMenu(new Menu("Smite", "Smite"));
                 {
@@ -87,7 +87,7 @@
                 }
             }
 
-            if (Smite.smiteSlot != SpellSlot.Unknown)
+            if (Entry.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown)
             {
                 var igniteMenu = Menu.AddSubMenu(new Menu("Ignite", "Ignite"));
                 {
