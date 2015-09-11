@@ -87,7 +87,7 @@
                 }
             }
 
-            if (Entry.Player.GetSpellSlot("summonerdot") != SpellSlot.Unknown)
+            if (Smite.smiteSlot != SpellSlot.Unknown)
             {
                 var igniteMenu = Menu.AddSubMenu(new Menu("Ignite", "Ignite"));
                 {
