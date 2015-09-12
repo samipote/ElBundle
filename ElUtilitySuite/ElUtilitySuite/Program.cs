@@ -14,7 +14,6 @@
             try
             {
                 CustomEvents.Game.OnGameLoad += Entry.OnLoad;
-                CheckVersion.Init();
             }
             catch (Exception e)
             {

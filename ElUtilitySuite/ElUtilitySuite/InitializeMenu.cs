@@ -126,6 +126,18 @@
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.Trinket", "Trinket").SetValue(true));
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.Sweeping", "Oracle's Lens").SetValue(true));
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.HP", "Pink when Akali's HP:").SetValue(new Slider(50)));
+
+                /*protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Stun", "Stuns").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Charm", "Charms").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Taunt", "Taunts").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Fear", "Fears").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Snare", "Snares").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Silence", "Silences").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Suppression", "Suppressions").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Polymorph", "Polymorphs").SetValue(false));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Blind", "Blinds").SetValue(true));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Slow", "Slows").SetValue(false));
+                protectMenu.SubMenu("Cleanse").AddItem(new MenuItem("Protect.Cleanse.Posion", "Posion").SetValue(false));*/
             }
 
             var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));

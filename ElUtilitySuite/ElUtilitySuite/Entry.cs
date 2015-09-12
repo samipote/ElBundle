@@ -64,15 +64,8 @@
                 ProtectYourself.Load();
                 Notifications.AddNotification(string.Format("El Utility Suite by jQuery v{0}", ScriptVersion), 10000);
                 InitializeMenu.Load();
-
-                if (IsSummonersRift)
-                {
-                    Smite.Load();
-                }
-                else
-                {
-                    Console.WriteLine("Map not supported, report to jQuery kappa");
-                }
+                CheckVersion.Init();
+                Smite.Load();
             }
             catch (Exception e)
             {
