@@ -52,7 +52,7 @@
 
             if (predictedHealth <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value)
             {
-                if (predictedDamage > 69)
+                if (predictedDamage > 30)
                 {
                     // ReSharper disable once UseNullPropagation
                     if (OnTargettedSpellWillKill != null)
