@@ -85,6 +85,9 @@
             {
                 SendTime = TickCount;
 
+                //test
+                Orbwalker.SetMovement(false);
+
                 if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
                 {
                     spells[Spells.E].Cast(target);
