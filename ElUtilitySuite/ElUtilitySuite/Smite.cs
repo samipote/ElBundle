@@ -99,7 +99,7 @@
 
             if (InitializeMenu.Menu.Item(minion.CharData.BaseSkinName).GetValue<bool>())
             {
-                if (SmiteDamage() > minion.Health + 10)
+                if (SmiteDamage() > minion.Health)
                 {
                     Entry.Player.Spellbook.CastSpell(smite.Slot, minion);
                 }
