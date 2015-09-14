@@ -67,6 +67,15 @@
                         break;
 
                     case 1:
+                        if (spells[Spells.W].IsReady() && !Player.HasBuff("RengarR")
+                            && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                            < spells[Spells.W].Range * 1 / 3)
+                        {
+                            spells[Spells.W].Cast();
+                        }
+                        break;
+
+                    case 2:
 
                         if (IsActive("Combo.Use.Q") && !Player.IsWindingUp)
                         {
@@ -293,7 +302,7 @@
 
             if (Ferocity == 5 && IsActive("Jungle.Save.Ferocity"))
             {
-                if (Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.W].Range * 1 / 3)
+                if (Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.W].Range)
                 {
                     UseHydra();
                 }
@@ -306,7 +315,7 @@
             }
 
             if (IsActive("Jungle.Use.W") && spells[Spells.W].IsReady()
-                && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.W].Range * 1 / 3)
+                && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.W].Range)
             {
                 UseHydra();
                 spells[Spells.W].Cast();

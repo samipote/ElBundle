@@ -85,19 +85,15 @@
             {
                 SendTime = TickCount;
 
-                //test
-
                 if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
                 {
                     spells[Spells.E].Cast(target);
-                    Console.WriteLine("E Ondash cast");
                 }
 
                 if (IsListActive("Combo.Prio").SelectedIndex == 1 && spells[Spells.Q].IsReady()
                     && Player.Distance(target) < spells[Spells.Q].Range + 50)
                 {
                     spells[Spells.Q].Cast();
-                    Console.WriteLine("Q Ondash cast");
                 }
 
                 if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
@@ -140,9 +136,11 @@
                 {
                     case 0:
                         Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: E");
-
                         break;
                     case 1:
+                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: W");
+                        break;
+                    case 2:
                         Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: Q");
                         break;
                 }
@@ -240,16 +238,16 @@
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
-                        MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "Q" }, 1));
+                        MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 2));
                         LastSwitch = Environment.TickCount;
                         break;
                     case 1:
-                        MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "Q" }, 0));
+                        MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 0));
                         LastSwitch = Environment.TickCount;
                         break;
 
                     default:
-                        MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "Q" }, 0));
+                        MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 0));
                         LastSwitch = Environment.TickCount;
                         break;
                 }
