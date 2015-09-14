@@ -69,7 +69,7 @@
                     case 1:
                         if (spells[Spells.W].IsReady() && !Player.HasBuff("RengarR")
                             && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                            < spells[Spells.W].Range * 1 / 3)
+                            < spells[Spells.W].Range * 0x1 / 0x3)
                         {
                             spells[Spells.W].Cast();
                         }

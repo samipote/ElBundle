@@ -38,7 +38,7 @@
                 Ignite = Player.GetSpellSlot("summonerdot");
                 Notifications.AddNotification(string.Format("ElRengarRevamped by jQuery v{0}", ScriptVersion), 6000);
                 Game.PrintChat(
-                    "<font color='#CC0000'>Stutter?</font> Please try to put your windup, holdzone, farmdelay and so on higher than what it is now!");
+                    "[00:00] <font color='#f9eb0b'>Stutter?</font> Please try to put your windup, holdzone, farmdelay and so on higher than what it is now!");
                 spells[Spells.E].SetSkillshot(0.25f, 70f, 1500f, true, SkillshotType.SkillshotLine);
 
                 MenuInit.Initialize();
@@ -94,6 +94,7 @@
                     && Player.Distance(target) < spells[Spells.Q].Range + 50)
                 {
                     spells[Spells.Q].Cast();
+                    return;
                 }
 
                 if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
@@ -105,7 +106,6 @@
 
         private static void OnDraw(EventArgs args)
         {
-            var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
             var drawW = MenuInit.Menu.Item("Misc.Drawings.W").GetValue<Circle>();
             var drawE = MenuInit.Menu.Item("Misc.Drawings.E").GetValue<Circle>();
 
@@ -135,13 +135,13 @@
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: E");
+                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.Yellow, "Prioritized spell: E");
                         break;
                     case 1:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: W");
+                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Prioritized spell: W");
                         break;
                     case 2:
-                        Drawing.DrawText(playerPos.X - 70, playerPos.Y + 40, Color.White, "Prioritized spell: Q");
+                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Prioritized spell: Q");
                         break;
                 }
             }
