@@ -181,11 +181,13 @@
             }
         }
 
+
         private static bool DangerousSpells()
         {
             return Entry.Player.HasBuffOfType(BuffType.Suppression) || Entry.Player.HasBuff("ZedR")
                    || Entry.Player.HasBuff("vladimirhemoplague") || Entry.Player.HasBuff("urgotswap2")
-                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave");
+                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave")
+                   || Entry.Player.HasBuff("fiorarmark");
         }
 
         private static bool IsCleanseReady()
