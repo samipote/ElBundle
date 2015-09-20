@@ -52,7 +52,8 @@
 
         private static void PotionManager()
         {
-            if (!InitializeMenu.Menu.Item("Potions.Activated").GetValue<bool>() || Entry.Player.InFountain() || Entry.Player.IsRecalling() || PotCheck())
+            if (!InitializeMenu.Menu.Item("Potions.Activated").GetValue<bool>() || Entry.Player.InFountain()
+                || Entry.Player.IsRecalling() || PotCheck())
             {
                 return;
             }
@@ -62,9 +63,11 @@
             var crystallineFlask = ItemData.Crystalline_Flask.GetItem();
             var biscuit = ItemData.Total_Biscuit_of_Rejuvenation2.GetItem();
 
-            if (Entry.Player.Health / Entry.Player.MaxHealth * 100 < InitializeMenu.Menu.Item("Potions.Player.Health").GetValue<Slider>().Value)
+            if (Entry.Player.Health / Entry.Player.MaxHealth * 100
+                < InitializeMenu.Menu.Item("Potions.Player.Health").GetValue<Slider>().Value)
             {
-                if (healthPotion.IsOwned(Entry.Player) && healthPotion.IsReady() && InitializeMenu.Menu.Item("Potions.Health").GetValue<bool>())
+                if (healthPotion.IsOwned(Entry.Player) && healthPotion.IsReady()
+                    && InitializeMenu.Menu.Item("Potions.Health").GetValue<bool>())
                 {
                     healthPotion.Cast();
                 }

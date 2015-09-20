@@ -62,6 +62,7 @@
                 Barrier.Load();
                 Potions.Load();
                 Smite.Load();
+                Cleanse.Load();
                 ProtectYourself.Load();
                 InitializeMenu.Load();
                 CheckVersion.Init();

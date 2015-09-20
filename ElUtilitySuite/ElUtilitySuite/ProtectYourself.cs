@@ -93,7 +93,10 @@
             {
                 foreach (var enemy in
                     ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(hero => hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && !hero.IsVisible && !hero.IsDead))
+                        .Where(
+                            hero =>
+                            hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && !hero.IsVisible && !hero.IsDead)
+                    )
                 {
                     rengarObj = enemy;
                 }

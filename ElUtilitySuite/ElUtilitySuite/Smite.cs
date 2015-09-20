@@ -15,6 +15,8 @@
     {
         #region Static Fields
 
+        public static SpellSlot smiteSlot;
+
         private static readonly string[] BuffsThatActuallyMakeSenseToSmite =
             {
                 "SRU_Red", "SRU_Blue", "SRU_Dragon",
@@ -29,8 +31,6 @@
         private static SpellDataInst slot2;
 
         private static Spell smite;
-
-        public static SpellSlot smiteSlot;
 
         #endregion
 
