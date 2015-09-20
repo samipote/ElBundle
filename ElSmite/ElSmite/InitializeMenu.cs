@@ -19,18 +19,31 @@ namespace ElSmite
 
             var mainMenu = Menu.AddSubMenu(new Menu("Default", "Default"));
             {
-                mainMenu.AddItem(new MenuItem("ElSmite.Activated", "Activated").SetValue(new KeyBind("M".ToCharArray()[0], KeyBindType.Toggle, true)));
-                mainMenu.AddItem(new MenuItem("SRU_Dragon", "Dragon").SetValue(true));
-                mainMenu.AddItem(new MenuItem("SRU_Baron", "Baron").SetValue(true));
-                mainMenu.AddItem(new MenuItem("SRU_Red", "Red buff").SetValue(true));
-                mainMenu.AddItem(new MenuItem("SRU_Blue", "Blue buff").SetValue(true));
+                if (Entry.IsSummonersRift)
+                {
+                    mainMenu.AddItem(
+                        new MenuItem("ElSmite.Activated", "Activated").SetValue(
+                            new KeyBind("M".ToCharArray()[0], KeyBindType.Toggle, true)));
+                    mainMenu.AddItem(new MenuItem("SRU_Dragon", "Dragon").SetValue(true));
+                    mainMenu.AddItem(new MenuItem("SRU_Baron", "Baron").SetValue(true));
+                    mainMenu.AddItem(new MenuItem("SRU_Red", "Red buff").SetValue(true));
+                    mainMenu.AddItem(new MenuItem("SRU_Blue", "Blue buff").SetValue(true));
 
-                //Bullshit smites
-                mainMenu.AddItem(new MenuItem("SRU_Gromp", "Gromp").SetValue(false));
-                mainMenu.AddItem(new MenuItem("SRU_Murkwolf", "Wolves").SetValue(false));
-                mainMenu.AddItem(new MenuItem("SRU_Krug", "Krug").SetValue(false));
-                mainMenu.AddItem(new MenuItem("SRU_Razorbeak", "Chicken camp").SetValue(false));
-                mainMenu.AddItem(new MenuItem("Sru_Crab", "Crab").SetValue(false));
+                    //Bullshit smites
+                    mainMenu.AddItem(new MenuItem("SRU_Gromp", "Gromp").SetValue(false));
+                    mainMenu.AddItem(new MenuItem("SRU_Murkwolf", "Wolves").SetValue(false));
+                    mainMenu.AddItem(new MenuItem("SRU_Krug", "Krug").SetValue(false));
+                    mainMenu.AddItem(new MenuItem("SRU_Razorbeak", "Chicken camp").SetValue(false));
+                    mainMenu.AddItem(new MenuItem("Sru_Crab", "Crab").SetValue(false));
+                }
+
+                if (Entry.IsTwistedTreeline)
+                {
+                    mainMenu.AddItem(new MenuItem("TT_Spiderboss", "Vilemaw Enabled").SetValue(true));
+                    mainMenu.AddItem(new MenuItem("TT_NGolem", "Golem Enabled").SetValue(true));
+                    mainMenu.AddItem(new MenuItem("TT_NWolf", "Wolf Enabled").SetValue(true));
+                    mainMenu.AddItem(new MenuItem("TT_NWraith", "Wraith Enabled").SetValue(true));
+                }
             }
 
             var combatMenu = Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
