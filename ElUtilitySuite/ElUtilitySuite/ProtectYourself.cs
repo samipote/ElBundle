@@ -14,8 +14,6 @@
 
         private static Spell gapcloseSpell;
 
-        private static Orbwalking.Orbwalker orbwalker;
-
         private static Obj_AI_Hero rengarObj;
 
         #endregion
@@ -122,7 +120,7 @@
                             var pinkWard = ItemData.Vision_Ward.GetItem();
                             var oracleLens = ItemData.Oracles_Lens_Trinket.GetItem();
 
-                            if (orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+                            if (InitializeMenu.Menu.Item("usecombo").GetValue<KeyBind>().Active)
                             {
                                 var akaliPinkHp = InitializeMenu.Menu.Item("Protect.Akali.HP").GetValue<Slider>().Value;
                                 var akaliHp = (int)((enemy.Health / enemy.MaxHealth) * 100);

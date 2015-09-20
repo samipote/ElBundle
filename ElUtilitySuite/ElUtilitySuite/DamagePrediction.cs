@@ -5,12 +5,6 @@
 
     internal class DamagePrediction
     {
-        #region Static Fields
-
-        private static int HealthBuffer = 50; //Safety check
-
-        #endregion
-
         #region Constructors and Destructors
 
         static DamagePrediction()

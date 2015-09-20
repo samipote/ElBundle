@@ -17,8 +17,6 @@
 
         private static Spell cleanseSpell;
 
-        private static Orbwalking.Orbwalker orbwalker;
-
         private static SpellDataInst slot1;
 
         private static SpellDataInst slot2;
