@@ -63,6 +63,7 @@
                 Potions.Load();
                 Smite.Load();
                 Cleanse.Load();
+                Offensive.Load();
                 ProtectYourself.Load();
                 InitializeMenu.Load();
                 CheckVersion.Init();

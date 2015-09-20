@@ -9,13 +9,14 @@
     {
         #region Static Fields
 
-        public static Menu Menu;
+        public static Menu Menu, _mainMenu;
 
         #endregion
 
 
         public static void Load()
         {
+
             Menu = new Menu("ElUtilitySuite", "ElUtilitySuite", true);
 
             if (Smite.smiteSlot != SpellSlot.Unknown)
@@ -70,15 +71,6 @@
                     healMenu.AddItem(new MenuItem("Heal.Activated", "Heal").SetValue(true));
                     healMenu.AddItem(new MenuItem("Heal.Predicted", "Predict damage").SetValue(true));
                     healMenu.AddItem(new MenuItem("Heal.HP", "Health percentage").SetValue(new Slider(20, 1)));
-
-                    //healMenu.AddItem(new MenuItem("Heal.Ally.HP", "Ally health percentage")).SetValue(new Slider(20, 1));
-                    //healMenu.AddItem(new MenuItem("seperator", ""));
-                    /*healMenu.AddItem(new MenuItem("seperator1", "Don't heal: ")).SetFontStyle(FontStyle.Bold, SharpDX.Color.Red);
-
-                    foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsAlly && !hero.IsMe))
-                    {
-                        healMenu.AddItem(new MenuItem("Heal." + hero.CharData.BaseSkinName.ToLowerInvariant() + ".noult." + hero.ChampionName, hero.ChampionName).SetValue(false));
-                    }*/
                 }
             }
 
@@ -90,15 +82,6 @@
                     igniteMenu.AddItem(new MenuItem("Ignite.shieldCheck", "Check for shields").SetValue(true));
                 }
             }
-
-            /*if (Entry.Player.GetSpellSlot("summonerbarrier") != SpellSlot.Unknown)
-            {
-                var barrierMenu = Menu.AddSubMenu(new Menu("Barrier", "Barrier"));
-                {
-                    barrierMenu.AddItem(new MenuItem("Barrier.Activated", "Barrier").SetValue(true));
-                    barrierMenu.AddItem(new MenuItem("Barrier.HP", "Health percentage").SetValue(new Slider(20, 1)));
-                }
-            }*/
 
             var potionsMenu = Menu.AddSubMenu(new Menu("Potions", "Potions"));
             {
@@ -165,14 +148,37 @@
                 cleanseMenu.SubMenu("Mikaels settings").SubMenu("Buffs").AddItem(new MenuItem("Protect.Cleanse.Posion.Ally", "Posion").SetValue(false));
 
                 cleanseMenu.AddItem(new MenuItem("cmode", "Mode: ")).SetValue(new StringList(new[] { "Always", "Combo" }, 1));
-                cleanseMenu.AddItem(new MenuItem("usecombo", "Combo (Active)").SetValue(new KeyBind(32, KeyBindType.Press)));
             }
+
+
+            #region Credits to Oracle
+
+            _mainMenu = Menu.AddSubMenu(new Menu("Offensives", "omenu"));
+
+            foreach (var x in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsEnemy))
+            {
+                _mainMenu.SubMenu("Champion Settings").AddItem(new MenuItem("ouseOn" + x.SkinName, "Use for " + x.SkinName)).SetValue(true);
+            }
+
+            CreateMenuItem("Muramana", "Muramana", 90, 30, true);
+            CreateMenuItem("Tiamat/Hydra", "Hydra", 90, 30);
+            CreateMenuItem("Hextech Gunblade", "Hextech", 90, 30);
+            CreateMenuItem("Youmuu's Ghostblade", "Youmuus", 90, 30);
+            CreateMenuItem("Bilgewater's Cutlass", "Cutlass", 90, 30);
+            CreateMenuItem("Blade of the Ruined King", "Botrk", 70, 70);
+            CreateMenuItem("Frost Queen's Claim", "Frostclaim", 100, 30);
+
+            #endregion
 
             var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
             {
                 credits.AddItem(new MenuItem("Paypal", "if you would like to donate via paypal:"));
                 credits.AddItem(new MenuItem("Email", "info@zavox.nl"));
             }
+
+            Menu.AddItem(new MenuItem("seperator1", ""));
+
+            Menu.AddItem(new MenuItem("usecombo", "Combo (Active)").SetValue(new KeyBind(32, KeyBindType.Press)));
 
             Menu.AddItem(new MenuItem("seperator", ""));
             Menu.AddItem(new MenuItem("Versionnumber", string.Format("Version: {0}", Entry.ScriptVersion)));
@@ -181,6 +187,24 @@
             Menu.AddToMainMenu();
         }
 
+        private static void CreateMenuItem(string displayname, string name, int evalue, int avalue, bool usemana = false)
+        {
+            var menuName = new Menu(name, name.ToLower());
 
+            menuName.AddItem(new MenuItem("use" + name, "Use " + displayname)).SetValue(true);
+            menuName.AddItem(new MenuItem("use" + name + "Pct", "Use on enemy HP %")).SetValue(new Slider(evalue));
+
+            if (!usemana)
+                menuName.AddItem(new MenuItem("use" + name + "Me", "Use on my HP %")).SetValue(new Slider(avalue));
+
+            if (usemana)
+                menuName.AddItem(new MenuItem("use" + name + "Mana", "Minimum mana % to use")).SetValue(new Slider(35));
+
+            if (name == "Muramana")
+                menuName.AddItem(
+                    new MenuItem("muraMode", " Muramana Mode: ").SetValue(new StringList(new[] { "Always", "Combo" }, 1)));
+
+            _mainMenu.AddSubMenu(menuName);
+        }
     }
 }
