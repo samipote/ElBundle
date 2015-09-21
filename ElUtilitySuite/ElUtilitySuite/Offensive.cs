@@ -8,9 +8,9 @@
 
     internal static class Offensive
     {
-        /*
+        /***
         *   CREDITS TO KURISU, ORACLE.
-        */
+        ***/
 
         #region Static Fields
 

@@ -10,9 +10,17 @@
     {
         #region Static Fields
 
+        public static Obj_AI_Hero AggroTarget;
+
+        public static Obj_AI_Hero Attacker;
+
+        public static bool Stealth;
+
         public static SpellSlot summonerHeal;
 
         private static Spell healSpell;
+
+        private static float incomingDamage, minionDamage;
 
         private static SpellDataInst slot1;
 
@@ -48,7 +56,6 @@
                     return;
                 }
 
-                DamagePrediction.OnTargettedSpellWillKill += DamagePrediction_OnTargettedSpellWillKill;
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Game.OnUpdate += OnUpdate;
             }
@@ -62,28 +69,57 @@
 
         #region Methods
 
-        private static void DamagePrediction_OnTargettedSpellWillKill(
-            Obj_AI_Hero sender,
-            Obj_AI_Hero target,
-            SpellData sData)
+        private static Obj_AI_Hero Allies()
         {
-            var targetName = target.ChampionName;
-            if (sender.IsAlly || Entry.Player.IsDead)
+            var target = Entry.Player;
+            foreach (var unit in
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .Where(x => x.IsAlly && x.IsValidTarget(900, false))
+                    .OrderByDescending(xe => xe.Health / xe.MaxHealth * 100))
+            {
+                target = unit;
+            }
+
+            return target;
+        }
+
+        private static void CheckHeal(float incdmg = 0)
+        {
+            var heal = Entry.Player.GetSpellSlot("summonerheal");
+            if (heal == SpellSlot.Unknown)
             {
                 return;
             }
 
-            /* if (targetName != Entry.Player.ChampionName && InitializeMenu.Menu.Item("Heal." + Entry.Player.ChampionName.ToLowerInvariant() + ".noult." + targetName).GetValue<bool>())
+            if (!InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>())
             {
                 return;
-            }*/
+            }
 
-            if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>()
-                && InitializeMenu.Menu.Item("Heal.Predicted").GetValue<bool>())
+            if (Entry.Player.Spellbook.CanUseSpell(heal) != SpellState.Ready)
             {
-                if (!Entry.Player.InFountain() || !Entry.Player.IsRecalling())
+                return;
+            }
+
+            var target = Allies();
+            var iDamagePercent = (int)((incdmg / Entry.Player.MaxHealth) * 100);
+
+            if (target.Distance(Entry.Player.ServerPosition) <= 700f)
+            {
+                var aHealthPercent = (int)((target.Health / target.MaxHealth) * 100);
+                if (aHealthPercent <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value
+                    && InitializeMenu.Menu.Item("healon" + target.ChampionName).GetValue<bool>())
                 {
-                    Console.WriteLine("HEAL");
+                    if ((iDamagePercent >= 1 || incdmg >= target.Health) && AggroTarget.NetworkId == target.NetworkId)
+                    {
+                        Entry.Player.Spellbook.CastSpell(summonerHeal);
+                    }
+                }
+
+                else if (iDamagePercent >= InitializeMenu.Menu.Item("Heal.Damage").GetValue<Slider>().Value
+                         && InitializeMenu.Menu.Item("healon" + target.ChampionName).GetValue<bool>()
+                         && AggroTarget.NetworkId == target.NetworkId)
+                {
                     Entry.Player.Spellbook.CastSpell(summonerHeal);
                 }
             }
@@ -91,23 +127,53 @@
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (!(sender is Obj_AI_Hero) || !(args.Target is Obj_AI_Hero) || Entry.Player.IsDead)
+            if (sender.Type == GameObjectType.obj_AI_Hero && sender.IsEnemy)
             {
-                return;
+                var heroSender = ObjectManager.Get<Obj_AI_Hero>().First(x => x.NetworkId == sender.NetworkId);
+                if (heroSender.GetSpellSlot(args.SData.Name) == SpellSlot.Unknown
+                    && args.Target.Type == Entry.Player.Type)
+                {
+                    AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
+                    incomingDamage = (float)heroSender.GetAutoAttackDamage(AggroTarget);
+                }
+
+                if (heroSender.ChampionName == "Jinx" && args.SData.Name.Contains("JinxQAttack")
+                    && args.Target.Type == Entry.Player.Type)
+                {
+                    AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
+                    incomingDamage = (float)heroSender.GetAutoAttackDamage(AggroTarget);
+                }
             }
 
-            if (sender.IsEnemy)
+            if (sender.Type == GameObjectType.obj_AI_Minion && sender.IsEnemy)
             {
-                if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>()
-                    && !InitializeMenu.Menu.Item("Heal.Predicted").GetValue<bool>())
+                if (args.Target.NetworkId == Entry.Player.NetworkId)
                 {
-                    if (Entry.Player.Health / Entry.Player.MaxHealth * 100
-                        <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value)
+                    AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
+
+                    minionDamage =
+                        (float)
+                        sender.CalcDamage(
+                            AggroTarget,
+                            Damage.DamageType.Physical,
+                            sender.BaseAttackDamage + sender.FlatPhysicalDamageMod);
+                }
+            }
+
+            if (sender.Type == GameObjectType.obj_AI_Turret && sender.IsEnemy)
+            {
+                if (args.Target.Type == Entry.Player.Type)
+                {
+                    if (sender.Distance(Allies().ServerPosition, true) <= 900 * 900)
                     {
-                        if (!Entry.Player.InFountain() || !Entry.Player.IsRecalling())
-                        {
-                            Entry.Player.Spellbook.CastSpell(summonerHeal);
-                        }
+                        AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
+
+                        incomingDamage =
+                            (float)
+                            sender.CalcDamage(
+                                AggroTarget,
+                                Damage.DamageType.Physical,
+                                sender.BaseAttackDamage + sender.FlatPhysicalDamageMod);
                     }
                 }
             }
@@ -122,6 +188,7 @@
 
             try
             {
+                CheckHeal(incomingDamage);
             }
             catch (Exception e)
             {

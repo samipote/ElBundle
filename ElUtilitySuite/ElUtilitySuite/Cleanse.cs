@@ -105,12 +105,13 @@
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
                         }
 
-                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Fear").GetValue<bool>() && b.Type == BuffType.Fear)
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Fear.Ally").GetValue<bool>()
+                            && b.Type == BuffType.Fear)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
                         }
 
-                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Snare").GetValue<bool>()
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Snare.Ally").GetValue<bool>()
                             && b.Type == BuffType.Snare)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
@@ -128,19 +129,31 @@
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
                         }
 
-                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Polymorph").GetValue<bool>()
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Polymorph.Ally").GetValue<bool>()
                             && b.Type == BuffType.Polymorph)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
                         }
 
-                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Blind").GetValue<bool>()
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Blind.Ally").GetValue<bool>()
                             && b.Type == BuffType.Blind)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
                         }
 
-                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Posion").GetValue<bool>()
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Knockback.Ally").GetValue<bool>()
+                            && b.Type == BuffType.Knockback)
+                        {
+                            Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
+                        }
+
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Knockup.Ally").GetValue<bool>()
+                            && b.Type == BuffType.Knockup)
+                        {
+                            Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
+                        }
+
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Posion.Ally").GetValue<bool>()
                             && b.Type == BuffType.Poison)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
@@ -179,13 +192,11 @@
             }
         }
 
-
         private static bool DangerousSpells()
         {
             return Entry.Player.HasBuffOfType(BuffType.Suppression) || Entry.Player.HasBuff("ZedR")
                    || Entry.Player.HasBuff("vladimirhemoplague") || Entry.Player.HasBuff("urgotswap2")
-                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave")
-                   || Entry.Player.HasBuff("fiorarmark");
+                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave") || Entry.Player.HasBuff("fiorarmark");
         }
 
         private static bool IsCleanseReady()
@@ -346,6 +357,33 @@
                 }
 
                 if (InitializeMenu.Menu.Item("Protect.Cleanse.Blind").GetValue<bool>() && b.Type == BuffType.Blind)
+                {
+                    if (IsCleanseReady())
+                    {
+                        Utility.DelayAction.Add(
+                            delay,
+                            () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
+                        return;
+                    }
+
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
+                }
+
+                if (InitializeMenu.Menu.Item("Protect.Cleanse.Knockup").GetValue<bool>() && b.Type == BuffType.Knockup)
+                {
+                    if (IsCleanseReady())
+                    {
+                        Utility.DelayAction.Add(
+                            delay,
+                            () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
+                        return;
+                    }
+
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
+                }
+
+                if (InitializeMenu.Menu.Item("Protect.Cleanse.Knockback").GetValue<bool>()
+                    && b.Type == BuffType.Knockback)
                 {
                     if (IsCleanseReady())
                     {
