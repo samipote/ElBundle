@@ -22,6 +22,12 @@
 
     internal class Rengar : Standards
     {
+        #region Static Fields
+
+        public static int lastAutoAttack, lastrengarq;
+
+        #endregion
+
         #region Public Methods and Operators
 
         public static void OnLoad(EventArgs args)
@@ -59,21 +65,6 @@
         #endregion
 
         #region Methods
-
-        private static void OrbwalkingBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
-        {
-            if (args.Target is Obj_AI_Hero && args.Target.IsValidTarget())
-            {
-                if (Ferocity == 5 && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
-                {
-                    spells[Spells.Q].Cast();
-                    if (RengarQ || RengarE)
-                    {
-                        Orbwalking.ResetAutoAttackTimer();
-                    }
-                }
-            }
-        }
 
         private static void AfterAttack(AttackableUnit unit, AttackableUnit target)
         {
@@ -118,27 +109,55 @@
                 SendTime = TickCount;
                 Orbwalker.SetMovement(false);
 
+                switch (IsListActive("Combo.Prio").SelectedIndex)
+                {
+                    case 0:
+                        if (spells[Spells.E].IsReady())
+                        {
+                            Console.WriteLine("OnDash");
 
-                if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady())
+                            spells[Spells.E].Cast(target);
+                        }
+                        break;
+
+                    case 1:
+                        spells[Spells.Q].Cast();
+                        if (target.IsValidTarget())
+                        {
+                            if (IsListActive("Combo.Prio").SelectedIndex == 1
+                                && Player.Distance(target) < spells[Spells.Q].Range + 200)
+                            {
+                                Utility.DelayAction.Add(50, () =>
+                                {
+                                    if (Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                                        < spells[Spells.W].Range)
+                                    {
+                                        spells[Spells.W].Cast();
+                                    }
+
+                                    spells[Spells.E].Cast(target.ServerPosition);
+                                    UseHydra();
+                                    Console.WriteLine("Casted Q Prio");
+                                });
+                            }
+                        }
+                        break;
+                }
+                //!Player.IsDashing() &&
+                if (spells[Spells.W].IsReady() && !HasPassive)
+                {
+                    Utility.DelayAction.Add(200, () => spells[Spells.W].Cast());
+                }
+                if (spells[Spells.E].IsReady())
                 {
                     spells[Spells.E].Cast(target);
                 }
-
-                if (IsListActive("Combo.Prio").SelectedIndex == 1 && Player.Distance(target) < spells[Spells.Q].Range + 200)
-                {
-                    spells[Spells.Q].Cast();
-    
-                }
-                //!Player.IsDashing() &&
-                if (spells[Spells.W].IsReady() &&  !HasPassive)
-                    Utility.DelayAction.Add(200, () => spells[Spells.W].Cast());
-               if (spells[Spells.E].IsReady()) spells[Spells.E].Cast(target);
 
                 if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
                 {
                     UseHydra();
                 }
-                
+
                 // Broscience?
                 Utility.DelayAction.Add(200, () => Orbwalker.SetMovement(true));
             }
@@ -175,13 +194,25 @@
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.Yellow, "Prioritized spell: E");
+                        Drawing.DrawText(
+                            Drawing.Width * 0.70f,
+                            Drawing.Height * 0.95f,
+                            Color.Yellow,
+                            "Prioritized spell: E");
                         break;
                     case 1:
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Prioritized spell: W");
+                        Drawing.DrawText(
+                            Drawing.Width * 0.70f,
+                            Drawing.Height * 0.95f,
+                            Color.White,
+                            "Prioritized spell: W");
                         break;
                     case 2:
-                        Drawing.DrawText(Drawing.Width * 0.70f, Drawing.Height * 0.95f, Color.White, "Prioritized spell: Q");
+                        Drawing.DrawText(
+                            Drawing.Width * 0.70f,
+                            Drawing.Height * 0.95f,
+                            Color.White,
+                            "Prioritized spell: Q");
                         break;
                 }
             }
@@ -199,8 +230,6 @@
                 Utility.DrawCircle(ObjectManager.Player.Position, spells[Spells.R].Range, Color.White, 1, 23, true);
             }
         }
-
-        public static int lastAutoAttack, lastrengarq;
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
@@ -238,7 +267,6 @@
                 {
                     lastAutoAttack = Utils.GameTimeTickCount;
                 }
-
 
                 if (RengarQ)
                 {
@@ -279,6 +307,26 @@
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        private static void OrbwalkingBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Target is Obj_AI_Hero && args.Target.IsValidTarget())
+            {
+                if (Ferocity <= 4)
+                {
+                    spells[Spells.Q].Cast();
+                }
+
+                if (Ferocity == 5 && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && Orbwalking.InAutoAttackRange(args.Target))
+                {
+                    spells[Spells.Q].Cast();
+                    if (RengarQ || RengarE)
+                    {
+                        Orbwalking.ResetAutoAttackTimer();
+                    }
+                }
             }
         }
 
