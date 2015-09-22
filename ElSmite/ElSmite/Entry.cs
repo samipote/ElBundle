@@ -10,11 +10,14 @@ using Color = System.Drawing.Color;
 
 namespace ElSmite
 {
+    using System.IO;
+
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class Entry
     {
         static SpellSlot smiteSlot;
-        static Obj_AI_Hero Player
+
+        public static Obj_AI_Hero Player
         {
             get
             {
@@ -51,7 +54,7 @@ namespace ElSmite
         static SpellDataInst slot1;
         static SpellDataInst slot2;
 
-        static Spell smite;
+        public static Spell smite;
 
         static readonly string[] BuffsThatActuallyMakeSenseToSmite =
         {
@@ -99,6 +102,15 @@ namespace ElSmite
                 InitializeMenu.Load();
                 Game.OnUpdate += OnUpdate;
                 Drawing.OnDraw += OnDraw;
+
+                Console.WriteLine(Player.ChampionName);
+
+                var type = Type.GetType("ElSmite.Plugins." + Player.ChampionName);
+                if (type != null)
+                {
+                    Base.Load(Player.ChampionName);
+                    Console.WriteLine("Loaded");
+                }
             }
             catch (Exception e)
             {
@@ -129,16 +141,20 @@ namespace ElSmite
 
         #region Smite
 
-        static void JungleSmite()
+        public static Obj_AI_Minion minion;
+
+        private static void JungleSmite()
         {
             if (!InitializeMenu.Menu.Item("ElSmite.Activated").GetValue<KeyBind>().Active) return;
 
-            Obj_AI_Minion minion = (Obj_AI_Minion) MinionManager.GetMinions(ObjectManager.Player.ServerPosition, 500, MinionTypes.All, MinionTeam.Neutral).ToList().FirstOrDefault(buff => buff.IsValidTarget() && BuffsThatActuallyMakeSenseToSmite.Contains(buff.CharData.BaseSkinName));
+            minion = (Obj_AI_Minion)MinionManager.GetMinions(ObjectManager.Player.ServerPosition, 500, MinionTypes.All, MinionTeam.Neutral).ToList().FirstOrDefault(buff => buff.IsValidTarget() && BuffsThatActuallyMakeSenseToSmite.Contains(buff.CharData.BaseSkinName));
 
             if (minion == null)
             {
                 return;
             }
+
+            //Mob = minion;
 
             if (InitializeMenu.Menu.Item(minion.CharData.BaseSkinName).GetValue<bool>())
             {
@@ -172,7 +188,7 @@ namespace ElSmite
 
         #region SmiteDamages
 
-        static double SmiteDamage()
+        public static double SmiteDamage()
         {
             var damage = new int[] { 20 * Player.Level + 370, 30 * Player.Level + 330, 40 *+ Player.Level + 240, 50 * Player.Level + 100 };
 

@@ -12,7 +12,7 @@ namespace ElSmite
     // ReSharper disable once ClassNeverInstantiated.Global
     public class InitializeMenu
     {
-        public static Menu Menu;
+        public static Menu Menu, ChampionMenu;
         public static void Load()
         {
             Menu = new Menu("ElSmite", "ElSmite", true);
@@ -46,6 +46,8 @@ namespace ElSmite
                 }
             }
 
+ 
+        
             var combatMenu = Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
             {
                 combatMenu.AddItem(new MenuItem("ElSmite.KS.Activated", "Use smite to killsteal").SetValue(true));
@@ -58,11 +60,11 @@ namespace ElSmite
                 drawMenu.AddItem(new MenuItem("ElSmite.Draw.Damage", "Draw smite Damage").SetValue(true));
             }
 
-            var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
+            /*var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
             {
                 credits.AddItem(new MenuItem("ElRengar.Paypal", "if you would like to donate via paypal:"));
                 credits.AddItem(new MenuItem("ElRengar.Email", "info@zavox.nl"));
-            }
+            }*/
 
             Menu.AddItem(new MenuItem("seperator", ""));
             Menu.AddItem(new MenuItem("422442fsaafsf", String.Format("Version: {0}", Entry.ScriptVersion)));

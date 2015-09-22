@@ -58,8 +58,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="InitializeMenu.cs" />
+    <Compile Include="Plugins\Chogath.cs" />
+    <Compile Include="Plugins\Elise.cs" />
+    <Compile Include="Plugins\Fizz.cs" />
+    <Compile Include="Plugins\LeeSin.cs" />
+    <Compile Include="Plugins\MonkeyKing.cs" />
+    <Compile Include="Plugins\Nidalee.cs" />
+    <Compile Include="Plugins\Nunu.cs" />
+    <Compile Include="Plugins\Olaf.cs" />
+    <Compile Include="Plugins\Pantheon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
