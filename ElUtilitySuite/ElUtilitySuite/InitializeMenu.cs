@@ -133,7 +133,7 @@
                 {
                     var menucleanse =
                         cleanseMenu.SubMenu("Cleanse settings")
-                            .AddItem(new MenuItem("Protect.Cleanse" + buff, "Use On " + buff));
+                            .AddItem(new MenuItem("Protect.Cleanse" + buff, "" + buff));
 
                     switch (buff)
                     {
