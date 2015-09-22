@@ -142,7 +142,6 @@
                     if (!eventArgs.IsBlink && ElDianaMenu._menu.Item("ElDiana.Interrupt.UseEDashes").GetValue<bool>()
                         && eSlot.IsReady() && eSlot.Range >= dis)
                     {
-                        Console.WriteLine("Cast !");
                         eSlot.Cast();
                     }
                 };
@@ -223,7 +222,7 @@
                 }
             }
 
-            if (Player.Distance(target, false) <= 600 && IgniteDamage(target) >= target.Health && useIgnite)
+            if (Player.Distance(target) <= 600 && IgniteDamage(target) >= target.Health && useIgnite)
             {
                 Player.Spellbook.CastSpell(ignite, target);
             }
@@ -242,7 +241,7 @@
                 case 3:
                     return HitChance.VeryHigh;
                 default:
-                    return HitChance.Medium;
+                    return HitChance.VeryHigh;
             }
         }
 
@@ -327,7 +326,7 @@
                 }
             }
 
-            if (useW && spells[Spells.W].IsReady() && qMinion != null)
+            if (useW && spells[Spells.W].IsReady())
             {
                 spells[Spells.W].Cast();
             }
@@ -482,7 +481,6 @@
                 spells[Spells.R].Cast(target);
             }
 
-            //TODO watch if enemy could cast a dangerous interruptible spell (ex. nunu ult, kata ult)
             if (useW && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target))
             {
                 spells[Spells.W].Cast();
@@ -538,7 +536,6 @@
                     var ultType = ElDianaMenu._menu.Item("ElDiana.Combo.R.Mode").GetValue<StringList>().SelectedIndex;
                     if (ElDianaMenu._menu.Item("ElDiana.Hotkey.ToggleComboMode").GetValue<KeyBind>().Active)
                     {
-                        //Crappy, I know. 
                         ultType = (ultType + 1) % 2;
                     }
                     switch (ultType)
@@ -561,11 +558,6 @@
                     Harass();
                     break;
             }
-
-            /* if (ElDianaMenu._menu.Item("ElDiana.Combo.Leapcombo").GetValue<KeyBind>().Active)
-             {
-                 leapCombo();
-             }*/
 
             var showNotifications = ElDianaMenu._menu.Item("ElDiana.misc.Notifications").GetValue<bool>();
 
