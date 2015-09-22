@@ -11,6 +11,15 @@
 
         public static Menu Menu, _mainMenu;
 
+        public static readonly BuffType[] Bufftype =
+        {
+            BuffType.Snare, BuffType.Knockback,
+            BuffType.Knockup, BuffType.Blind,
+            BuffType.Silence, BuffType.Charm,
+            BuffType.Stun, BuffType.Fear,
+            BuffType.Slow,  BuffType.Taunt,
+            BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
+        };
         #endregion
 
         #region Public Methods and Operators
@@ -121,49 +130,32 @@
             {
                 cleanseMenu.AddItem(new MenuItem("Cleanse.Activated", "Activated").SetValue(true));
                 cleanseMenu.AddItem(new MenuItem("Cleanse.Delay", "Cleanse delay ")).SetValue(new Slider(0, 0, 25));
+                foreach (var buff in Bufftype)
+                {
+                    var menucleanse =
+                        cleanseMenu.SubMenu("Cleanse settings")
+                            .AddItem(new MenuItem("Protect.Cleanse" + buff, "Use On " + buff));
 
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Activated")
-                    .AddItem(new MenuItem("Cleanse.Activated", "Activate Cleanse").SetValue(true));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Stun", "Stuns").SetValue(true));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Charm", "Charms").SetValue(true));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Taunt", "Taunts").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Fear", "Fears").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Snare", "Snares").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Silence", "Silences").SetValue(true));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Suppression", "Suppressions").SetValue(true));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Polymorph", "Polymorphs").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Blind", "Blinds").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Slow", "Slows").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Posion", "Posion").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Knockup", "Knockups").SetValue(false));
-                cleanseMenu.SubMenu("Cleanse settings")
-                    .SubMenu("Buffs")
-                    .AddItem(new MenuItem("Protect.Cleanse.Knockback", "Knockbacks").SetValue(false));
+                    switch (buff)
+                    {
+                        case BuffType.Taunt:
+                        case BuffType.Snare:
+                        case BuffType.Polymorph:
+                        case BuffType.Blind:
+                        case BuffType.Slow:
+                        case BuffType.Poison:
+                        case BuffType.Knockback:
+                        case BuffType.Knockup:
+                            menucleanse.SetValue(false);
+                            break;
+                        default:
+                            menucleanse.SetValue(true);
+                            break;
+                    }
+                    cleanseMenu.SubMenu("Cleanse settings")
+                        .SubMenu("Activated")
+                        .AddItem(new MenuItem("Cleanse.Activated", "Activate Cleanse").SetValue(true));
+                }
 
                 foreach (var a in ObjectManager.Get<Obj_AI_Hero>().Where(ally => ally.Team == Entry.Player.Team))
                 {
