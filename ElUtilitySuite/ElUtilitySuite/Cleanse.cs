@@ -11,39 +11,23 @@
 
     public static class Cleanse
     {
-        /*
- *                 foreach (var b in Bufftype)
-        {
-            if (mikaels.IsOwned(Entry.Player) && mikaels.IsReady())
-            {
-                if (InitializeMenu.Menu.Item("Protect.Cleans" + b).GetValue<bool>())
-                {
-                    Utility.DelayAction.Add(delay, () => );
-                }
-
-            }
-        }
- */
-
-        public static readonly BuffType[] Bufftype =
-        {
-            BuffType.Snare, BuffType.Knockback,
-            BuffType.Knockup, BuffType.Blind,
-            BuffType.Silence, BuffType.Charm,
-            BuffType.Stun, BuffType.Fear,
-            BuffType.Slow, BuffType.Taunt,
-            BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
-        };
-
         #region Static Fields
 
-        public static SS summonerCleanse;
+        private static readonly BuffType[] Bufftype =
+            {
+                BuffType.Snare, BuffType.Knockback, BuffType.Knockup,
+                BuffType.Blind, BuffType.Silence, BuffType.Charm, BuffType.Stun,
+                BuffType.Fear, BuffType.Slow, BuffType.Taunt,
+                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
+            };
 
         private static Spell cleanseSpell;
 
         private static SpellDataInst slot1;
 
         private static SpellDataInst slot2;
+
+        private static SS summonerCleanse;
 
         #endregion
 
@@ -57,7 +41,7 @@
                 slot2 = Entry.Player.Spellbook.GetSpell(SpellSlot.Summoner2);
 
                 //Soon riot will introduce multiple cleanses, mark my words.
-                var cleanseNames = new[] {"summonerboost"};
+                var cleanseNames = new[] { "summonerboost" };
 
                 if (cleanseNames.Contains(slot1.Name))
                 {
@@ -90,16 +74,16 @@
         private static void AllyCleanse()
         {
             var mikaels = ItemData.Mikaels_Crucible.GetItem();
-            var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value*10;
+            var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value * 10;
 
             foreach (var unit in
                 ObjectManager.Get<Obj_AI_Hero>()
                     .Where(
                         x =>
-                            x.IsAlly && !x.IsMe && x.IsValidTarget(900, false)
-                            && InitializeMenu.Menu.Item("Protect.Cleanse.Kappa" + x.SkinName).GetValue<bool>()
-                            && InitializeMenu.Menu.Item("Protect.Cleanse.Mikeals.Activated").GetValue<bool>())
-                    .OrderByDescending(xe => xe.Health/xe.MaxHealth*100))
+                        x.IsAlly && !x.IsMe && x.IsValidTarget(900, false)
+                        && InitializeMenu.Menu.Item("Protect.Cleanse.Kappa" + x.SkinName).GetValue<bool>()
+                        && InitializeMenu.Menu.Item("Protect.Cleanse.Mikeals.Activated").GetValue<bool>())
+                    .OrderByDescending(xe => xe.Health / xe.MaxHealth * 100))
             {
                 foreach (var b in unit.Buffs)
                 {
@@ -253,20 +237,24 @@
         private static void UseCleanse()
         {
             if (Entry.Player.HasBuffOfType(BuffType.SpellShield) || Entry.Player.HasBuffOfType(BuffType.SpellImmunity))
+            {
                 return;
+            }
 
             if (!InitializeMenu.Menu.Item("Cleanse.Activated").GetValue<bool>())
+            {
                 return;
+            }
 
-            var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value*10;
+            var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value * 10;
 
             foreach (var buff in Bufftype)
             {
-                if (InitializeMenu.Menu.Item("Protect.Cleanse" + buff).GetValue<bool>() &&
-                    Entry.Player.HasBuffOfType(buff)
-                    && IsCleanseReady())
+                if (InitializeMenu.Menu.Item("Protect.Cleanse" + buff).GetValue<bool>()
+                    && Entry.Player.HasBuffOfType(buff) && IsCleanseReady())
                 {
-                    Utility.DelayAction.Add(delay,
+                    Utility.DelayAction.Add(
+                        delay,
                         () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
                     return;
                 }
@@ -289,7 +277,7 @@
                 CleanseItems();
             }
         }
+
+        #endregion
     }
 }
-
-#endregion

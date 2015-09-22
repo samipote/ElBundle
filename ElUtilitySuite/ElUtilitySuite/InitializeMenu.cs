@@ -11,15 +11,14 @@
 
         public static Menu Menu, _mainMenu;
 
-        public static readonly BuffType[] Bufftype =
-        {
-            BuffType.Snare, BuffType.Knockback,
-            BuffType.Knockup, BuffType.Blind,
-            BuffType.Silence, BuffType.Charm,
-            BuffType.Stun, BuffType.Fear,
-            BuffType.Slow,  BuffType.Taunt,
-            BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
-        };
+        private static readonly BuffType[] Bufftype =
+            {
+                BuffType.Snare, BuffType.Knockback, BuffType.Knockup,
+                BuffType.Blind, BuffType.Silence, BuffType.Charm, BuffType.Stun,
+                BuffType.Fear, BuffType.Slow, BuffType.Taunt,
+                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
+            };
+
         #endregion
 
         #region Public Methods and Operators
@@ -232,12 +231,6 @@
             CreateMenuItem("Frost Queen's Claim", "Frostclaim", 100, 30);
 
             #endregion
-
-            var credits = Menu.AddSubMenu(new Menu("Credits", "jQuery"));
-            {
-                credits.AddItem(new MenuItem("Paypal", "if you would like to donate via paypal:"));
-                credits.AddItem(new MenuItem("Email", "info@zavox.nl"));
-            }
 
             Menu.AddItem(new MenuItem("seperator1", ""));
 

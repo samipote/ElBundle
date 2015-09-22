@@ -15,6 +15,10 @@
     {
         #region Static Fields
 
+        public static Obj_AI_Minion minion;
+
+        public static Spell smite;
+
         public static SpellSlot smiteSlot;
 
         private static readonly string[] BuffsThatActuallyMakeSenseToSmite =
@@ -29,8 +33,6 @@
         private static SpellDataInst slot1;
 
         private static SpellDataInst slot2;
-
-        private static Spell smite;
 
         #endregion
 
@@ -73,6 +75,17 @@
             }
         }
 
+        public static double SmiteDamage()
+        {
+            var damage = new[]
+                             {
+                                 20 * Entry.Player.Level + 370, 30 * Entry.Player.Level + 330,
+                                 40 * +Entry.Player.Level + 240, 50 * Entry.Player.Level + 100
+                             };
+
+            return Entry.Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready ? damage.Max() : 0;
+        }
+
         #endregion
 
         #region Methods
@@ -84,7 +97,7 @@
                 return;
             }
 
-            var minion =
+            minion =
                 (Obj_AI_Minion)
                 MinionManager.GetMinions(ObjectManager.Player.ServerPosition, 500, MinionTypes.All, MinionTeam.Neutral)
                     .ToList()
@@ -306,17 +319,6 @@
             }
 
             return 0;
-        }
-
-        private static double SmiteDamage()
-        {
-            var damage = new[]
-                             {
-                                 20 * Entry.Player.Level + 370, 30 * Entry.Player.Level + 330,
-                                 40 * +Entry.Player.Level + 240, 50 * Entry.Player.Level + 100
-                             };
-
-            return Entry.Player.Spellbook.CanUseSpell(smite.Slot) == SpellState.Ready ? damage.Max() : 0;
         }
 
         private static void SmiteKill()

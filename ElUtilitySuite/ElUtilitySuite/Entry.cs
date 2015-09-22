@@ -71,6 +71,13 @@
 
                 Game.OnUpdate += OnUpdate;
                 Obj_AI_Base.OnLevelUp += OnLevelUp;
+
+                var type = Type.GetType("ElUtilitySuite.Plugins." + Player.ChampionName);
+                if (type != null)
+                {
+                    Base.Load(Player.ChampionName);
+                    Console.WriteLine("Loaded");
+                }
             }
             catch (Exception e)
             {

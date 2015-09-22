@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Barrier.cs" />
+    <Compile Include="Base.cs" />
     <Compile Include="CheckVersion.cs" />
     <Compile Include="Cleanse.cs" />
     <Compile Include="DamagePrediction.cs" />
@@ -64,6 +65,15 @@
     <Compile Include="Ignite.cs" />
     <Compile Include="InitializeMenu.cs" />
     <Compile Include="Offensive.cs" />
+    <Compile Include="Plugins\Chogath.cs" />
+    <Compile Include="Plugins\Elise.cs" />
+    <Compile Include="Plugins\Fizz.cs" />
+    <Compile Include="Plugins\LeeSin.cs" />
+    <Compile Include="Plugins\MonkeyKing.cs" />
+    <Compile Include="Plugins\Nidalee.cs" />
+    <Compile Include="Plugins\Nunu.cs" />
+    <Compile Include="Plugins\Olaf.cs" />
+    <Compile Include="Plugins\Pantheon.cs" />
     <Compile Include="Potions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
