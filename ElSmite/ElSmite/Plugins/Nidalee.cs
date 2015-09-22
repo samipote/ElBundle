@@ -69,7 +69,8 @@
                 if (InitializeMenu.Menu.Item("Enabled-" + ObjectManager.Player.ChampionName).GetValue<bool>()
                     && champSpell.IsReady())
                 {
-                    if (Entry.Player.GetSpellDamage(Entry.minion, champSpell.Slot) >= Entry.minion.Health && pred.Hitchance >= HitChance.Medium)
+                    if (Entry.Player.GetSpellDamage(Entry.minion, champSpell.Slot) >= Entry.minion.Health
+                        && pred.Hitchance >= HitChance.Medium)
                     {
                         champSpell.Cast(pred.CastPosition);
                     }

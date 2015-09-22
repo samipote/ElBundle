@@ -4,6 +4,8 @@
 
     internal class Base
     {
+        #region Methods
+
         internal static void Load(string champName)
         {
             switch (champName)
@@ -45,5 +47,7 @@
                     break;
             }
         }
+
+        #endregion
     }
 }

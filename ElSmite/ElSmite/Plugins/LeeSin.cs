@@ -66,8 +66,6 @@
                     return;
                 }
 
-                Console.WriteLine(Entry.minion.CharData.BaseSkinName);
-
                 spellDamage = GetQ2Dmg(Entry.minion);
                 totalDamage = spellDamage + Entry.SmiteDamage();
 
