@@ -18,7 +18,7 @@
                 BuffType.Snare, BuffType.Knockback, BuffType.Knockup,
                 BuffType.Blind, BuffType.Silence, BuffType.Charm, BuffType.Stun,
                 BuffType.Fear, BuffType.Slow, BuffType.Taunt,
-                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
+                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison, BuffType.Flee
             };
 
         private static Spell cleanseSpell;
@@ -162,6 +162,12 @@
                         }
 
                         if (InitializeMenu.Menu.Item("Protect.Cleanse.Posion.Ally").GetValue<bool>()
+                            && b.Type == BuffType.Poison)
+                        {
+                            Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
+                        }
+
+                        if (InitializeMenu.Menu.Item("Protect.Cleanse.Flee.Ally").GetValue<bool>()
                             && b.Type == BuffType.Poison)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));

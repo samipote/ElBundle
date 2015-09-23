@@ -16,7 +16,7 @@
                 BuffType.Snare, BuffType.Knockback, BuffType.Knockup,
                 BuffType.Blind, BuffType.Silence, BuffType.Charm, BuffType.Stun,
                 BuffType.Fear, BuffType.Slow, BuffType.Taunt,
-                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison
+                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison, BuffType.Flee
             };
 
         #endregion
@@ -145,6 +145,7 @@
                         case BuffType.Poison:
                         case BuffType.Knockback:
                         case BuffType.Knockup:
+                        case BuffType.Flee:
                             menucleanse.SetValue(false);
                             break;
                         default:
@@ -206,6 +207,9 @@
                 cleanseMenu.SubMenu("Mikaels settings")
                     .SubMenu("Buffs")
                     .AddItem(new MenuItem("Protect.Cleanse.Knockback.Ally", "Knockbacks").SetValue(false));
+                cleanseMenu.SubMenu("Mikaels settings")
+                    .SubMenu("Buffs")
+                    .AddItem(new MenuItem("Protect.Cleanse.Flee.Ally", "Flee").SetValue(false));
 
                 cleanseMenu.AddItem(new MenuItem("cmode", "Mode: "))
                     .SetValue(new StringList(new[] { "Always", "Combo" }, 1));
