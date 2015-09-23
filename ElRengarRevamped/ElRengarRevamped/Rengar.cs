@@ -326,10 +326,6 @@
                     && Orbwalking.InAutoAttackRange(args.Target))
                 {
                     spells[Spells.Q].Cast();
-                    if (RengarQ || RengarE)
-                    {
-                        Orbwalking.ResetAutoAttackTimer();
-                    }
                 }
             }
         }
