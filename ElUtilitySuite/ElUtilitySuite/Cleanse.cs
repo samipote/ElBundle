@@ -268,6 +268,7 @@
                     Utility.DelayAction.Add(
                         delay,
                         () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
+
                     return;
                 }
 
