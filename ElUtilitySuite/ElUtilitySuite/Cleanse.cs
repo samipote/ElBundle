@@ -168,7 +168,7 @@
                         }
 
                         if (InitializeMenu.Menu.Item("Protect.Cleanse.Flee.Ally").GetValue<bool>()
-                            && b.Type == BuffType.Poison)
+                            && b.Type == BuffType.Flee)
                         {
                             Utility.DelayAction.Add(delay, () => mikaels.Cast(unit));
                         }
