@@ -58,7 +58,7 @@
                 clearMenu.SubMenu("Jungleclear").AddItem(new MenuItem("Jungle.Use.W", "Use W").SetValue(true));
                 clearMenu.SubMenu("Jungleclear").AddItem(new MenuItem("Jungle.Use.E", "Use E").SetValue(true));
                 clearMenu.SubMenu("Jungleclear")
-                    .AddItem(new MenuItem("Jungle.Movement", "Movement in jungle").SetValue(true));
+                    .AddItem(new MenuItem("Jungle.Movement2", "Movement in jungle off").SetValue(false));
                 clearMenu.SubMenu("Jungleclear")
                     .AddItem(new MenuItem("Jungle.Save.Ferocity", "Save ferocity").SetValue(false));
             }
