@@ -31,7 +31,7 @@
             {
                 var smiteMenu = Menu.AddSubMenu(new Menu("Smite", "Smite"));
                 {
-                    //Important smites
+
                     smiteMenu.AddItem(
                         new MenuItem("ElSmite.Activated", "Activated").SetValue(
                             new KeyBind("M".ToCharArray()[0], KeyBindType.Toggle, true)));
@@ -42,7 +42,6 @@
                         smiteMenu.AddItem(new MenuItem("SRU_Red", "Red buff").SetValue(true));
                         smiteMenu.AddItem(new MenuItem("SRU_Blue", "Blue buff").SetValue(true));
 
-                        //Bullshit smites
                         smiteMenu.AddItem(new MenuItem("SRU_Gromp", "Gromp").SetValue(false));
                         smiteMenu.AddItem(new MenuItem("SRU_Murkwolf", "Wolves").SetValue(false));
                         smiteMenu.AddItem(new MenuItem("SRU_Krug", "Krug").SetValue(false));
@@ -135,22 +134,15 @@
                         cleanseMenu.SubMenu("Cleanse settings")
                             .AddItem(new MenuItem("Protect.Cleanse" + buff, "" + buff));
 
-                    switch (buff)
+                    if (buff == BuffType.Taunt || buff == BuffType.Snare || buff == BuffType.Polymorph
+                        || buff == BuffType.Blind || buff == BuffType.Slow || buff == BuffType.Poison
+                        || buff == BuffType.Knockback || buff == BuffType.Knockup || buff == BuffType.Flee)
                     {
-                        case BuffType.Taunt:
-                        case BuffType.Snare:
-                        case BuffType.Polymorph:
-                        case BuffType.Blind:
-                        case BuffType.Slow:
-                        case BuffType.Poison:
-                        case BuffType.Knockback:
-                        case BuffType.Knockup:
-                        case BuffType.Flee:
-                            menucleanse.SetValue(false);
-                            break;
-                        default:
-                            menucleanse.SetValue(true);
-                            break;
+                        menucleanse.SetValue(false);
+                    }
+                    else
+                    {
+                        menucleanse.SetValue(true);
                     }
                     cleanseMenu.SubMenu("Cleanse settings")
                         .SubMenu("Activated")

@@ -32,7 +32,8 @@
                 comboMenu.SubMenu("Combo")
                     .AddItem(new MenuItem("Combo.Use.E.OutOfRange", "Use E when out of range").SetValue(false));
                 comboMenu.SubMenu("Combo")
-                    .AddItem(new MenuItem("Combo.Prio", "Prioritize").SetValue(new StringList(new[] { "E", "W", "Q" }, 2)));
+                    .AddItem(
+                        new MenuItem("Combo.Prio", "Prioritize").SetValue(new StringList(new[] { "E", "W", "Q" }, 2)));
                 comboMenu.SubMenu("Combo")
                     .AddItem(
                         new MenuItem("Combo.Switch", "Switch priority").SetValue(
@@ -56,6 +57,8 @@
                 clearMenu.SubMenu("Jungleclear").AddItem(new MenuItem("Jungle.Use.Q", "Use Q").SetValue(true));
                 clearMenu.SubMenu("Jungleclear").AddItem(new MenuItem("Jungle.Use.W", "Use W").SetValue(true));
                 clearMenu.SubMenu("Jungleclear").AddItem(new MenuItem("Jungle.Use.E", "Use E").SetValue(true));
+                clearMenu.SubMenu("Jungleclear")
+                    .AddItem(new MenuItem("Jungle.Movement", "Movement in jungle").SetValue(true));
                 clearMenu.SubMenu("Jungleclear")
                     .AddItem(new MenuItem("Jungle.Save.Ferocity", "Save ferocity").SetValue(false));
             }
@@ -94,7 +97,7 @@
 
         private static Menu OrbwalkingMenu()
         {
-            return Menu.AddSubMenu(new Menu("Swagwalker", "Orbwalker"));
+            return Menu.AddSubMenu(new Menu("jQuery Orbwalker", "Orbwalker"));
         }
 
         private static Menu TargetSelectorMenu()

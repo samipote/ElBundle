@@ -89,16 +89,15 @@
                         case 2:
                             if (IsActive("Combo.Use.Q"))
                             {
-                                //if (SendTime + Game.Ping + 700 - TickCount > 0)
-                                if (Utils.GameTimeTickCount - Rengar.lastrengarq < 1000)
+                                if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
                                     spells[Spells.Q].Cast();
-                                    Broscience(target);
+                                    //Broscience(target);
                                 }
                                 else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 {
                                     spells[Spells.Q].Cast();
-                                    Broscience(target);
+                                    //Broscience(target);
                                 }
                             }
                             break;
@@ -106,16 +105,16 @@
                         default:
                             if (IsActive("Combo.Use.Q"))
                             {
-                                if (Utils.GameTimeTickCount - Rengar.lastrengarq < 1000)
+                                if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
                                     spells[Spells.Q].Cast();
-                                    Broscience(target);
+                                    //Broscience(target);
                                     //Console.Write("Q Prio");
                                 }
                                 else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 {
                                     spells[Spells.Q].Cast();
-                                    Broscience(target);
+                                    //Broscience(target);
                                 }
                             }
                             break;
@@ -127,14 +126,14 @@
                     return;
                 }
 
-                if (IsActive("Combo.Use.Q") && target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1)
-                    || Utils.GameTimeTickCount - Rengar.lastrengarq < 1000)
+                //target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1
+                if (IsActive("Combo.Use.Q") && Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                 {
                     spells[Spells.Q].Cast();
-                    if (target != null)
+                   /* if (target != null)
                     {
                         Broscience(target);
-                    }
+                    }*/
                 }
 
                 if (RengarR)
@@ -150,9 +149,8 @@
                     Utility.DelayAction.Add(100, () => UseHydra());
                 }
 
-                if (target != null
-                    && (!HasPassive && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
-                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range))
+                if (!HasPassive && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
+                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range)
                 {
                     var prediction = spells[Spells.E].GetPrediction(target);
                     if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
@@ -219,7 +217,7 @@
         {
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
-                Utility.DelayAction.Add(
+                /*Utility.DelayAction.Add(
                     (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f),
                     () =>
                         {
@@ -227,7 +225,7 @@
                             {
                                 Player.IssueOrder(GameObjectOrder.AttackUnit, target);
                             }
-                        });
+                        });*/
             }
         }
 
@@ -333,9 +331,14 @@
                     1000,
                     MinionTypes.All,
                     MinionTeam.Neutral,
-                    MinionOrderTypes.MaxHealth).FirstOrDefault();
+                    MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.Distance(Player) < spells[Spells.W].Range);
 
             if (minion == null)
+            {
+                return;
+            }
+
+            if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
             {
                 return;
             }
@@ -349,13 +352,13 @@
                 return;
             }
 
-            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady() && !Player.IsWindingUp)
+            if (!Player.Spellbook.IsAutoAttacking && IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
             {
                 spells[Spells.Q].Cast();
             }
 
             if (IsActive("Jungle.Use.W") && spells[Spells.W].IsReady()
-                && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= spells[Spells.W].Range * 1 / 3)
+                && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= 500)
             {
                 UseHydra();
                 spells[Spells.W].Cast();
@@ -376,6 +379,11 @@
                 return;
             }
 
+            if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
+            {
+                return;
+            }
+
             if (Ferocity == 5 && IsActive("Clear.Save.Ferocity"))
             {
                 if (Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.W].Range * 1 / 3)
@@ -385,12 +393,11 @@
                 return;
             }
 
-            if (IsActive("Clear.Use.Q") && spells[Spells.Q].IsReady() && !Player.IsWindingUp)
+            if (!Player.Spellbook.IsAutoAttacking && IsActive("Clear.Use.Q") && spells[Spells.Q].IsReady()
+                && Utils.GameTimeTickCount - Rengar.LastAutoAttack < 5700 && Player.CanMove)
             {
-                if (spells[Spells.Q].GetDamage(minion) > minion.Health)
-                {
-                    spells[Spells.Q].Cast();
-                }
+                spells[Spells.Q].Cast();
+                return;
             }
 
             if (IsActive("Clear.Use.W") && spells[Spells.W].IsReady()

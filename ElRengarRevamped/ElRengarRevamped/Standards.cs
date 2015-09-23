@@ -22,7 +22,7 @@
                                                                                  Spells.Q,
                                                                                  new Spell(
                                                                                  SpellSlot.Q,
-                                                                                 Player.AttackRange + 100)
+                                                                                 Player.AttackRange)
                                                                              },
                                                                              { Spells.W, new Spell(SpellSlot.W, 500) },
                                                                              { Spells.E, new Spell(SpellSlot.E, 1000) },
@@ -115,6 +115,15 @@
 
         #endregion
 
+        #region Public Methods and Operators
+
+        public static bool IsActive(string menuItem)
+        {
+            return MenuInit.Menu.Item(menuItem).GetValue<bool>();
+        }
+
+        #endregion
+
         #region Methods
 
         protected static float IgniteDamage(Obj_AI_Hero target)
@@ -124,11 +133,6 @@
                 return 0f;
             }
             return (float)Player.GetSummonerSpellDamage(target, Damage.SummonerSpell.Ignite);
-        }
-
-        protected static bool IsActive(string menuItem)
-        {
-            return MenuInit.Menu.Item(menuItem).GetValue<bool>();
         }
 
         protected static StringList IsListActive(string menuItem)

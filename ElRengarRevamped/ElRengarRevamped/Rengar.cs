@@ -24,7 +24,7 @@
     {
         #region Static Fields
 
-        public static int lastAutoAttack, lastrengarq;
+        public static int LastAutoAttack, Lastrengarq;
 
         #endregion
 
@@ -127,18 +127,20 @@
                             if (IsListActive("Combo.Prio").SelectedIndex == 1
                                 && Player.Distance(target) < spells[Spells.Q].Range + 200)
                             {
-                                Utility.DelayAction.Add(50, () =>
-                                {
-                                    if (Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                        < spells[Spells.W].Range)
-                                    {
-                                        spells[Spells.W].Cast();
-                                    }
+                                Utility.DelayAction.Add(
+                                    50,
+                                    () =>
+                                        {
+                                            if (Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                                                < spells[Spells.W].Range)
+                                            {
+                                                spells[Spells.W].Cast();
+                                            }
 
-                                    spells[Spells.E].Cast(target.ServerPosition);
-                                    UseHydra();
-                                    Console.WriteLine("Casted Q Prio");
-                                });
+                                            spells[Spells.E].Cast(target.ServerPosition);
+                                            UseHydra();
+                                            Console.WriteLine("Casted Q Prio");
+                                        });
                             }
                         }
                         break;
@@ -265,12 +267,13 @@
 
                 if (args.SData.IsAutoAttack())
                 {
-                    lastAutoAttack = Utils.GameTimeTickCount;
+                    LastAutoAttack = Utils.GameTimeTickCount;
+                    //Console.WriteLine("AA");
                 }
 
                 if (RengarQ)
                 {
-                    lastrengarq = Utils.GameTimeTickCount;
+                    Lastrengarq = Environment.TickCount;
                 }
             }
         }
@@ -319,7 +322,8 @@
                     spells[Spells.Q].Cast();
                 }
 
-                if (Ferocity == 5 && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && Orbwalking.InAutoAttackRange(args.Target))
+                if (Ferocity == 5 && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo
+                    && Orbwalking.InAutoAttackRange(args.Target))
                 {
                     spells[Spells.Q].Cast();
                     if (RengarQ || RengarE)
