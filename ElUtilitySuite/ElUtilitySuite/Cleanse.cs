@@ -56,7 +56,6 @@
                 else
                 {
                     Console.WriteLine("You don't have cleanse faggot");
-                    return;
                 }
 
                 Game.OnUpdate += OnUpdate;
