@@ -336,7 +336,7 @@ namespace ElCorki
             var harassQ = ElCorkiMenu._menu.Item("ElCorki.Harass.Q").GetValue<bool>();
             var harassE = ElCorkiMenu._menu.Item("ElCorki.Harass.E").GetValue<bool>();
             var harassR = ElCorkiMenu._menu.Item("ElCorki.Harass.R").GetValue<bool>();
-            var minmana = ElCorkiMenu._menu.Item("ElCorki.harass.mana").GetValue<Slider>().Value;
+            var minmana = ElCorkiMenu._menu.Item("ElCorki.harass.mana2").GetValue<Slider>().Value;
             var rStacks = ElCorkiMenu._menu.Item("ElCorki.Harass.RStacks").GetValue<Slider>().Value;
 
             if (Player.ManaPercent < minmana)
