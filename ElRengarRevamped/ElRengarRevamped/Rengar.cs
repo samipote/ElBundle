@@ -317,7 +317,7 @@
         {
             if (args.Target is Obj_AI_Hero && args.Target.IsValidTarget())
             {
-                if (Ferocity <= 4)
+                if (Ferocity <= 4 && Orbwalking.InAutoAttackRange(args.Target))
                 {
                     spells[Spells.Q].Cast();
                 }
