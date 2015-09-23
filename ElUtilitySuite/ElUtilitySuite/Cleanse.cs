@@ -229,7 +229,13 @@
 
                 if (InitializeMenu.Menu.Item("Cleanse.Activated").GetValue<bool>())
                 {
-                    UseCleanse();
+                    var cleanseNames = new[] { "summonerboost" };
+
+                    if (cleanseNames.Contains(slot1.Name) || cleanseNames.Contains(slot2.Name))
+                    {
+                        UseCleanse();
+                    }
+
                     AllyCleanse();
                 }
             }
