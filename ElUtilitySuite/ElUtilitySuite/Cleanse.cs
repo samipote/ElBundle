@@ -18,7 +18,8 @@
                 BuffType.Snare, BuffType.Knockback, BuffType.Knockup,
                 BuffType.Blind, BuffType.Silence, BuffType.Charm, BuffType.Stun,
                 BuffType.Fear, BuffType.Slow, BuffType.Taunt,
-                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison, BuffType.Flee
+                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison,
+                BuffType.Flee
             };
 
         private static Spell cleanseSpell;
@@ -269,6 +270,7 @@
                         () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
                     return;
                 }
+
                 Utility.DelayAction.Add(delay, CleanseItems);
             }
 
@@ -285,6 +287,7 @@
                     Utility.DelayAction.Add(delay + 1000, () => CleanseItems());
                     return;
                 }
+
                 CleanseItems();
             }
         }
