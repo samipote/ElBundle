@@ -90,16 +90,32 @@
             if (sender.Name == "Rengar_Base_R_Alert" || sender.Name == "Rengar_LeapSound.troy" && sender.IsEnemy)
             {
                 var oracleLens = ItemData.Oracles_Lens_Trinket.GetItem();
+                var pinkTrinket = ItemData.Greater_Vision_Totem_Trinket.GetItem();
+                var pinkWard = ItemData.Vision_Ward.GetItem();
 
                 foreach (var enemy in
                     ObjectManager.Get<Obj_AI_Hero>()
                         .Where(hero => hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && hero.IsEnemy))
                 {
-                    Console.WriteLine("Yup");
                     if (oracleLens.IsOwned(Entry.Player) && oracleLens.IsReady()
-                              && InitializeMenu.Menu.Item("Protect.Rengar.Lens").GetValue<bool>())
+                        && InitializeMenu.Menu.Item("Protect.Rengar.Lens").GetValue<bool>())
                     {
                         oracleLens.Cast(Entry.Player);
+                        return;
+                    }
+
+                    if (pinkWard.IsOwned(Entry.Player) && pinkWard.IsReady()
+                        && InitializeMenu.Menu.Item("Protect.Rengar.Pinkward").GetValue<bool>())
+                    {
+                        pinkWard.Cast(enemy.ServerPosition);
+                        return;
+                    }
+
+                    if (pinkTrinket.IsOwned(Entry.Player) && pinkTrinket.IsReady()
+                        && InitializeMenu.Menu.Item("Protect.Rengar.PinkwardTrinket").GetValue<bool>())
+                    {
+                        pinkTrinket.Cast(enemy.ServerPosition);
+                        return;
                     }
                 }
             }
@@ -108,10 +124,7 @@
             {
                 foreach (var enemy in
                     ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(
-                            hero =>
-                            hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && !hero.IsDead)
-                    )
+                        .Where(hero => hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && !hero.IsDead))
                 {
                     rengarObj = enemy;
                 }
@@ -193,7 +206,6 @@
 
             try
             {
-         
             }
             catch (Exception e)
             {
