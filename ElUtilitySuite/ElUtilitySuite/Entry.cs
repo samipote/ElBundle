@@ -57,7 +57,6 @@
         {
             try
             {
-
                 new RecallTracker();
                 Heal.Load();
                 Ignite.Load();

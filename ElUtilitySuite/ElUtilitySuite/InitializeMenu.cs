@@ -1,7 +1,5 @@
 ﻿namespace ElUtilitySuite
 {
-    using System;
-    using System.Diagnostics;
     using System.Linq;
 
     using LeagueSharp;
@@ -18,7 +16,8 @@
                 BuffType.Snare, BuffType.Knockback, BuffType.Knockup,
                 BuffType.Blind, BuffType.Silence, BuffType.Charm, BuffType.Stun,
                 BuffType.Fear, BuffType.Slow, BuffType.Taunt,
-                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison, BuffType.Flee
+                BuffType.Suppression, BuffType.Polymorph, BuffType.Poison,
+                BuffType.Flee
             };
 
         #endregion
@@ -118,9 +117,9 @@
                 protectMenu.SubMenu("Rengar")
                     .AddItem(new MenuItem("Protect.Rengar.Lens", "Oracle's Lens").SetValue(true));
                 protectMenu.SubMenu("Rengar")
-                   .AddItem(new MenuItem("Protect.Rengar.Pinkward", "Pinkward").SetValue(true));
+                    .AddItem(new MenuItem("Protect.Rengar.Pinkward", "Pinkward").SetValue(true));
                 protectMenu.SubMenu("Rengar")
-                   .AddItem(new MenuItem("Protect.Rengar.PinkwardTrinket", "Pink trinket").SetValue(true));
+                    .AddItem(new MenuItem("Protect.Rengar.PinkwardTrinket", "Pink trinket").SetValue(true));
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali", "Autopink Akali W").SetValue(true));
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.PinkWard", "Pinkward").SetValue(true));
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali.Trinket", "Trinket").SetValue(true));
@@ -134,13 +133,19 @@
             {
                 //cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.TaricE", "Cleanse Taric E").SetValue(false));
                 //cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.LeonaQ", "Cleanse Leona Q").SetValue(false));
-                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.ZedR", "Cleanse Zed R").SetValue(true));
-                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.SkarnerR", "Cleanse Skarner R").SetValue(true));
-                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.VladimirR", "Cleanse Vladimir R").SetValue(true));
-                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.FioraR", "Cleanse Fiora R").SetValue(true));
-                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.MordekaiserR", "Cleanse Mordekaiser R").SetValue(true));
-                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.LeonaR", "Cleanse Leona R").SetValue(false));
-
+                cleanseMenu.SubMenu("Specials")
+                    .AddItem(new MenuItem("Protect.Cleanse.Specials.ZedR", "Cleanse Zed R").SetValue(true));
+                cleanseMenu.SubMenu("Specials")
+                    .AddItem(new MenuItem("Protect.Cleanse.Specials.SkarnerR", "Cleanse Skarner R").SetValue(true));
+                cleanseMenu.SubMenu("Specials")
+                    .AddItem(new MenuItem("Protect.Cleanse.Specials.VladimirR", "Cleanse Vladimir R").SetValue(true));
+                cleanseMenu.SubMenu("Specials")
+                    .AddItem(new MenuItem("Protect.Cleanse.Specials.FioraR", "Cleanse Fiora R").SetValue(true));
+                cleanseMenu.SubMenu("Specials")
+                    .AddItem(
+                        new MenuItem("Protect.Cleanse.Specials.MordekaiserR", "Cleanse Mordekaiser R").SetValue(true));
+                cleanseMenu.SubMenu("Specials")
+                    .AddItem(new MenuItem("Protect.Cleanse.Specials.LeonaR", "Cleanse Leona R").SetValue(false));
 
                 cleanseMenu.AddItem(new MenuItem("Cleanse.Activated", "Activated").SetValue(true));
                 cleanseMenu.AddItem(new MenuItem("Cleanse.Delay", "Cleanse delay ")).SetValue(new Slider(0, 0, 25));
@@ -243,7 +248,6 @@
             CreateMenuItem("Frost Queen's Claim", "Frostclaim", 100, 30);
 
             #endregion
-
 
             var notificationsMenu = Menu.AddSubMenu(new Menu("Recall tracker", "Recall tracker"));
 

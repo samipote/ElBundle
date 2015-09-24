@@ -109,7 +109,7 @@
                 var aHealthPercent = (int)((target.Health / target.MaxHealth) * 100);
                 if (aHealthPercent <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value
                     && InitializeMenu.Menu.Item("healon" + target.ChampionName).GetValue<bool>()
-                    &&  !Entry.Player.IsRecalling() && !Entry.Player.InFountain())
+                    && !Entry.Player.IsRecalling() && !Entry.Player.InFountain())
                 {
                     if ((iDamagePercent >= 1 || incdmg >= target.Health) && AggroTarget.NetworkId == target.NetworkId)
                     {
@@ -119,7 +119,8 @@
 
                 else if (iDamagePercent >= InitializeMenu.Menu.Item("Heal.Damage").GetValue<Slider>().Value
                          && InitializeMenu.Menu.Item("healon" + target.ChampionName).GetValue<bool>()
-                         && AggroTarget.NetworkId == target.NetworkId && !Entry.Player.IsRecalling() && !Entry.Player.InFountain())
+                         && AggroTarget.NetworkId == target.NetworkId && !Entry.Player.IsRecalling()
+                         && !Entry.Player.InFountain())
                 {
                     Entry.Player.Spellbook.CastSpell(summonerHeal);
                 }

@@ -80,6 +80,10 @@
                     return new Spell(SpellSlot.E, 400);
                 case "Urgot":
                     return new Spell(SpellSlot.R, 700);
+                case "VelKoz":
+                    return new Spell(SpellSlot.E, 800);
+                case "Morgana":
+                    return new Spell(SpellSlot.Q, 1175);
             }
 
             return null;
@@ -129,6 +133,7 @@
                     rengarObj = enemy;
                 }
             }
+
             if (rengarObj != null && Entry.Player.Distance(rengarObj, true) < 1000 * 1000
                 && InitializeMenu.Menu.Item("Protect.Rengar2").GetValue<bool>())
             {
@@ -219,7 +224,8 @@
                    || Entry.Player.ChampionName == "Draven" || Entry.Player.ChampionName == "Ashe"
                    || Entry.Player.ChampionName == "Leesin" || Entry.Player.ChampionName == "Janna"
                    || Entry.Player.ChampionName == "Fiddlesticks" || Entry.Player.ChampionName == "Braum"
-                   || Entry.Player.ChampionName == "Thresh" || Entry.Player.ChampionName == "Urgot";
+                   || Entry.Player.ChampionName == "Thresh" || Entry.Player.ChampionName == "Urgot"
+                   || Entry.Player.ChampionName == "VelKoz" || Entry.Player.ChampionName == "Morgana";
         }
 
         #endregion

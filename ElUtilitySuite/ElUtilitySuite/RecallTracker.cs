@@ -1,7 +1,8 @@
 ﻿namespace ElUtilitySuite
 {
     //Recall tracker from BaseUlt
-    #region 
+
+    #region
 
     using System;
     using System.Collections.Generic;
