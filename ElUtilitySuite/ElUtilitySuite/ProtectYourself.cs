@@ -87,7 +87,7 @@
 
         private static void OnCreateObject(GameObject sender, EventArgs args)
         {
-            if (sender.Name == "Rengar_Base_R_Alert" && sender.IsEnemy)
+            if (sender.Name == "Rengar_Base_R_Alert" || sender.Name == "Rengar_LeapSound.troy" && sender.IsEnemy)
             {
                 var oracleLens = ItemData.Oracles_Lens_Trinket.GetItem();
 
@@ -95,6 +95,7 @@
                     ObjectManager.Get<Obj_AI_Hero>()
                         .Where(hero => hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && hero.IsEnemy))
                 {
+                    Console.WriteLine("Yup");
                     if (oracleLens.IsOwned(Entry.Player) && oracleLens.IsReady()
                               && InitializeMenu.Menu.Item("Protect.Rengar.Lens").GetValue<bool>())
                     {
