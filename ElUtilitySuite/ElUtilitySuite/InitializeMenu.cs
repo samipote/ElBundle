@@ -244,6 +244,13 @@
 
             #endregion
 
+
+            var notificationsMenu = Menu.AddSubMenu(new Menu("Recall tracker", "Recall tracker"));
+
+            notificationsMenu.AddItem(new MenuItem("showRecalls", "Show Recalls").SetValue(true));
+            notificationsMenu.AddItem(new MenuItem("notifRecFinished", "Recall finished").SetValue(true));
+            notificationsMenu.AddItem(new MenuItem("notifRecAborted", "Recall aborted").SetValue(true));
+
             Menu.AddItem(new MenuItem("seperator1", ""));
 
             Menu.AddItem(new MenuItem("usecombo", "Combo (Active)").SetValue(new KeyBind(32, KeyBindType.Press)));
