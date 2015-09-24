@@ -210,7 +210,7 @@
         {
             return Entry.Player.HasBuffOfType(BuffType.Suppression) || Entry.Player.HasBuff("ZedR")
                    || Entry.Player.HasBuff("vladimirhemoplague") || Entry.Player.HasBuff("urgotswap2")
-                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave") || Entry.Player.HasBuff("fiorarmark");
+                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave") || Entry.Player.HasBuff("fiorarmark") || Entry.Player.HasBuff("fiorarmark");
         }
 
         private static bool IsCleanseReady()
@@ -260,6 +260,7 @@
 
             var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value * 10;
 
+
             foreach (var buff in Bufftype)
             {
                 if (InitializeMenu.Menu.Item("Protect.Cleanse" + buff).GetValue<bool>()
@@ -277,15 +278,39 @@
 
             if (DangerousSpells())
             {
-                if (Entry.Player.HasBuff("ZedR"))
+                if (Entry.Player.HasBuff("ZedR") && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.ZedR").GetValue<bool>())
                 {
                     Utility.DelayAction.Add(delay + 1800, () => CleanseItems());
                     return;
                 }
 
-                if (Entry.Player.HasBuff("SkarnerR"))
+                if (Entry.Player.HasBuff("SkarnerR") && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.SkarnerR").GetValue<bool>())
                 {
-                    Utility.DelayAction.Add(delay + 1000, () => CleanseItems());
+                    Utility.DelayAction.Add(1000, () => CleanseItems());
+                    return;
+                }
+                
+                if (Entry.Player.HasBuff("vladimirhemoplague") && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.VladimirR").GetValue<bool>())
+                {
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
+                    return;
+                }
+
+                if (Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave") && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.MordekaiserR").GetValue<bool>())
+                {
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
+                    return;
+                }
+
+                if (Entry.Player.HasBuff("fiorarmark") && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.FioraR").GetValue<bool>())
+                {
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
+                    return;
+                }
+
+                if (Entry.Player.HasBuff("LeonaSolarFlare") && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.LeonaR").GetValue<bool>())
+                {
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
                     return;
                 }
 

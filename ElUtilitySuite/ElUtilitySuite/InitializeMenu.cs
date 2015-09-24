@@ -128,6 +128,16 @@
 
             var cleanseMenu = Menu.AddSubMenu(new Menu("Cleanse", "Cleanse"));
             {
+                //cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.TaricE", "Cleanse Taric E").SetValue(false));
+                //cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.LeonaQ", "Cleanse Leona Q").SetValue(false));
+                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.ZedR", "Cleanse Zed R").SetValue(true));
+                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.SkarnerR", "Cleanse Skarner R").SetValue(true));
+                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.VladimirR", "Cleanse Vladimir R").SetValue(true));
+                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.FioraR", "Cleanse Fiora R").SetValue(true));
+                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.MordekaiserR", "Cleanse Mordekaiser R").SetValue(true));
+                cleanseMenu.SubMenu("Specials").AddItem(new MenuItem("Protect.Cleanse.Specials.LeonaR", "Cleanse Leona R").SetValue(false));
+
+
                 cleanseMenu.AddItem(new MenuItem("Cleanse.Activated", "Activated").SetValue(true));
                 cleanseMenu.AddItem(new MenuItem("Cleanse.Delay", "Cleanse delay ")).SetValue(new Slider(0, 0, 25));
                 foreach (var buff in Bufftype)
