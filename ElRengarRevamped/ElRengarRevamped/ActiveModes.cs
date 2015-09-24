@@ -338,10 +338,10 @@
                 return;
             }
 
-            if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
+            /*if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
             {
                 return;
-            }
+            }*/
 
             if (Ferocity == 5 && IsActive("Jungle.Save.Ferocity"))
             {
@@ -352,6 +352,11 @@
                 return;
             }
 
+            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
+            {
+                spells[Spells.Q].Cast();
+            }
+
             if (IsActive("Jungle.Use.W") && spells[Spells.W].IsReady()
              && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= 450)
             {
@@ -359,10 +364,6 @@
                 spells[Spells.W].Cast();
             }
 
-            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
-            {
-                spells[Spells.Q].Cast();
-            }
 
             if (IsActive("Jungle.Use.E") && spells[Spells.E].IsReady()
                 && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.E].Range)
