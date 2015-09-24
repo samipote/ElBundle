@@ -83,7 +83,7 @@
 
         private static void Heal()
         {
-            if (Player.IsRecalling() || Player.InFountain() || Player.Mana <= 4)
+            if (Player.IsRecalling() || Player.InFountain() || Player.Mana <= 4 || RengarR)
             {
                 return;
             }

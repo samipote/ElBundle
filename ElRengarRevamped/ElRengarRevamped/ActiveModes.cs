@@ -328,10 +328,10 @@
             var minion =
                 MinionManager.GetMinions(
                     Player.ServerPosition,
-                    1000,
+                    spells[Spells.W].Range + 100,
                     MinionTypes.All,
                     MinionTeam.Neutral,
-                    MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.Distance(Player) < spells[Spells.W].Range);
+                    MinionOrderTypes.MaxHealth).FirstOrDefault();
 
             if (minion == null)
             {
@@ -352,16 +352,16 @@
                 return;
             }
 
-            if (!Player.Spellbook.IsAutoAttacking && IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
-            {
-                spells[Spells.Q].Cast();
-            }
-
             if (IsActive("Jungle.Use.W") && spells[Spells.W].IsReady()
-                && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= 500)
+             && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= 450)
             {
                 UseHydra();
                 spells[Spells.W].Cast();
+            }
+
+            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
+            {
+                spells[Spells.Q].Cast();
             }
 
             if (IsActive("Jungle.Use.E") && spells[Spells.E].IsReady()
