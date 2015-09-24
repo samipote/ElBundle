@@ -87,20 +87,36 @@
 
         private static void OnCreateObject(GameObject sender, EventArgs args)
         {
+            if (sender.Name == "Rengar_Base_R_Alert" && sender.IsEnemy)
+            {
+                var oracleLens = ItemData.Oracles_Lens_Trinket.GetItem();
+
+                foreach (var enemy in
+                    ObjectManager.Get<Obj_AI_Hero>()
+                        .Where(hero => hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && hero.IsEnemy))
+                {
+                    if (oracleLens.IsOwned(Entry.Player) && oracleLens.IsReady()
+                              && InitializeMenu.Menu.Item("Protect.Rengar.Lens").GetValue<bool>())
+                    {
+                        oracleLens.Cast(enemy.ServerPosition);
+                    }
+                }
+            }
+
             if (sender.Name == "Rengar_LeapSound.troy" && sender.IsEnemy)
             {
                 foreach (var enemy in
                     ObjectManager.Get<Obj_AI_Hero>()
                         .Where(
                             hero =>
-                            hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && !hero.IsVisible && !hero.IsDead)
+                            hero.IsValidTarget(1500) && hero.ChampionName == "Rengar" && !hero.IsDead)
                     )
                 {
                     rengarObj = enemy;
                 }
             }
             if (rengarObj != null && Entry.Player.Distance(rengarObj, true) < 1000 * 1000
-                && InitializeMenu.Menu.Item("Protect.Rengar").GetValue<bool>())
+                && InitializeMenu.Menu.Item("Protect.Rengar2").GetValue<bool>())
             {
                 AntiRengar();
             }
@@ -176,21 +192,7 @@
 
             try
             {
-                var oracleLens = ItemData.Oracles_Lens_Trinket.GetItem();
-
-                foreach (var enemy in
-                    ObjectManager.Get<Obj_AI_Hero>()
-                        .Where(hero => hero.IsValidTarget(1500) && hero.ChampionName == "Rengar"))
-                {
-                    if (enemy.HasBuff("rengarralertsound") || enemy.HasBuff("RengarRBuff"))
-                    {
-                        if (oracleLens.IsOwned(Entry.Player) && oracleLens.IsReady()
-                            && InitializeMenu.Menu.Item("Protect.Rengar.Lens").GetValue<bool>())
-                        {
-                            oracleLens.Cast(enemy.ServerPosition);
-                        }
-                    }
-                }
+         
             }
             catch (Exception e)
             {

@@ -1,5 +1,7 @@
 ﻿namespace ElUtilitySuite
 {
+    using System;
+    using System.Diagnostics;
     using System.Linq;
 
     using LeagueSharp;
@@ -27,11 +29,11 @@
         {
             Menu = new Menu("ElUtilitySuite", "ElUtilitySuite", true);
 
-            if (Smite.smiteSlot != SpellSlot.Unknown)
+            var smite = Entry.Player.Spellbook.Spells.FindAll(h => h.Name.ToLower().Contains("smite")).FirstOrDefault();
+            if (smite != null && Smite.smiteSlot != SpellSlot.Unknown)
             {
                 var smiteMenu = Menu.AddSubMenu(new Menu("Smite", "Smite"));
                 {
-
                     smiteMenu.AddItem(
                         new MenuItem("ElSmite.Activated", "Activated").SetValue(
                             new KeyBind("M".ToCharArray()[0], KeyBindType.Toggle, true)));
@@ -112,7 +114,7 @@
             var protectMenu = Menu.AddSubMenu(new Menu("Protect yourself", "ProtectYourself"));
             {
                 protectMenu.SubMenu("Rengar")
-                    .AddItem(new MenuItem("Protect.Rengar", "Rengar antigapcloser").SetValue(true));
+                    .AddItem(new MenuItem("Protect.Rengar2", "Rengar antigapcloser - Beta").SetValue(false));
                 protectMenu.SubMenu("Rengar")
                     .AddItem(new MenuItem("Protect.Rengar.Lens", "Oracle's Lens").SetValue(true));
                 protectMenu.SubMenu("Akali").AddItem(new MenuItem("Protect.Akali", "Autopink Akali W").SetValue(true));
