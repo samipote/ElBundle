@@ -98,7 +98,7 @@
                     if (oracleLens.IsOwned(Entry.Player) && oracleLens.IsReady()
                               && InitializeMenu.Menu.Item("Protect.Rengar.Lens").GetValue<bool>())
                     {
-                        oracleLens.Cast(enemy.ServerPosition);
+                        oracleLens.Cast(Entry.Player);
                     }
                 }
             }
