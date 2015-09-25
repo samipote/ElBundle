@@ -72,7 +72,7 @@ namespace Elvarus
             Notifications.AddNotification("ElVarus by jQuery v1.0.1.5", 10000);
 
             spells[Spells.Q].SetSkillshot(.25f, 70f, 1650f, false, SkillshotType.SkillshotLine);
-            spells[Spells.E].SetSkillshot(.50f, 250f, 1400f, false, SkillshotType.SkillshotCircle);
+            spells[Spells.E].SetSkillshot(0.35f, 120, 1500, false, SkillshotType.SkillshotCircle);
             spells[Spells.R].SetSkillshot(.25f, 120f, 1950f, false, SkillshotType.SkillshotLine);
 
             spells[Spells.Q].SetCharged("VarusQ", "VarusQ", 250, 1600, 1.2f);
@@ -118,10 +118,23 @@ namespace Elvarus
 
         private static void Combo()
         {
-            var target = TargetSelector.GetTarget(spells[Spells.Q].ChargedMaxRange, TargetSelector.DamageType.Physical);
+            var wTarget =
+                HeroManager.Enemies.Find(
+                    x => x.HasBuff("varuswdebuff") && x.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player)));
+            var target = wTarget
+                         ?? TargetSelector.GetTarget(
+                             spells[Spells.Q].ChargedMaxRange,
+                             TargetSelector.DamageType.Physical);
+
             if (target == null || !target.IsValidTarget())
             {
                 return;
+            }
+            if (wTarget != null && ElVarusMenu.Menu.Item("ElVarus.Combo.W.Focus").GetValue<bool>())
+            {
+                TargetSelector.SetTarget(target);
+                Hud.SelectedUnit = target;
+                Console.WriteLine("Selected target: {0}", target.ChampionName);
             }
 
             var stackCount = ElVarusMenu.Menu.Item("ElVarus.Combo.Stack.Count").GetValue<Slider>().Value;
@@ -131,12 +144,13 @@ namespace Elvarus
             var comboR = ElVarusMenu.Menu.Item("ElVarus.Combo.R").GetValue<bool>();
             var alwaysQ = ElVarusMenu.Menu.Item("ElVarus.combo.always.Q").GetValue<bool>();
 
-            Items(target);
 
-            if (comboE && spells[Spells.E].IsReady())
+            if (comboE && spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
             {
                 spells[Spells.E].Cast(target);
             }
+
+            Items(target);
 
             if (spells[Spells.Q].IsReady() && comboQ)
             {
@@ -156,10 +170,61 @@ namespace Elvarus
                 }
             }
 
+            if (IsQKillable(target))
+            {
+                if (!spells[Spells.Q].IsCharging)
+                {
+                    spells[Spells.Q].StartCharging();
+                }
+
+                if (spells[Spells.Q].IsCharging)
+                {
+                    spells[Spells.Q].Cast(target);
+                }
+            }
+
             if (comboR && Player.CountEnemiesInRange(spells[Spells.R].Range) >= rCount && spells[Spells.R].IsReady())
             {
                 spells[Spells.R].CastOnBestTarget();
             }
+        }
+
+
+        //Credits to God :cat_lazy:
+        private static void Killsteal()
+        {
+            if (ElVarusMenu.Menu.Item("ElVarus.KSSS").GetValue<bool>() && spells[Spells.Q].IsReady())
+            {
+                foreach (var target in
+                    HeroManager.Enemies.Where(
+                        enemy =>
+                        enemy.IsValidTarget() && IsQKillable(enemy)
+                        && Player.Distance(enemy.Position) <= spells[Spells.Q].ChargedMaxRange))
+                {
+                    spells[Spells.Q].StartCharging();
+
+                    if (spells[Spells.Q].IsCharging)
+                    {
+                        _orbwalker.SetAttack(false);
+                        if (IsQKillable(target) && !target.IsInvulnerable) spells[Spells.Q].Cast(target);
+                    }
+                }
+            }
+        }
+
+        private static double GetExecuteDamage(Obj_AI_Base target)
+        {
+            if (spells[Spells.Q].IsReady())
+            {
+                return (spells[Spells.Q].GetDamage(target)) + (Player.TotalAttackDamage());
+            }
+
+            return 0;
+        }
+
+        private static float GetHealth(Obj_AI_Base target)
+        {
+            return target.Health;
         }
 
         private static HitChance GetHitchance()
@@ -175,7 +240,7 @@ namespace Elvarus
                 case 3:
                     return HitChance.VeryHigh;
                 default:
-                    return HitChance.Medium;
+                    return HitChance.VeryHigh;
             }
         }
 
@@ -183,7 +248,7 @@ namespace Elvarus
         {
             return
                 target.Buffs.Where(
-                    xBuff => xBuff.Name == "varuswdebuff" && target.IsValidTarget(spells[Spells.Q].Range))
+                    xBuff => xBuff.Name == "varuswdebuff" && target.IsValidTarget(spells[Spells.Q].ChargedMaxRange))
                     .Select(xBuff => xBuff.Count)
                     .FirstOrDefault();
         }
@@ -227,6 +292,12 @@ namespace Elvarus
                     }
                 }
             }
+        }
+
+        private static bool IsQKillable(Obj_AI_Base target)
+        {
+            var hero = target as Obj_AI_Hero;
+            return GetExecuteDamage(target) > GetHealth(target) && (hero == null);
         }
 
         private static void Items(Obj_AI_Base target)
@@ -387,6 +458,8 @@ namespace Elvarus
                     Harass();
                     break;
             }
+
+            Killsteal();
 
             if (_orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {

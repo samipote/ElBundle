@@ -33,6 +33,7 @@ namespace Elvarus
             cMenu.AddItem(new MenuItem("ElVarus.combo.always.Q", "always Q").SetValue(false));
             cMenu.AddItem(new MenuItem("ElVarus.Combo.E", "Use E").SetValue(true));
             cMenu.AddItem(new MenuItem("ElVarus.Combo.R", "Use R").SetValue(true));
+            cMenu.AddItem(new MenuItem("ElVarus.Combo.W.Focus", "Focus W target").SetValue(false));
             cMenu.AddItem(new MenuItem("ElVarus.sssss", ""));
             cMenu.AddItem(new MenuItem("ElVarus.Combo.R.Count", "R when enemies >= ")).SetValue(new Slider(1, 1, 5));
             cMenu.AddItem(new MenuItem("ElVarus.Combo.Stack.Count", "Q when stacks >= ")).SetValue(new Slider(3, 1, 3));
@@ -86,7 +87,7 @@ namespace Elvarus
             Menu.AddSubMenu(lMenu);
 
             //ElSinged.Misc
-            var miscMenu = new Menu("Drawings", "Misc");
+            var miscMenu = new Menu("Misc", "Misc");
             miscMenu.AddItem(new MenuItem("ElVarus.Draw.off", "Turn drawings off").SetValue(false));
             miscMenu.AddItem(new MenuItem("ElVarus.Draw.Q", "Draw Q").SetValue(new Circle()));
             miscMenu.AddItem(new MenuItem("ElVarus.Draw.W", "Draw W").SetValue(new Circle()));
@@ -115,6 +116,8 @@ namespace Elvarus
                     DrawDamage.Fill = eventArgs.GetNewValue<Circle>().Active;
                     DrawDamage.FillColor = eventArgs.GetNewValue<Circle>().Color;
                 };
+
+            miscMenu.AddItem(new MenuItem("ElVarus.KSSS", "Killsteal").SetValue(true));
 
             Menu.AddSubMenu(miscMenu);
 
