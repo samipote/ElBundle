@@ -58,7 +58,7 @@
                     {
                         //!HasPassive && 
                         case 0:
-                            if ((int)(Game.Time * 1000) - SendTime < (700 + Game.Ping))
+                            if (!RengarR && (int)(Game.Time * 1000) - SendTime < (700 + Game.Ping))
                             {
                                 var prediction = spells[Spells.E].GetPrediction(target);
                                 if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
@@ -66,7 +66,7 @@
                                     spells[Spells.E].Cast(target);
                                 }
                             }
-                            else if (IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
+                            else if (!RengarR && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
                                      && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
                                      <= spells[Spells.E].Range)
                             {
