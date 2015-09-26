@@ -54,11 +54,6 @@
                     cleanseSpell = new Spell(SpellSlot.Summoner2, 550f);
                     summonerCleanse = SpellSlot.Summoner2;
                 }
-                else
-                {
-                    Console.WriteLine("You don't have cleanse faggot");
-                }
-
                 Game.OnUpdate += OnUpdate;
             }
             catch (Exception e)
@@ -231,13 +226,7 @@
 
                 if (InitializeMenu.Menu.Item("Cleanse.Activated").GetValue<bool>())
                 {
-                    var cleanseNames = new[] { "summonerboost" };
-
-                    if (cleanseNames.Contains(slot1.Name) || cleanseNames.Contains(slot2.Name))
-                    {
-                        UseCleanse();
-                    }
-
+                    UseCleanse();
                     AllyCleanse();
                 }
             }
@@ -254,27 +243,37 @@
                 return;
             }
 
+            var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value * 10;
+
             if (!InitializeMenu.Menu.Item("Cleanse.Activated").GetValue<bool>())
             {
                 return;
             }
 
-            var delay = InitializeMenu.Menu.Item("Cleanse.Delay").GetValue<Slider>().Value * 10;
-
             foreach (var buff in Bufftype)
             {
                 if (InitializeMenu.Menu.Item("Protect.Cleanse" + buff).GetValue<bool>()
-                    && Entry.Player.HasBuffOfType(buff) && IsCleanseReady())
+                    && Entry.Player.HasBuffOfType(buff))
                 {
-                    Utility.DelayAction.Add(
-                        delay,
-                        () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
+                    var cleanseNames = new[] { "summonerboost" };
+                    if (cleanseNames.Contains(slot1.Name) || cleanseNames.Contains(slot2.Name))
+                    {
+                        if (IsCleanseReady())
+                        {
+                            Utility.DelayAction.Add(
+                                delay,
+                                () => Entry.Player.Spellbook.CastSpell(cleanseSpell.Slot, Entry.Player));
 
+                            return;
+                        }
+                    }
+
+                    Utility.DelayAction.Add(delay, () => CleanseItems());
                     return;
                 }
-
-                Utility.DelayAction.Add(delay, CleanseItems);
             }
+
+            CleanseItems();
 
             if (DangerousSpells())
             {
@@ -318,10 +317,7 @@
                     && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.LeonaR").GetValue<bool>())
                 {
                     Utility.DelayAction.Add(delay, () => CleanseItems());
-                    return;
                 }
-
-                CleanseItems();
             }
         }
 
