@@ -92,12 +92,10 @@
                                 if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
                                     spells[Spells.Q].Cast();
-                                    //Broscience(target);
                                 }
                                 else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 {
                                     spells[Spells.Q].Cast();
-                                    //Broscience(target);
                                 }
                             }
                             break;
@@ -108,13 +106,10 @@
                                 if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
                                     spells[Spells.Q].Cast();
-                                    //Broscience(target);
-                                    //Console.Write("Q Prio");
                                 }
                                 else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 {
                                     spells[Spells.Q].Cast();
-                                    //Broscience(target);
                                 }
                             }
                             break;
@@ -127,13 +122,9 @@
                 }
 
                 //target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1
-                if (IsActive("Combo.Use.Q") && Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
+                if (IsActive("Combo.Use.Q") && Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000 && spells[Spells.Q].IsInRange(target))
                 {
                     spells[Spells.Q].Cast();
-                   /* if (target != null)
-                    {
-                        Broscience(target);
-                    }*/
                 }
 
                 if (RengarR)
@@ -168,10 +159,7 @@
 
                 if (target.IsValidTarget(250f))
                 {
-                    if (target != null)
-                    {
-                        UseHydra();
-                    }
+                    UseHydra();
                 }
 
                 if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100 && !RengarR
@@ -207,27 +195,6 @@
         }
 
         #endregion
-
-        #endregion
-
-        #region Methods
-
-        //This is BroScience by Asuna
-        private static void Broscience(AttackableUnit target)
-        {
-            if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
-            {
-                /*Utility.DelayAction.Add(
-                    (int)(Game.Ping / 2f + spells[Spells.Q].Delay * 1000 + 300f / 1000f + 50f),
-                    () =>
-                        {
-                            if (target.IsValidTarget() && !Player.IsWindingUp)
-                            {
-                                Player.IssueOrder(GameObjectOrder.AttackUnit, target);
-                            }
-                        });*/
-            }
-        }
 
         #endregion
 

@@ -22,7 +22,7 @@
                                                                                  Spells.Q,
                                                                                  new Spell(
                                                                                  SpellSlot.Q,
-                                                                                 Player.AttackRange)
+                                                                                 Player.AttackRange + 150)
                                                                              },
                                                                              { Spells.W, new Spell(SpellSlot.W, 500) },
                                                                              { Spells.E, new Spell(SpellSlot.E, 1000) },
