@@ -33,7 +33,7 @@
 
         protected static SpellSlot Ignite;
 
-        protected static int LastSwitch;
+        public static int LastSwitch;
 
         protected static int SendTime = 0;
 

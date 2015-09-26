@@ -58,7 +58,6 @@
                     {
                         //!HasPassive && 
                         case 0:
-
                             if ((int)(Game.Time * 1000) - SendTime < (700 + Game.Ping))
                             {
                                 var prediction = spells[Spells.E].GetPrediction(target);

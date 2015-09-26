@@ -121,11 +121,10 @@
                         break;
 
                     case 1:
-                        spells[Spells.Q].Cast();
+                       spells[Spells.Q].Cast();
                         if (target.IsValidTarget())
                         {
-                            if (IsListActive("Combo.Prio").SelectedIndex == 1
-                                && Player.Distance(target) < spells[Spells.Q].Range + 200)
+                            if (Player.Distance(target) < spells[Spells.Q].Range + 100)
                             {
                                 Utility.DelayAction.Add(
                                     50,
@@ -332,24 +331,24 @@
 
         private static void SwitchCombo()
         {
-            var switchTime = Environment.TickCount - LastSwitch;
-
+            var switchTime = Utils.GameTimeTickCount - LastSwitch;
             if (MenuInit.Menu.Item("Combo.Switch").GetValue<KeyBind>().Active && switchTime >= 350)
             {
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
                         MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 2));
-                        LastSwitch = Environment.TickCount;
+                        Console.WriteLine("yeee");
+                        LastSwitch = Utils.GameTimeTickCount;
                         break;
                     case 1:
                         MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 0));
-                        LastSwitch = Environment.TickCount;
+                        LastSwitch = Utils.GameTimeTickCount;
                         break;
 
                     default:
                         MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 0));
-                        LastSwitch = Environment.TickCount;
+                        LastSwitch = Utils.GameTimeTickCount;
                         break;
                 }
             }
