@@ -273,7 +273,7 @@
                 }
             }
 
-            CleanseItems();
+            //CleanseItems();
 
             if (DangerousSpells())
             {
