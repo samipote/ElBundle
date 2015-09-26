@@ -250,7 +250,16 @@
             CreateMenuItem("Frost Queen's Claim", "Frostclaim", 100, 30);
 
             defensiveMenu = Menu.AddSubMenu(new Menu("Defensive", "DefensiveMenu"));
+
+            foreach (var x in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsAlly))
+            {
+                defensiveMenu.AddItem(new MenuItem("DefenseOn" + x.SkinName, "Use for " + x.SkinName)).SetValue(true);
+            }
+
             CreateDefensiveItem("Randuin's Omen", "Randuins", "selfcount", 40, 40);
+            CreateDefensiveItem("Face of the Mountain", "Mountain", "allyhealth", 20, 45);
+            CreateDefensiveItem("Locket of Iron Solari", "Locket", "allyhealth", 40, 45);
+            CreateDefensiveItem("Seraph's Embrace", "Seraphs", "selfhealth", 40, 45);
 
             defensiveMenu.SubMenu("Talisman")
                 .AddItem(new MenuItem("useTalisman", "Use Talisman of Ascension"))
@@ -296,20 +305,13 @@
             if (!type.Contains("count"))
             {
                 menuName.AddItem(new MenuItem("use" + name + "Pct", "Use on HP %")).SetValue(new Slider(hpvalue));
-                menuName.AddItem(new MenuItem("use" + name + "Dmg", "Use on Dmg dealt %"))
+                menuName.AddItem(new MenuItem("use" + name + "Dmg", "Use on damage dealt %"))
                     .SetValue(new Slider(dmgvalue));
             }
 
             if (type.Contains("count"))
             {
                 menuName.AddItem(new MenuItem("use" + name + "Count", "Use on Count")).SetValue(new Slider(3, 1, 5));
-            }
-
-            if (!type.Contains("count"))
-            {
-                menuName.AddItem(new MenuItem("use" + name + "Zhy", "Use on Dangerous (Spells)")).SetValue(false);
-                menuName.AddItem(new MenuItem("use" + name + "Ults", "Use on Dangerous (Ultimates Only)"))
-                    .SetValue(true);
             }
 
             defensiveMenu.AddSubMenu(menuName);

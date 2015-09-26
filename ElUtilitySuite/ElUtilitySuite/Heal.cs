@@ -57,11 +57,6 @@
                     healSpell = new Spell(SpellSlot.Summoner2, 550f);
                     summonerHeal = SpellSlot.Summoner2;
                 }
-                else
-                {
-                    Console.WriteLine("You don't have heal faggot");
-                    return;
-                }
 
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Game.OnUpdate += OnUpdate;
