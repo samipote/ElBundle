@@ -209,9 +209,9 @@
         private static bool DangerousSpells()
         {
             return Entry.Player.HasBuffOfType(BuffType.Suppression) || Entry.Player.HasBuff("ZedR")
-                   || Entry.Player.HasBuff("vladimirhemoplague") || Entry.Player.HasBuff("urgotswap2")
-                   || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave") || Entry.Player.HasBuff("fiorarmark")
-                   || Entry.Player.HasBuff("fiorarmark");
+                   || Entry.Player.HasBuff("zedrdeathmark") || Entry.Player.HasBuff("vladimirhemoplague")
+                   || Entry.Player.HasBuff("urgotswap2") || Entry.Player.HasBuff("MordekaiserChildrenOfTheGrave")
+                   || Entry.Player.HasBuff("fiorarmark") || Entry.Player.HasBuff("fiorarmark");
         }
 
         private static bool IsCleanseReady()
@@ -279,6 +279,7 @@
             if (DangerousSpells())
             {
                 if (Entry.Player.HasBuff("ZedR")
+                    || Entry.Player.HasBuff("zedrdeathmark")
                     && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.ZedR").GetValue<bool>())
                 {
                     Utility.DelayAction.Add(delay + 1800, () => CleanseItems());

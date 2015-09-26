@@ -30,6 +30,13 @@
 
         #region Public Methods and Operators
 
+        public static Obj_AI_Hero GetEnemy(string championname)
+        {
+            return
+                ObjectManager.Get<Obj_AI_Hero>()
+                    .First(enemy => enemy.Team != Entry.Player.Team && enemy.ChampionName == championname);
+        }
+
         public static void Load()
         {
             try
@@ -69,27 +76,6 @@
 
         #region Methods
 
-        private static Obj_AI_Hero Allies()
-        {
-            var target = Entry.Player;
-            foreach (var unit in
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Where(x => x.IsAlly && x.IsValidTarget(900, false))
-                    .OrderByDescending(xe => xe.Health / xe.MaxHealth * 100))
-            {
-                target = unit;
-            }
-
-            return target;
-        }
-
-        public static Obj_AI_Hero GetEnemy(string championname)
-        {
-            return
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .First(enemy => enemy.Team != Entry.Player.Team && enemy.ChampionName == championname);
-        }
-
         private static void CheckHeal(float incdmg = 0)
         {
             var heal = Entry.Player.GetSpellSlot("summonerheal");
@@ -108,7 +94,7 @@
                 return;
             }
 
-            var target = Allies();
+            var target = Entry.Allies();
             var iDamagePercent = (int)((incdmg / Entry.Player.MaxHealth) * 100);
 
             if (target.Distance(Entry.Player.ServerPosition) <= 700f && Entry.Player.CountEnemiesInRange(1000) > 0)
@@ -173,7 +159,7 @@
             {
                 if (args.Target.Type == Entry.Player.Type)
                 {
-                    if (sender.Distance(Allies().ServerPosition, true) <= 900 * 900)
+                    if (sender.Distance(Entry.Allies().ServerPosition, true) <= 900 * 900)
                     {
                         AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
 

@@ -9,7 +9,7 @@
     {
         #region Static Fields
 
-        public static Menu Menu, _mainMenu;
+        public static Menu Menu;
 
         private static readonly BuffType[] Bufftype =
             {
@@ -19,6 +19,8 @@
                 BuffType.Suppression, BuffType.Polymorph, BuffType.Poison,
                 BuffType.Flee
             };
+
+        private static Menu mainMenu, defensiveMenu;
 
         #endregion
 
@@ -230,11 +232,11 @@
 
             #region Credits to Oracle
 
-            _mainMenu = Menu.AddSubMenu(new Menu("Offensives", "omenu"));
+            mainMenu = Menu.AddSubMenu(new Menu("Offensive", "omenu"));
 
             foreach (var x in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsEnemy))
             {
-                _mainMenu.SubMenu("Champion Settings")
+                mainMenu.SubMenu("Champion Settings")
                     .AddItem(new MenuItem("ouseOn" + x.SkinName, "Use for " + x.SkinName))
                     .SetValue(true);
             }
@@ -246,6 +248,22 @@
             CreateMenuItem("Bilgewater's Cutlass", "Cutlass", 90, 30);
             CreateMenuItem("Blade of the Ruined King", "Botrk", 70, 70);
             CreateMenuItem("Frost Queen's Claim", "Frostclaim", 100, 30);
+
+            defensiveMenu = Menu.AddSubMenu(new Menu("Defensive", "DefensiveMenu"));
+            CreateDefensiveItem("Randuin's Omen", "Randuins", "selfcount", 40, 40);
+
+            defensiveMenu.SubMenu("Talisman")
+                .AddItem(new MenuItem("useTalisman", "Use Talisman of Ascension"))
+                .SetValue(true);
+            defensiveMenu.SubMenu("Talisman")
+                .AddItem(new MenuItem("useAllyPct", "Use on ally %"))
+                .SetValue(new Slider(50, 1));
+            defensiveMenu.SubMenu("Talisman")
+                .AddItem(new MenuItem("useEnemyPct", "Use on enemy %"))
+                .SetValue(new Slider(50, 1));
+            defensiveMenu.SubMenu("Talisman")
+                .AddItem(new MenuItem("talismanMode", "Mode: "))
+                .SetValue(new StringList(new[] { "Always", "Combo" }));
 
             #endregion
 
@@ -269,6 +287,33 @@
         #endregion
 
         #region Methods
+
+        private static void CreateDefensiveItem(string displayname, string name, string type, int hpvalue, int dmgvalue)
+        {
+            var menuName = new Menu(name, name.ToLower());
+            menuName.AddItem(new MenuItem("use" + name, "Use " + displayname)).SetValue(true);
+
+            if (!type.Contains("count"))
+            {
+                menuName.AddItem(new MenuItem("use" + name + "Pct", "Use on HP %")).SetValue(new Slider(hpvalue));
+                menuName.AddItem(new MenuItem("use" + name + "Dmg", "Use on Dmg dealt %"))
+                    .SetValue(new Slider(dmgvalue));
+            }
+
+            if (type.Contains("count"))
+            {
+                menuName.AddItem(new MenuItem("use" + name + "Count", "Use on Count")).SetValue(new Slider(3, 1, 5));
+            }
+
+            if (!type.Contains("count"))
+            {
+                menuName.AddItem(new MenuItem("use" + name + "Zhy", "Use on Dangerous (Spells)")).SetValue(false);
+                menuName.AddItem(new MenuItem("use" + name + "Ults", "Use on Dangerous (Ultimates Only)"))
+                    .SetValue(true);
+            }
+
+            defensiveMenu.AddSubMenu(menuName);
+        }
 
         private static void CreateMenuItem(
             string displayname,
@@ -299,7 +344,7 @@
                         new StringList(new[] { "Always", "Combo" }, 1)));
             }
 
-            _mainMenu.AddSubMenu(menuName);
+            mainMenu.AddSubMenu(menuName);
         }
 
         #endregion
