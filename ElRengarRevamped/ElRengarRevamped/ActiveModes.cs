@@ -194,14 +194,14 @@
                     && IgniteDamage(target) >= target.Health)
                 {
                     Player.Spellbook.CastSpell(Ignite, target);
-                    Console.WriteLine("Used ignite (Combo) on " + target.SkinName + " (" + target.Health / target.MaxHealth * 100 + "%)!");
+                    //Console.WriteLine("Used ignite (Combo) on " + target.SkinName + " (" + target.Health / target.MaxHealth * 100 + "%)!");
                 }
 
                 if (IsActive("Combo.Use.Smite") && Smite != SpellSlot.Unknown
                     && Player.Spellbook.CanUseSpell(Smite) == SpellState.Ready)
                 {
                     Player.Spellbook.CastSpell(Smite, target);
-                    Console.WriteLine("Used smite (Combo) on " + target.SkinName + " (" + target.Health / target.MaxHealth * 100 + "%)!");
+                    //Console.WriteLine("Used smite (Combo) on " + target.SkinName + " (" + target.Health / target.MaxHealth * 100 + "%)!");
                 }
 
                 #endregion
