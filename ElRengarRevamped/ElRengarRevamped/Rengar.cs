@@ -111,7 +111,6 @@
 
             if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
-
                 if (spells[Spells.Q].IsReady() && target.Distance(Player) < Player.AttackRange && HasPassive
                    && Player.IsDashing() && Ferocity == 5 && IsListActive("Combo.Prio").SelectedIndex == 2)
                 {
@@ -150,7 +149,6 @@
                         }
 
                         spells[Spells.Q].Cast();
-                        Console.WriteLine("Q Cast Ondash");
                         if (target.IsValidTarget())
                         {
                             if (Player.Distance(target) < spells[Spells.Q].Range + 100)
@@ -169,12 +167,11 @@
                                             UseHydra();
                                             Console.WriteLine("Casted Q Prio");
                                         });
-                                //Console.WriteLine("DelayAction");
                             }
                         }
                         break;
                 }
-                //!Player.IsDashing() &&
+
                 if (spells[Spells.W].IsReady() && !HasPassive)
                 {
                     Utility.DelayAction.Add(200, () => spells[Spells.W].Cast());

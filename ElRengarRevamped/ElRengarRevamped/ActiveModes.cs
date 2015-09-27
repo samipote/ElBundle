@@ -90,7 +90,7 @@
                             }
                             break;
                         case 2:
-                            if (IsActive("Combo.Use.Q"))
+                            if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
                             {
                                 if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
@@ -106,7 +106,7 @@
                             break;
 
                         default:
-                            if (IsActive("Combo.Use.Q"))
+                            if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
                             {
                                 if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
@@ -136,6 +136,7 @@
                 }
                 else if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
                 {
+                    spells[Spells.Q].Cast();
                     //Console.WriteLine("2. Default < 5 stacks Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
                 }
 
