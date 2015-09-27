@@ -77,7 +77,7 @@
                 /*betaMenu.AddItem(
                     new MenuItem("Beta.Ferocity", "Minimum Ferocity").SetValue(new Slider(1, 5, 5)));*/
 
-                betaMenu.AddItem(new MenuItem("Assassi searchrange", "Assassin search range"));
+                betaMenu.AddItem(new MenuItem("Assassin.searchrange", "Assassin search range"));
 
                 betaMenu.AddItem(
                     new MenuItem("Beta.searchrange", "Search range").SetValue(new Slider(2000, 1000, 2500)));
