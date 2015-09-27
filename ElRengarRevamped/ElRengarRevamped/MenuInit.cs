@@ -72,9 +72,8 @@
             var betaMenu = Menu.AddSubMenu(new Menu("Beta options", "BetaOptions"));
             {
                 betaMenu.AddItem(new MenuItem("Beta.Cast.Q", "Use beta Q").SetValue(false));
-               betaMenu.AddItem(new MenuItem("Beta.Cast.Youmuu", "Youmuu's required").SetValue(true));
-                betaMenu.AddItem(
-                   new MenuItem("Beta.Cast.Q.Delay", "Cast Q delay").SetValue(new Slider(500, 100, 2000)));
+                betaMenu.AddItem(new MenuItem("Beta.Cast.Youmuu", "Youmuu's required").SetValue(true));
+                betaMenu.AddItem(new MenuItem("Beta.Cast.Q.Delay", "Cast Q delay").SetValue(new Slider(500, 100, 2000)));
                 /*betaMenu.AddItem(
                     new MenuItem("Beta.Ferocity", "Minimum Ferocity").SetValue(new Slider(1, 5, 5)));*/
 

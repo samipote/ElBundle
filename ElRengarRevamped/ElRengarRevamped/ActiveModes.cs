@@ -52,11 +52,10 @@
                     Youmuu.Cast(Player);
                 }
 
-
                 #region RengarR
 
                 if (Ferocity == 5)
-                { 
+                {
                     switch (IsListActive("Combo.Prio").SelectedIndex)
                     {
                         case 0:
@@ -112,7 +111,7 @@
                                 if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
                                 {
                                     spells[Spells.Q].Cast();
-                                   // Console.WriteLine("Default Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
+                                    // Console.WriteLine("Default Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
                                 }
                                 else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
                                 {
@@ -135,7 +134,7 @@
                     spells[Spells.Q].Cast();
                     //Console.WriteLine("Default < 5 stacks Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
                 }
-                else if(IsActive("Combo.Use.Q") &&  spells[Spells.Q].IsInRange(target))
+                else if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
                 {
                     //Console.WriteLine("2. Default < 5 stacks Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
                 }
@@ -167,7 +166,9 @@
 
                 if (!IsActive("Combo.Use.W")
                     || !spells[Spells.W].IsReady()
-                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range && ItemData.Tiamat_Melee_Only.GetItem().IsReady() || ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady())
+                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range
+                    && ItemData.Tiamat_Melee_Only.GetItem().IsReady()
+                    || ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady())
                 {
                     UseHydra();
                     //Console.WriteLine("Hydra " + target.SkinName + "");
@@ -343,12 +344,11 @@
             }
 
             if (IsActive("Jungle.Use.W") && spells[Spells.W].IsReady()
-             && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= 450)
+                && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) <= 450)
             {
                 UseHydra();
                 spells[Spells.W].Cast();
             }
-
 
             if (IsActive("Jungle.Use.E") && spells[Spells.E].IsReady()
                 && Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.E].Range)

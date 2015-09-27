@@ -29,11 +29,11 @@
                                                                              { Spells.R, new Spell(SpellSlot.R, 2000) }
                                                                          };
 
+        public static int LastSwitch;
+
         protected internal static Orbwalking.Orbwalker Orbwalker;
 
         protected static SpellSlot Ignite;
-
-        public static int LastSwitch;
 
         protected static int SendTime = 0;
 
