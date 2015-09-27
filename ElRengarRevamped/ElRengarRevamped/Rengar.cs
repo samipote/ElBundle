@@ -79,7 +79,8 @@
                     if (RengarQ || RengarE)
                     {
                         Orbwalking.ResetAutoAttackTimer();
-                        // Console.WriteLine("Orbwalker Reset in AfterAttack");
+                        Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+                        Console.WriteLine("Orbwalker Reset in AfterAttack");
                     }
                 }
             }
@@ -122,6 +123,15 @@
                     if (spells[Spells.E].IsReady() && Player.IsDashing())
                     {
                         spells[Spells.E].Cast(target);
+                        Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+                        Console.WriteLine("here");
+                    }
+
+                    if (!spells[Spells.E].IsReady() && spells[Spells.Q].IsReady() && Player.IsDashing())
+                    {
+                        spells[Spells.Q].Cast();
+                        Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+                        Console.WriteLine("here 2");
                     }
                 }
 
@@ -133,8 +143,6 @@
                     case 0:
                         if (spells[Spells.E].IsReady())
                         {
-                            Console.WriteLine("OnDash");
-
                             spells[Spells.E].Cast(target);
                             Console.WriteLine("E Cast on OnDash");
                         }
@@ -376,6 +384,7 @@
                     if (explode.Distance(Player.ServerPosition) <= qcastRange && Ferocity == 5 && RengarR)
                     {
                         Utility.DelayAction.Add(qdelay, () => spells[Spells.Q].Cast());
+                        //Player.IssueOrder(GameObjectOrder.AttackUnit, explode);
                         justDoIt = true;
                         //Console.WriteLine("RengarLogs: CASTED Q WHILE R ");
                     }
