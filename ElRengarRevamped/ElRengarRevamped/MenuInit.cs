@@ -69,6 +69,27 @@
                 healMenu.AddItem(new MenuItem("Heal.HP", "Self heal at >= ").SetValue(new Slider(25, 1, 100)));
             }
 
+            var betaMenu = Menu.AddSubMenu(new Menu("Beta options", "BetaOptions"));
+            {
+                betaMenu.AddItem(new MenuItem("Beta.Cast.Q", "Use beta Q").SetValue(false));
+               betaMenu.AddItem(new MenuItem("Beta.Cast.Youmuu", "Youmuu's required").SetValue(true));
+                betaMenu.AddItem(
+                   new MenuItem("Beta.Cast.Q.Delay", "Cast Q delay").SetValue(new Slider(500, 100, 2000)));
+                /*betaMenu.AddItem(
+                    new MenuItem("Beta.Ferocity", "Minimum Ferocity").SetValue(new Slider(1, 5, 5)));*/
+
+                betaMenu.AddItem(new MenuItem("Assassi searchrange", "Assassin search range"));
+
+                betaMenu.AddItem(
+                    new MenuItem("Beta.searchrange", "Search range").SetValue(new Slider(2000, 1000, 2500)));
+
+                betaMenu.AddItem(
+                    new MenuItem("Beta.searchrange.Q", "Q cast range").SetValue(new Slider(1000, 500, 1500)));
+
+                betaMenu.AddItem(new MenuItem("Beta.Search.Range", "Draw search range").SetValue(new Circle()));
+                betaMenu.AddItem(new MenuItem("Beta.Search.QCastRange", "Draw Q cast range").SetValue(new Circle()));
+            }
+
             var miscMenu = Menu.AddSubMenu(new Menu("Misc", "Misc"));
             {
                 miscMenu.AddItem(new MenuItem("Misc.Drawings.Off", "Turn drawings off").SetValue(false));

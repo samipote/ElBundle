@@ -379,6 +379,7 @@ namespace ElRengarRevamped
                     {
                         if (!NoCancelChamps.Contains(_championName))
                         {
+
                             LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
                             _missileLaunched = false;
 

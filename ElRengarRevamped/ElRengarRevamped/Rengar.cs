@@ -1,6 +1,9 @@
 ﻿namespace ElRengarRevamped
 {
     using System;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.Remoting.Messaging;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -25,6 +28,8 @@
         #region Static Fields
 
         public static int LastAutoAttack, Lastrengarq;
+
+        public static bool justDoIt = false;
 
         #endregion
 
@@ -76,6 +81,7 @@
                     if (RengarQ || RengarE)
                     {
                         Orbwalking.ResetAutoAttackTimer();
+                       // Console.WriteLine("Orbwalker Reset in AfterAttack");
                     }
                 }
             }
@@ -93,15 +99,33 @@
                 && spells[Spells.W].IsReady())
             {
                 spells[Spells.W].Cast();
+               // Console.WriteLine("Casted heal 5 ferocity HP: " + Player.Health );
             }
         }
 
         private static void OnDash(Obj_AI_Base sender, Dash.DashItem args)
         {
-            var target = TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Magical);
+            var target = TargetSelector.GetTarget(2000, TargetSelector.DamageType.Magical);
             if (!target.IsValidTarget())
             {
                 return;
+            }
+
+           if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+            {
+                if (spells[Spells.Q].IsReady() && target.Distance(Player) < Player.AttackRange && HasPassive
+                    && Player.IsDashing() && Ferocity == 5 && IsListActive("Combo.Prio").SelectedIndex == 2)
+                {
+                    spells[Spells.Q].Cast();
+                }
+
+                if (justDoIt == true)
+                {
+                    if (spells[Spells.E].IsReady() && Player.IsDashing())
+                    {
+                        spells[Spells.E].Cast(target);
+                    }
+                }
             }
 
             if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
@@ -117,11 +141,20 @@
                             Console.WriteLine("OnDash");
 
                             spells[Spells.E].Cast(target);
+                            Console.WriteLine("E Cast on OnDash");
                         }
                         break;
 
                     case 1:
+                       if (IsActive("Beta.Cast.Q") && RengarR)
+                       {
+                            spells[Spells.E].Cast(target);
+                            Console.WriteLine("BETA CAST E ON DASH");
+                            return;
+                       }
+                        
                        spells[Spells.Q].Cast();
+                        Console.WriteLine("Q Cast Ondash");
                         if (target.IsValidTarget())
                         {
                             if (Player.Distance(target) < spells[Spells.Q].Range + 100)
@@ -140,6 +173,7 @@
                                             UseHydra();
                                             Console.WriteLine("Casted Q Prio");
                                         });
+                                //Console.WriteLine("DelayAction");
                             }
                         }
                         break;
@@ -157,10 +191,11 @@
                 if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
                 {
                     UseHydra();
+                    //Console.WriteLine("Hydra Ondash");
                 }
 
                 // Broscience?
-                Utility.DelayAction.Add(200, () => Orbwalker.SetMovement(true));
+                Utility.DelayAction.Add(400, () => Orbwalker.SetMovement(true));
             }
         }
 
@@ -169,9 +204,28 @@
             var drawW = MenuInit.Menu.Item("Misc.Drawings.W").GetValue<Circle>();
             var drawE = MenuInit.Menu.Item("Misc.Drawings.E").GetValue<Circle>();
 
+            var drawSearchRange = MenuInit.Menu.Item("Beta.Search.Range").GetValue<Circle>();
+            var searchrange = MenuInit.Menu.Item("Beta.searchrange").GetValue<Slider>().Value;
+
+            var drawsearchrangeQ = MenuInit.Menu.Item("Beta.Search.QCastRange").GetValue<Circle>();
+            var searchrangeQCastRange = MenuInit.Menu.Item("Beta.searchrange.Q").GetValue<Slider>().Value;
+           
             if (IsActive("Misc.Drawings.Off"))
             {
                 return;
+            }
+
+            if (IsActive("Beta.Cast.Q"))
+            {
+                if (drawSearchRange.Active && spells[Spells.R].Level > 0)
+                {
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, searchrange, Color.Orange);
+                }
+
+                if (drawsearchrangeQ.Active && spells[Spells.R].Level > 0)
+                {
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, searchrangeQCastRange, Color.Orange);
+                }
             }
 
             if (drawW.Active)
@@ -189,6 +243,8 @@
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, spells[Spells.E].Range, Color.White);
                 }
             }
+
+           
 
             if (IsActive("Misc.Drawings.Prioritized"))
             {
@@ -232,50 +288,6 @@
             }
         }
 
-        private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (sender.IsMe)
-            {
-                if (RengarQ || RengarE)
-                {
-                    Orbwalking.ResetAutoAttackTimer();
-                }
-
-                if (args.SData.Name == "RengarR" && Items.CanUseItem(3142))
-                {
-                    Utility.DelayAction.Add(1500, () => Items.UseItem(3142));
-                }
-
-                if (args.SData.Name.Contains("Attack") && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
-                {
-                    //Tiamat Hydra cast after AA  - Credits to Kurisu 
-                    Utility.DelayAction.Add(
-                        50 + (int)(Player.AttackDelay * 100) + Game.Ping / 2 + 10,
-                        delegate
-                            {
-                                if (Items.CanUseItem(3077))
-                                {
-                                    Items.UseItem(3077);
-                                }
-                                if (Items.CanUseItem(3074))
-                                {
-                                    Items.UseItem(3074);
-                                }
-                            });
-                }
-
-                if (args.SData.IsAutoAttack())
-                {
-                    LastAutoAttack = Utils.GameTimeTickCount;
-                    //Console.WriteLine("AA");
-                }
-
-                if (RengarQ)
-                {
-                    Lastrengarq = Environment.TickCount;
-                }
-            }
-        }
 
         private static void OnUpdate(EventArgs args)
         {
@@ -304,6 +316,30 @@
                         break;
                 }
 
+                if (IsActive("Beta.Cast.Q") && IsListActive("Combo.Prio").SelectedIndex == 2)
+                {
+                    if (IsActive("Beta.Cast.Youmuu") && !Items.HasItem(3142))
+                    {
+                        return;
+                    }
+
+                    var searchrange = MenuInit.Menu.Item("Beta.searchrange").GetValue<Slider>().Value;
+                    var explode = ObjectManager.Get<Obj_AI_Hero>().FirstOrDefault(h => h.IsEnemy && h.IsValidTarget(searchrange, false));
+                    if (!explode.IsValidTarget()) return;
+
+                    var qdelay = MenuInit.Menu.Item("Beta.Cast.Q.Delay").GetValue<Slider>().Value;
+                    //var minimumFerocity = MenuInit.Menu.Item("Beta.Ferocity").GetValue<Slider>().Value;
+                    var qcastRange = MenuInit.Menu.Item("Beta.searchrange.Q").GetValue<Slider>().Value;
+
+                    if (explode.Distance(Player.ServerPosition) <= qcastRange && Ferocity == 5 && RengarR)
+                    {
+                        Utility.DelayAction.Add(qdelay, () => spells[Spells.Q].Cast());
+                        justDoIt = true;
+                        //Console.WriteLine("RengarLogs: CASTED Q WHILE R ");
+                    }
+                }
+                
+                //Console.WriteLine(GetEnemy());
                 spells[Spells.R].Range = 1000 + spells[Spells.R].Level * 1000;
             }
             catch (Exception e)
@@ -311,6 +347,55 @@
                 Console.WriteLine(e);
             }
         }
+
+        private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe)
+            {
+                if (RengarQ || RengarE)
+                {
+                    Orbwalking.ResetAutoAttackTimer();
+                }
+
+                if (args.SData.Name == "RengarR")
+                {
+                    if (Items.CanUseItem(3142))
+                    {
+                        Utility.DelayAction.Add(1500, () => Items.UseItem(3142));
+                    }
+                }
+
+                if (args.SData.Name.Contains("Attack") && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+                {
+                    //Tiamat Hydra cast after AA  - Credits to Kurisu 
+                    Utility.DelayAction.Add(
+                        50 + (int)(Player.AttackDelay * 100) + Game.Ping / 2 + 10,
+                        delegate
+                            {
+                                if (Items.CanUseItem(3077))
+                                {
+                                    Items.UseItem(3077);
+                                }
+                                if (Items.CanUseItem(3074))
+                                {
+                                    Items.UseItem(3074);
+                                }
+                            });
+                }
+
+                if (args.SData.IsAutoAttack())
+                {
+                    LastAutoAttack = Utils.GameTimeTickCount;
+                }
+
+                if (RengarQ)
+                {
+                    Lastrengarq = Environment.TickCount;
+                }
+            }
+        }
+
+
 
         private static void OrbwalkingBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
         {
@@ -324,6 +409,12 @@
                 if (Ferocity == 5 && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo
                     && Orbwalking.InAutoAttackRange(args.Target))
                 {
+                    spells[Spells.Q].Cast();
+                }
+
+                if (Ferocity == 5 && HasPassive && spells[Spells.Q].IsReady() && IsListActive("Combo.Prio").SelectedIndex == 2)
+                {
+                    //Console.WriteLine("Before jump");
                     spells[Spells.Q].Cast();
                 }
             }
