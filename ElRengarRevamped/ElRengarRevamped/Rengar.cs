@@ -104,7 +104,7 @@
 
         private static void OnDash(Obj_AI_Base sender, Dash.DashItem args)
         {
-            var target = TargetSelector.GetTarget(2000, TargetSelector.DamageType.Magical);
+            var target = TargetSelector.GetTarget(1500, TargetSelector.DamageType.Physical);
             if (!target.IsValidTarget())
             {
                 return;
@@ -116,6 +116,11 @@
                    && Player.IsDashing() && Ferocity == 5 && IsListActive("Combo.Prio").SelectedIndex == 2)
                 {
                     spells[Spells.Q].Cast();
+                }
+                else if (IsListActive("Combo.Prio").SelectedIndex == 0 && spells[Spells.E].IsReady() && Ferocity == 5
+                         && Player.IsDashing())
+                {
+                    spells[Spells.E].Cast(target);
                 }
 
                 if (justDoIt)
@@ -141,14 +146,14 @@
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
-                        if (spells[Spells.E].IsReady())
+                        if (spells[Spells.E].IsReady() && spells[Spells.E].CanCast(target) && Ferocity == 5)
                         {
                             spells[Spells.E].Cast(target);
-                            Console.WriteLine("E Cast on OnDash");
+                            Console.WriteLine("E Cast on OnDash" + Player.Mana);
                         }
                         break;
 
-                    case 1:
+                   case 1:
                         if (IsActive("Beta.Cast.Q") && RengarR)
                         {
                             spells[Spells.E].Cast(target);
@@ -180,19 +185,18 @@
                         break;
                 }
 
-                if (spells[Spells.W].IsReady() && !HasPassive)
+               /*if (spells[Spells.W].IsReady() && !HasPassive)
                 {
-                    Utility.DelayAction.Add(200, () => spells[Spells.W].Cast());
+                    Utility.DelayAction.Add(100, () => spells[Spells.W].Cast());
                 }
-                if (spells[Spells.E].IsReady())
+                if (spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
                 {
                     spells[Spells.E].Cast(target);
                 }
-
+                */
                 if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
                 {
                     UseHydra();
-                    //Console.WriteLine("Hydra Ondash");
                 }
 
                 // Broscience?
@@ -342,6 +346,8 @@
             }
             try
             {
+
+                //Console.WriteLine(IsListActive("Combo.Prio").SelectedIndex);
                 SwitchCombo();
                 SmiteCombo();
                 Heal();
@@ -389,7 +395,7 @@
                         //Console.WriteLine("RengarLogs: CASTED Q WHILE R ");
                     }
                 }
-
+               
                 //Console.WriteLine(GetEnemy());
                 spells[Spells.R].Range = 1000 + spells[Spells.R].Level * 1000;
             }
@@ -403,13 +409,13 @@
         {
             if (args.Target is Obj_AI_Hero && args.Target.IsValidTarget())
             {
-                if (Ferocity <= 4 && Orbwalking.InAutoAttackRange(args.Target))
+                if (Ferocity <= 4 && Orbwalking.InAutoAttackRange(args.Target) && IsListActive("Combo.Prio").SelectedIndex == 2)
                 {
                     spells[Spells.Q].Cast();
                 }
 
                 if (Ferocity == 5 && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo
-                    && Orbwalking.InAutoAttackRange(args.Target))
+                    && Orbwalking.InAutoAttackRange(args.Target) && IsListActive("Combo.Prio").SelectedIndex == 2)
                 {
                     spells[Spells.Q].Cast();
                 }
