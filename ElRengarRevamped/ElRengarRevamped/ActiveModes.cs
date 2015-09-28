@@ -145,6 +145,7 @@
                     return;
                 }
 
+  
                 if (IsActive("Combo.Use.W")
                     && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.W].Range * 1 / 3
                     && !Player.IsDashing() && !HasPassive && spells[Spells.W].IsReady())
@@ -152,6 +153,10 @@
                     spells[Spells.W].Cast(Player);
                     Utility.DelayAction.Add(100, () => UseHydra());
                     //Console.WriteLine("W Cast with Hydra " + Player.Mana );
+                } else if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target) && !Player.IsDashing())
+                {
+                    spells[Spells.W].Cast(Player);
+                    Utility.DelayAction.Add(100, () => UseHydra());
                 }
 
                 if (!HasPassive && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
@@ -165,8 +170,7 @@
                     }
                 }
 
-                if (!IsActive("Combo.Use.W")
-                    || !spells[Spells.W].IsReady()
+                if (!spells[Spells.W].IsReady()
                     && Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range
                     && ItemData.Tiamat_Melee_Only.GetItem().IsReady()
                     || ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady())
