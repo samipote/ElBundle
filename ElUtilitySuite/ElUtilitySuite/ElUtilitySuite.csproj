@@ -66,6 +66,7 @@
     <Compile Include="DamagePrediction.cs" />
     <Compile Include="Defensive.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="Exhaust.cs" />
     <Compile Include="Heal.cs" />
     <Compile Include="Ignite.cs" />
     <Compile Include="InitializeMenu.cs" />
