@@ -48,6 +48,8 @@
                 stackMenu.AddItem(
                     new MenuItem("ElVeigar.Stack.Q", "Auto Q stack").SetValue(
                         new KeyBind("M".ToCharArray()[0], KeyBindType.Toggle)));
+
+                stackMenu.AddItem(new MenuItem("ElVeigar.Stack.Q2", "Minimum minions for Q").SetValue(new Slider(2, 1, 2)));
                 stackMenu.AddItem(new MenuItem("ElVeigar.Stack.Mana", "Minimum mana").SetValue(new Slider(20)));
             }
 

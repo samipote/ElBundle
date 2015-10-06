@@ -9,6 +9,7 @@
 
     using SharpDX;
 
+    using Collision = LeagueSharp.Common.Collision;
     using Color = System.Drawing.Color;
 
     internal static class Entry
@@ -127,6 +128,16 @@
                     spells[Spells.W].Cast(target.Position);
                 }
             }
+        }
+
+        private static float ComboDamage(this Obj_AI_Base target)
+        {
+            return 0;
+        }
+
+        // Later, :cat_lazy: atm.
+        private static void ComboModes(this Obj_AI_Base target)
+        {
         }
 
         private static void DoCombo()
@@ -452,7 +463,8 @@
                             if (spells[Spells.Q].GetDamage(target) > target.Health
                                 && MenuInit.IsActive("ElVeigar.Combo.KS.Q"))
                             {
-                                if (predictionQ.Hitchance >= HitChance.High && predictionQ.CollisionObjects.Count == 0 && spells[Spells.Q].IsInRange(target))
+                                if (predictionQ.Hitchance >= HitChance.High && predictionQ.CollisionObjects.Count == 0
+                                    && spells[Spells.Q].IsInRange(target))
                                 {
                                     spells[Spells.Q].Cast(target.Position);
                                 }
@@ -484,18 +496,6 @@
             {
                 Console.WriteLine("An error occurred: '{0}'", e);
             }
-        }
-
-
-        // Later, :cat_lazy: atm.
-        private static void ComboModes(this Obj_AI_Base target)
-        {
-            
-        }
-
-        private static float ComboDamage(this Obj_AI_Base target)
-        {
-            return 0;
         }
 
         private static void OnDraw(EventArgs args)
@@ -581,26 +581,68 @@
             }
         }
 
+        private static List<Obj_AI_Base> QGetCollisionMinions(Obj_AI_Hero source, Vector3 targetposition)
+        {
+            var input = new PredictionInput
+                            {
+                                Unit = source, Radius = spells[Spells.Q].Width, Delay = spells[Spells.Q].Delay,
+                                Speed = spells[Spells.Q].Speed
+                            };
+
+            input.CollisionObjects[0] = CollisionableObjects.Minions;
+
+            return
+                Collision.GetCollision(new List<Vector3> { targetposition }, input)
+                    .OrderBy(obj => obj.Distance(source))
+                    .ToList();
+        }
+
         private static void QStack()
         {
-            var minion =
-                MinionManager.GetMinions(
-                    spells[Spells.Q].Range,
-                    MinionTypes.All,
-                    MinionTeam.Enemy,
-                    MinionOrderTypes.MaxHealth).FirstOrDefault(m => m.Health < spells[Spells.Q].GetDamage(m));
-
             if (Player.IsRecalling() || Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo
                 || Player.ManaPercent < MenuInit.Menu.Item("ElVeigar.Stack.Mana").GetValue<Slider>().Value)
             {
                 return;
             }
 
-            if (minion != null && spells[Spells.Q].IsReady())
+            var minions =
+                ObjectManager.Get<Obj_AI_Base>()
+                    .Where(
+                        m =>
+                        m.IsMinion && m.IsEnemy && Player.Distance(m.Position) <= spells[Spells.Q].Range
+                        && m.Health < ((Player.GetSpellDamage(m, SpellSlot.Q)))
+                        && HealthPrediction.GetHealthPrediction(
+                            m,
+                            (int)(Player.Distance(m) / spells[Spells.Q].Speed),
+                            (int)(spells[Spells.Q].Delay * 1000 + Game.Ping / 2)) > 0);
+
+            foreach (var minion in minions.Where(x => x.Health <= spells[Spells.Q].GetDamage(x)))
             {
-                if (spells[Spells.Q].GetDamage(minion) > minion.Health)
+                var killcount = 0;
+
+                foreach (
+                    var colminion in
+                        QGetCollisionMinions(
+                            Player,
+                            Player.ServerPosition.Extend(minion.ServerPosition, spells[Spells.Q].Range)))
                 {
-                    spells[Spells.Q].Cast(minion.Position);
+                    if (colminion.Health <= spells[Spells.Q].GetDamage(colminion))
+                    {
+                        killcount++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (killcount >= MenuInit.Menu.Item("ElVeigar.Stack.Q2").GetValue<Slider>().Value)
+                {
+                    if (!Player.IsWindingUp)
+                    {
+                        spells[Spells.Q].Cast(minion.ServerPosition);
+                        break;
+                    }
                 }
             }
         }
