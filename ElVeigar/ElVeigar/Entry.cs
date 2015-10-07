@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
 
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -22,17 +23,11 @@
 
         public static Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>
                                                              {
-                                                                 { Spells.Q, new Spell(SpellSlot.Q, 650f) },
+                                                                 { Spells.Q, new Spell(SpellSlot.Q, 950f) },
                                                                  { Spells.W, new Spell(SpellSlot.W, 900f) },
-                                                                 { Spells.E, new Spell(SpellSlot.E, 650f) },
+                                                                 { Spells.E, new Spell(SpellSlot.E, 1050f) },
                                                                  { Spells.R, new Spell(SpellSlot.R, 650f) }
                                                              };
-
-        private static float radius;
-
-        private static float radiusSqr;
-
-        private static float widthSqr;
 
         #endregion
 
@@ -73,7 +68,7 @@
 
         #region Public Methods and Operators
 
-        public static float IgniteDamage(Obj_AI_Hero target)
+        private static float IgniteDamage(Obj_AI_Hero target)
         {
             if (Ignite == SpellSlot.Unknown || Player.Spellbook.CanUseSpell(Ignite) != SpellState.Ready)
             {
@@ -93,15 +88,10 @@
                 Drawing.OnDraw += OnDraw;
                 Interrupter2.OnInterruptableTarget += Interrupter_OnPosibleToInterrupt;
 
-                spells[Spells.Q].SetTargetted(0.25f, 1500);
-                spells[Spells.W].SetSkillshot(1.25f, 225, float.MaxValue, false, SkillshotType.SkillshotCircle);
+                spells[Spells.Q].SetSkillshot(0.25f, 70f, 2000f, false, SkillshotType.SkillshotLine);
+                spells[Spells.W].SetSkillshot(1.35f, 225f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+                spells[Spells.E].SetSkillshot(.8f, 350f, float.MaxValue, false, SkillshotType.SkillshotCircle);
                 spells[Spells.R].SetTargetted(0.25f, 1400);
-                spells[Spells.E].SetSkillshot(0.8f, 350f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-
-                spells[Spells.E].Width = 700;
-                widthSqr = spells[Spells.E].Width * spells[Spells.E].Width;
-                radius = spells[Spells.E].Width / 2;
-                radiusSqr = radius * radius;
             }
             catch (Exception e)
             {
@@ -150,15 +140,17 @@
                     return;
                 }
 
-                if (spells[Spells.E].IsReady() && MenuInit.IsActive("ElVeigar.Combo.E")
-                    && spells[Spells.E].IsInRange(target))
+                if (spells[Spells.E].IsReady() && MenuInit.IsActive("ElVeigar.Combo.E"))
                 {
-                    var castPosition = GetCageCastPosition(target);
-                    if (castPosition != null)
+                    if (Player.Distance(target.Position) <= spells[Spells.E].Range)
                     {
-                        if (!IsInvulnerable(target))
+                        var predE = spells[Spells.E].GetPrediction(target);
+                        if (spells[Spells.E].IsReady() && predE.Hitchance == HitChance.VeryHigh)
                         {
-                            spells[Spells.E].Cast((Vector3)castPosition);
+                            if (!IsInvulnerable(target))
+                            {
+                                CastE(target);
+                            }
                         }
                     }
                 }
@@ -177,8 +169,6 @@
                 if (spells[Spells.R].IsReady() && spells[Spells.R].IsInRange(target)
                     && MenuInit.IsActive("ElVeigar.Combo.R"))
                 {
-                    /* if (spells[Spells.R].GetDamage(target)
-                         + (target.TotalMagicalDamage * 0.8) > target.Health)*/
                     if (GetExecuteDamage(target) > target.Health)
                     {
                         if (!IsInvulnerable(target))
@@ -218,18 +208,18 @@
                 switch (MenuInit.IsListActive("Harass.Mode").SelectedIndex)
                 {
                     case 0: // E - Q - W
-                        if (spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
+                        if (spells[Spells.E].IsReady() &&  Player.Distance(target.Position) <= spells[Spells.E].Range)
                         {
-                            var castPosition = GetCageCastPosition(target);
-                            if (castPosition != null)
+                            var predE = spells[Spells.E].GetPrediction(target);
+                            if (spells[Spells.E].IsReady() && predE.Hitchance == HitChance.VeryHigh)
                             {
                                 if (!IsInvulnerable(target))
                                 {
-                                    spells[Spells.E].Cast((Vector3)castPosition);
+                                    CastE(target);
                                 }
                             }
                         }
-
+    
                         var prediction = spells[Spells.Q].GetPrediction(target);
 
                         if (spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
@@ -242,17 +232,18 @@
                         break;
 
                     case 1: //E - W
-                        if (spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
+                        if (spells[Spells.E].IsReady() && Player.Distance(target.Position) <= spells[Spells.E].Range)
                         {
-                            var castPosition = GetCageCastPosition(target);
-                            if (castPosition != null)
+                            var predE = spells[Spells.E].GetPrediction(target);
+                            if (spells[Spells.E].IsReady() && predE.Hitchance == HitChance.VeryHigh)
                             {
                                 if (!IsInvulnerable(target))
                                 {
-                                    spells[Spells.E].Cast((Vector3)castPosition);
+                                    CastE(target);
                                 }
                             }
                         }
+
                         break;
 
                     case 2: // Q
@@ -344,57 +335,6 @@
             }
         }
 
-        private static Vector3? GetCageCastPosition(Obj_AI_Hero target)
-        {
-            var prediction = Prediction.GetPrediction(target, 0.2f);
-
-            if (prediction.Hitchance < HitChance.High)
-            {
-                return null;
-            }
-
-            var nearTargets =
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .Where(
-                        h =>
-                        h.NetworkId != target.NetworkId && h.IsValidTarget(spells[Spells.E].Range + radius)
-                        && h.Distance(target, true) < widthSqr);
-
-            foreach (var target2 in nearTargets)
-            {
-                var prediction2 = Prediction.GetPrediction(target2, 0.2f);
-
-                if (prediction2.Hitchance < HitChance.High
-                    || prediction.UnitPosition.Distance(prediction2.UnitPosition, true) > widthSqr)
-                {
-                    continue;
-                }
-
-                var distanceSqr = prediction.UnitPosition.Distance(prediction2.UnitPosition, true);
-                var distance = Math.Sqrt(distanceSqr);
-                var middlePoint = (prediction.UnitPosition + prediction2.UnitPosition) / 2;
-                var perpendicular =
-                    (prediction.UnitPosition - prediction2.UnitPosition).Normalized().To2D().Perpendicular();
-
-                var length = (float)Math.Sqrt(radiusSqr - distanceSqr);
-                var castPosition = middlePoint.To2D() + perpendicular * length;
-
-                if (castPosition.Distance(Player.Position.To2D(), true) > radiusSqr)
-                {
-                    castPosition = middlePoint.To2D() - perpendicular * length;
-                }
-
-                if (castPosition.Distance(Player.Position.To2D(), true) > radiusSqr)
-                {
-                    continue;
-                }
-
-                return castPosition.To3D();
-            }
-
-            return prediction.UnitPosition.Extend(Player.Position, radius);
-        }
-
         private static float GetExecuteDamage(Obj_AI_Base target)
         {
             if (spells[Spells.R].IsReady())
@@ -433,14 +373,10 @@
 
             if (Player.Distance(unit.Position) < spells[Spells.E].Range && spells[Spells.E].IsReady())
             {
-                var castPosition = GetCageCastPosition(unit);
-                if (castPosition != null)
+                if (!IsInvulnerable(unit))
                 {
-                    if (!IsInvulnerable(unit))
-                    {
-                        spells[Spells.E].Cast((Vector3)castPosition);
-                    }
-                }
+                    CastE(unit);
+                } 
             }
         }
 
@@ -620,11 +556,10 @@
             {
                 var killcount = 0;
 
-                foreach (
-                    var colminion in
-                        QGetCollisionMinions(
-                            Player,
-                            Player.ServerPosition.Extend(minion.ServerPosition, spells[Spells.Q].Range)))
+                foreach (var colminion in
+                    QGetCollisionMinions(
+                        Player,
+                        Player.ServerPosition.Extend(minion.ServerPosition, spells[Spells.Q].Range)))
                 {
                     if (colminion.Health <= spells[Spells.Q].GetDamage(colminion))
                     {
@@ -648,5 +583,56 @@
         }
 
         #endregion
+
+        #region DedToto
+
+        public static void CastE(Obj_AI_Base target)
+        {
+            var pred = Prediction.GetPrediction(target, spells[Spells.E].Delay);
+            var castVec = pred.UnitPosition.To2D()
+                          - Vector2.Normalize(pred.UnitPosition.To2D() - Player.Position.To2D())
+                          * spells[Spells.E].Width;
+
+            if (pred.Hitchance >= HitChance.High && spells[Spells.E].IsReady())
+            {
+                spells[Spells.E].Cast(castVec);
+            }
+        }
+
+        public static void CastE(Obj_AI_Hero target)
+        {
+            var pred = Prediction.GetPrediction(target, spells[Spells.E].Delay);
+            var castVec = pred.UnitPosition.To2D()
+                          - Vector2.Normalize(pred.UnitPosition.To2D() - Player.Position.To2D())
+                          * spells[Spells.E].Width;
+
+            if (pred.Hitchance >= HitChance.High && spells[Spells.E].IsReady())
+            {
+                spells[Spells.E].Cast(castVec);
+            }
+        }
+
+        public static void CastE(Vector3 pos)
+        {
+            var castVec = pos.To2D() - Vector2.Normalize(pos.To2D() - Player.Position.To2D()) * spells[Spells.E].Width;
+
+            if (spells[Spells.E].IsReady())
+            {
+                spells[Spells.E].Cast(castVec);
+            }
+        }
+
+        public static void CastE(Vector2 pos)
+        {
+            var castVec = pos;
+
+            if (spells[Spells.E].IsReady())
+            {
+                spells[Spells.E].Cast(castVec);
+            }
+        }
+
+        #endregion
+
     }
 }
