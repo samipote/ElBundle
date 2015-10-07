@@ -219,7 +219,7 @@ namespace ElNamiBurrito
 
                 if (spells[Spells.E].IsInRange(selectedAlly) && spells[Spells.E].IsReady())
                 {
-                    spells[Spells.E].Cast(selectedAlly);
+                    spells[Spells.E].CastOnUnit(selectedAlly);
                 }
             }
 
@@ -264,7 +264,7 @@ namespace ElNamiBurrito
 
                 if (spells[Spells.E].IsInRange(selectedAlly) && spells[Spells.E].IsReady()) 
                 {
-                    spells[Spells.E].Cast(selectedAlly);
+                    spells[Spells.E].CastOnUnit(selectedAlly);
                 } else {
                     spells[Spells.E].Cast();
                 }
