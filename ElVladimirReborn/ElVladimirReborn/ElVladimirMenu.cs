@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
-using LeagueSharp.Common;
-using System.Drawing;
-
-
-namespace ElVladimirReborn
+﻿namespace ElVladimirReborn
 {
+    using System;
+
+    using LeagueSharp.Common;
 
     public class ElVladimirMenu
     {
+        #region Static Fields
+
         public static Menu _menu;
+
+        #endregion
+
+        #region Public Methods and Operators
 
         public static void Initialize()
         {
@@ -38,7 +37,8 @@ namespace ElVladimirReborn
             comboMenu.AddItem(new MenuItem("ElVladimir.Combo.E", "Use E").SetValue(true));
             comboMenu.AddItem(new MenuItem("ElVladimir.Combo.R", "Use R").SetValue(true));
             comboMenu.AddItem(new MenuItem("ElVladimir.Combo.SmartUlt", "Use Smartult").SetValue(true));
-            comboMenu.AddItem(new MenuItem("ElVladimir.Combo.Count.R", "Minimum targets for R")).SetValue(new Slider(1, 1, 5));
+            comboMenu.AddItem(new MenuItem("ElVladimir.Combo.Count.R", "Minimum targets for R"))
+                .SetValue(new Slider(1, 1, 5));
             comboMenu.AddItem(new MenuItem("separator", ""));
             comboMenu.AddItem(new MenuItem("ElVladimir.Combo.R.Killable", "Use R only when killable").SetValue(true));
             comboMenu.AddItem(new MenuItem("ElVladimir.Combo.Ignite", "Use ignite").SetValue(true));
@@ -51,11 +51,18 @@ namespace ElVladimirReborn
             harassMenu.AddItem(new MenuItem("ElVladimir.Harass.E", "Use E").SetValue(true));
 
             //ElVladimir.Auto.Harass
-            harassMenu.SubMenu("AutoHarass settings").AddItem(new MenuItem("ElVladimir.AutoHarass.Health.E", "Minimum Health for E").SetValue(new Slider(20)));
-            harassMenu.SubMenu("AutoHarass settings").AddItem(new MenuItem("ElVladimir.AutoHarass.Activated", "Auto harass", true).SetValue(new KeyBind("L".ToCharArray()[0], KeyBindType.Toggle)));
+            harassMenu.SubMenu("AutoHarass settings")
+                .AddItem(
+                    new MenuItem("ElVladimir.AutoHarass.Health.E", "Minimum Health for E").SetValue(new Slider(20)));
+            harassMenu.SubMenu("AutoHarass settings")
+                .AddItem(
+                    new MenuItem("ElVladimir.AutoHarass.Activated", "Auto harass", true).SetValue(
+                        new KeyBind("L".ToCharArray()[0], KeyBindType.Toggle)));
             harassMenu.SubMenu("AutoHarass settings").AddItem(new MenuItem("spacespacespace", ""));
-            harassMenu.SubMenu("AutoHarass settings").AddItem(new MenuItem("ElVladimir.AutoHarass.Q", "Use Q").SetValue(true));
-            harassMenu.SubMenu("AutoHarass settings").AddItem(new MenuItem("ElVladimir.AutoHarass.E", "Use E").SetValue(true));
+            harassMenu.SubMenu("AutoHarass settings")
+                .AddItem(new MenuItem("ElVladimir.AutoHarass.Q", "Use Q").SetValue(true));
+            harassMenu.SubMenu("AutoHarass settings")
+                .AddItem(new MenuItem("ElVladimir.AutoHarass.E", "Use E").SetValue(true));
 
             _menu.AddSubMenu(harassMenu);
 
@@ -64,14 +71,19 @@ namespace ElVladimirReborn
             clearMenu.AddItem(new MenuItem("ElVladimir.WaveClear.E", "Use E").SetValue(true));
             clearMenu.AddItem(new MenuItem("ElVladimir.JungleClear.Q", "Use Q in jungle").SetValue(true));
             clearMenu.AddItem(new MenuItem("ElVladimir.JungleClear.E", "Use E in jungle").SetValue(true));
-            clearMenu.AddItem(new MenuItem("ElVladimir.WaveClear.Health.E", "Minimum Health for E").SetValue(new Slider(20)));
+            clearMenu.AddItem(
+                new MenuItem("ElVladimir.WaveClear.Health.E", "Minimum Health for E").SetValue(new Slider(20)));
 
             _menu.AddSubMenu(clearMenu);
 
             var settingsMenu = new Menu("Settings", "Settings");
-            settingsMenu.AddItem(new MenuItem("ElVladimir.Settings.Stack.E", "Automatic stack E", true).SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
-            settingsMenu.AddItem(new MenuItem("ElVladimir.Settings.Stack.HP", "Minimum automatic stack HP")).SetValue(new Slider(20));
-            settingsMenu.AddItem(new MenuItem("ElVladimir.Settings.AntiGapCloser.Active", "Anti gapcloser")).SetValue(true);
+            settingsMenu.AddItem(
+                new MenuItem("ElVladimir.Settings.Stack.E", "Automatic stack E", true).SetValue(
+                    new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
+            settingsMenu.AddItem(new MenuItem("ElVladimir.Settings.Stack.HP", "Minimum automatic stack HP"))
+                .SetValue(new Slider(20));
+            settingsMenu.AddItem(new MenuItem("ElVladimir.Settings.AntiGapCloser.Active", "Anti gapcloser"))
+                .SetValue(true);
 
             _menu.AddSubMenu(settingsMenu);
 
@@ -103,5 +115,7 @@ namespace ElVladimirReborn
 
             Console.WriteLine("Menu Loaded");
         }
+
+        #endregion
     }
 }
