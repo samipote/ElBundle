@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
-using LeagueSharp.Common;
-using System.Drawing;
-
-
-namespace ElXerath
+﻿namespace ElXerath
 {
+    using System;
+    using LeagueSharp.Common;
 
     public class ElXerathMenu
     {
+        #region Static Fields
+
         public static Menu _menu;
+
+        #endregion
+
+        #region Public Methods and Operators
 
         public static void Initialize()
         {
@@ -39,25 +37,38 @@ namespace ElXerath
 
             var rMenu = new Menu("Ult", "Ult");
             rMenu.AddItem(new MenuItem("ElXerath.R.AutoUseR", "Auto use charges").SetValue(true));
-            rMenu.AddItem(new MenuItem("ElXerath.R.Mode", "Mode ").SetValue(new StringList(new[] { "Normal", "Custom delays", "OnTap", "Custom hitchance", "Near mouse" })));
-            rMenu.AddItem(new MenuItem("ElXerath.R.OnTap", "Ult on tap").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            rMenu.AddItem(
+                new MenuItem("ElXerath.R.Mode", "Mode ").SetValue(
+                    new StringList(new[] { "Normal", "Custom delays", "OnTap", "Custom hitchance", "Near mouse" })));
+            rMenu.AddItem(
+                new MenuItem("ElXerath.R.OnTap", "Ult on tap").SetValue(
+                    new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             rMenu.AddItem(new MenuItem("ElXerath.R.Block", "Block movement").SetValue(true));
 
             rMenu.SubMenu("CustomDelay").AddItem(new MenuItem("ElXerath.R.Delay", "Custom delays").SetValue(true));
             for (var i = 1; i <= 3; i++)
-                rMenu.SubMenu("CustomDelay").SubMenu("Custom delay").AddItem(new MenuItem("Delay" + i, "Delay" + i).SetValue(new Slider(0, 1500, 0)));
+            {
+                rMenu.SubMenu("CustomDelay")
+                    .SubMenu("Custom delay")
+                    .AddItem(new MenuItem("Delay" + i, "Delay" + i).SetValue(new Slider(0, 1500, 0)));
+            }
 
             rMenu.AddItem(new MenuItem("ElXerath.R.Radius", "Target radius").SetValue(new Slider(700, 1500, 300)));
 
-            _menu.AddSubMenu(rMenu);   
+            _menu.AddSubMenu(rMenu);
 
             var hMenu = new Menu("Harass", "Harass");
             hMenu.AddItem(new MenuItem("ElXerath.Harass.Q", "Use Q").SetValue(true));
             hMenu.AddItem(new MenuItem("ElXerath.Harass.W", "Use W").SetValue(true));
-            hMenu.SubMenu("AutoHarass").AddItem(new MenuItem("ElXerath.AutoHarass", "[Toggle] Auto harass", false).SetValue(new KeyBind("U".ToCharArray()[0], KeyBindType.Toggle)));
+            hMenu.SubMenu("AutoHarass")
+                .AddItem(
+                    new MenuItem("ElXerath.AutoHarass", "[Toggle] Auto harass", false).SetValue(
+                        new KeyBind("U".ToCharArray()[0], KeyBindType.Toggle)));
             hMenu.SubMenu("AutoHarass").AddItem(new MenuItem("ElXerath.UseQAutoHarass", "Use Q").SetValue(true));
             hMenu.SubMenu("AutoHarass").AddItem(new MenuItem("ElXerath.UseWAutoHarass", "Use W").SetValue(true));
-            hMenu.SubMenu("AutoHarass").AddItem(new MenuItem("ElXerath.harass.mana", "Auto harass mana")).SetValue(new Slider(55));
+            hMenu.SubMenu("AutoHarass")
+                .AddItem(new MenuItem("ElXerath.harass.mana", "Auto harass mana"))
+                .SetValue(new Slider(55));
 
             _menu.AddSubMenu(hMenu);
 
@@ -88,9 +99,13 @@ namespace ElXerath
             miscMenu.AddItem(new MenuItem("ElXerath.misc.Antigapcloser", "Antigapcloser").SetValue(true));
             miscMenu.AddItem(new MenuItem("ElXerath.misc.Notifications", "Use notifications").SetValue(true));
             miscMenu.AddItem(new MenuItem("useEdaadaDFafsdsgdrmddsddsasfsasdsdsaadsd", ""));
-            miscMenu.AddItem(new MenuItem("ElXerath.Misc.E", "Cast E key").SetValue(new KeyBind("H".ToCharArray()[0], KeyBindType.Press)));
+            miscMenu.AddItem(
+                new MenuItem("ElXerath.Misc.E", "Cast E key").SetValue(
+                    new KeyBind("H".ToCharArray()[0], KeyBindType.Press)));
             miscMenu.AddItem(new MenuItem("useEdaadaDFafsddssdsgdrmddsddsasfsasdsdsaadsd", ""));
-            miscMenu.AddItem(new MenuItem("ElXerath.hitChance", "Hitchance Q").SetValue(new StringList(new[] { "Low", "Medium", "High", "Very High" }, 3)));
+            miscMenu.AddItem(
+                new MenuItem("ElXerath.hitChance", "Hitchance Q").SetValue(
+                    new StringList(new[] { "Low", "Medium", "High", "Very High" }, 3)));
 
             _menu.AddSubMenu(miscMenu);
 
@@ -108,5 +123,7 @@ namespace ElXerath
 
             Console.WriteLine("Menu Loaded");
         }
+
+        #endregion
     }
 }
