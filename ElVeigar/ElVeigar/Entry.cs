@@ -632,6 +632,32 @@
             }
         }
 
+        public static float GetComboDamage(Obj_AI_Base enemy)
+        {
+            float damage = 0;
+
+            if (spells[Spells.Q].IsReady())
+            {
+                damage += spells[Spells.Q].GetDamage(enemy);
+            }
+
+            if (spells[Spells.W].IsReady())
+            {
+                damage += spells[Spells.W].GetDamage(enemy);
+            }
+
+            if (spells[Spells.R].IsReady())
+            {
+                damage += spells[Spells.R].GetDamage(enemy);
+            }
+
+            if (Ignite == SpellSlot.Unknown || Player.Spellbook.CanUseSpell(Ignite) != SpellState.Ready)
+            {
+                damage += (float)Player.GetSummonerSpellDamage(enemy, Damage.SummonerSpell.Ignite);
+            }
+
+            return damage;
+        }
         #endregion
 
     }

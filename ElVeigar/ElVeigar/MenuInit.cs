@@ -4,6 +4,8 @@
 
     using LeagueSharp;
     using LeagueSharp.Common;
+    using System.Drawing;
+
 
     public class MenuInit
     {
@@ -80,6 +82,31 @@
                 miscMenu.AddItem(new MenuItem("Misc.Drawings.R", "Draw R").SetValue(new Circle()));
 
                 miscMenu.AddItem(new MenuItem("Misc.Interrupt", "Interrupt with E").SetValue(false));
+
+                var dmgAfterE = new MenuItem("ElDiana.DrawComboDamage", "Draw combo damage").SetValue(true);
+                var drawFill =
+                    new MenuItem("ElDiana.DrawColour", "Fill colour", true).SetValue(
+                        new Circle(true, Color.FromArgb(204, 0, 167, 255)));
+                miscMenu.AddItem(drawFill);
+                miscMenu.AddItem(dmgAfterE);
+
+                DrawDamage.DamageToUnit = Entry.GetComboDamage;
+                DrawDamage.Enabled = dmgAfterE.GetValue<bool>();
+                DrawDamage.Fill = drawFill.GetValue<Circle>().Active;
+                DrawDamage.FillColor = drawFill.GetValue<Circle>().Color;
+
+                dmgAfterE.ValueChanged +=
+                    delegate (object sender, OnValueChangeEventArgs eventArgs)
+                    {
+                        DrawDamage.Enabled = eventArgs.GetNewValue<bool>();
+                    };
+
+                drawFill.ValueChanged += delegate (object sender, OnValueChangeEventArgs eventArgs)
+                {
+                    DrawDamage.Fill = eventArgs.GetNewValue<Circle>().Active;
+                    DrawDamage.FillColor = eventArgs.GetNewValue<Circle>().Color;
+                };
+
             }
 
             var ksMenu = Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
