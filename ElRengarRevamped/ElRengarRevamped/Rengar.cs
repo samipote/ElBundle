@@ -76,12 +76,12 @@
                 if (unit.IsMe && spells[Spells.Q].IsReady() && target is Obj_AI_Hero && target.IsValidTarget())
                 {
                     spells[Spells.Q].Cast();
-                    if (RengarQ || RengarE)
+                    /*if (RengarQ || RengarE)
                     {
                         Orbwalking.ResetAutoAttackTimer();
                         Player.IssueOrder(GameObjectOrder.AttackUnit, target);
                         Console.WriteLine("Orbwalker Reset in AfterAttack");
-                    }
+                    }*/
                 }
             }
         }
