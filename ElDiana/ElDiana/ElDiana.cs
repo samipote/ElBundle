@@ -169,10 +169,10 @@
                 ElDianaMenu._menu.Item("ElDiana.Combo.UseSecondRLimitation").GetValue<Slider>().Value;
             var minHpToDive = ElDianaMenu._menu.Item("ElDiana.Combo.R.PreventUnderTower").GetValue<Slider>().Value;
 
-            if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
+            if (useQ && spells[Spells.Q].IsReady() && Player.Distance(target) <= spells[Spells.Q].Range)
             {
                 var pred = spells[Spells.Q].GetPrediction(target);
-                if (pred.Hitchance >= CustomHitChance)
+                if (pred.Hitchance >= HitChance.VeryHigh)
                 {
                     spells[Spells.Q].Cast(target);
                 }
@@ -190,13 +190,9 @@
                 spells[Spells.W].Cast();
             }
 
-            if (useE && spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
+            if (useE && spells[Spells.E].IsReady() && Player.Distance(target) <= spells[Spells.E].Range)
             {
-                var pred = spells[Spells.E].GetPrediction(target);
-                if (pred.Hitchance >= CustomHitChance)
-                {
-                    spells[Spells.E].Cast();
-                }
+                spells[Spells.E].Cast();
             }
 
             if (secondR && (!target.UnderTurret(true) || (minHpToDive <= Player.HealthPercent)))
@@ -277,13 +273,9 @@
                 spells[Spells.W].Cast();
             }
 
-            if (useE && spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
+            if (useE && spells[Spells.E].IsReady() && Player.Distance(target) <= spells[Spells.E].Range)
             {
-                var pred = spells[Spells.E].GetPrediction(target);
-                if (pred.Hitchance >= CustomHitChance)
-                {
-                    spells[Spells.E].Cast();
-                }
+                spells[Spells.E].Cast();
             }
         }
 
