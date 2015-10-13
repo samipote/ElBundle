@@ -113,7 +113,7 @@
             }
 
             Notifications.AddNotification(string.Format("ElDiana by jQuery v{0}", ScriptVersion), 1000);
-            spells[Spells.Q].SetSkillshot(0.25f, 195f, 1400f, false, SkillshotType.SkillshotCircle);
+            spells[Spells.Q].SetSkillshot(0.25f, 150f, 1400f, false, SkillshotType.SkillshotCircle);
             ignite = Player.GetSpellSlot("summonerdot");
 
             ElDianaMenu.Initialize();
