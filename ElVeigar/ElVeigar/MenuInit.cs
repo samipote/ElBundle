@@ -33,6 +33,7 @@
             {
                 comboMenu.AddItem(new MenuItem("ElVeigar.Combo.Q", "Use Q").SetValue(true));
                 comboMenu.AddItem(new MenuItem("ElVeigar.Combo.W.Stun", "Use W on stun").SetValue(true));
+                comboMenu.AddItem(new MenuItem("ElVeigar.Combo.W", "Use W").SetValue(false));
                 comboMenu.AddItem(new MenuItem("ElVeigar.Combo.E", "Use E").SetValue(true));
                 comboMenu.AddItem(new MenuItem("ElVeigar.Combo.R", "Use R").SetValue(true));
                 comboMenu.AddItem(new MenuItem("ElVeigar.Combo.Use.Ignite", "Use Ignite").SetValue(true)); 

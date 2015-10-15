@@ -81,6 +81,11 @@
         {
             try
             {
+                if (ObjectManager.Player.ChampionName != "Veigar")
+                {
+                    return;
+                }
+
                 Ignite = Player.GetSpellSlot("summonerdot");
                 Notifications.AddNotification(string.Format("ElVeigar by jQuery v{0}", ScriptVersion), 10000);
                 MenuInit.Initialize();
@@ -163,6 +168,17 @@
                     if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                     {
                         spells[Spells.Q].Cast(target.Position);
+                    }
+                }
+
+                var predictionW = spells[Spells.W].GetPrediction(target);
+
+                if (spells[Spells.W].IsReady() && Player.Distance(target.Position) <= spells[Spells.W].Range
+                    && MenuInit.IsActive("ElVeigar.Combo.W"))
+                {
+                    if (predictionW.Hitchance >= HitChance.High)
+                    {
+                        spells[Spells.W].Cast(target.Position);
                     }
                 }
 
