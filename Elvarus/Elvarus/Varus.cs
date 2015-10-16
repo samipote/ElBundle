@@ -48,17 +48,6 @@ namespace Elvarus
 
         #endregion
 
-        #region Properties
-
-        private static HitChance CustomHitChance
-        {
-            get
-            {
-                return GetHitchance();
-            }
-        }
-
-        #endregion
 
         #region Public Methods and Operators
 
@@ -227,23 +216,6 @@ namespace Elvarus
             return target.Health;
         }
 
-        private static HitChance GetHitchance()
-        {
-            switch (ElVarusMenu.Menu.Item("ElVarus.hitChance").GetValue<StringList>().SelectedIndex)
-            {
-                case 0:
-                    return HitChance.Low;
-                case 1:
-                    return HitChance.Medium;
-                case 2:
-                    return HitChance.High;
-                case 3:
-                    return HitChance.VeryHigh;
-                default:
-                    return HitChance.VeryHigh;
-            }
-        }
-
         private static int GetStacksOn(Obj_AI_Base target)
         {
             return
@@ -272,22 +244,26 @@ namespace Elvarus
                     spells[Spells.E].CastOnBestTarget();
                 }
 
-                if (!spells[Spells.Q].IsCharging)
+                if (harassQ)
                 {
-                    spells[Spells.Q].StartCharging();
-                }
-                if (spells[Spells.Q].IsReady() && harassQ)
-                {
-                    var prediction = spells[Spells.Q].GetPrediction(target);
-                    var distance =
-                        Player.ServerPosition.Distance(
-                            prediction.UnitPosition
-                            + 200 * (prediction.UnitPosition - Player.ServerPosition).Normalized(),
-                            true);
-                    if (distance < spells[Spells.Q].RangeSqr)
+                    if (!spells[Spells.Q].IsCharging)
                     {
-                        if (spells[Spells.Q].Cast(prediction.CastPosition))
+                        spells[Spells.Q].StartCharging();
+                    }
+
+                    if (spells[Spells.Q].IsReady())
+                    {
+                        var prediction = spells[Spells.Q].GetPrediction(target);
+                        var distance =
+                            Player.ServerPosition.Distance(
+                                prediction.UnitPosition
+                                + 200 * (prediction.UnitPosition - Player.ServerPosition).Normalized(),
+                                true);
+                        if (distance < spells[Spells.Q].RangeSqr)
                         {
+                            if (spells[Spells.Q].Cast(prediction.CastPosition))
+                            {
+                            }
                         }
                     }
                 }

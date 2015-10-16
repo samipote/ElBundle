@@ -43,9 +43,6 @@ namespace Elvarus
                     new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
 
             cMenu.AddItem(new MenuItem("ElVarus.ssssssssssss", ""));
-            cMenu.AddItem(
-                new MenuItem("ElVarus.hitChance", "Hitchance Q").SetValue(
-                    new StringList(new[] { "Low", "Medium", "High", "Very High" }, 3)));
             cMenu.AddItem(new MenuItem("ComboActive", "Combo!").SetValue(new KeyBind(32, KeyBindType.Press)));
             Menu.AddSubMenu(cMenu);
 
@@ -54,9 +51,7 @@ namespace Elvarus
             hMenu.AddItem(new MenuItem("ElVarus.Harass.E", "Use E").SetValue(true));
             hMenu.AddItem(new MenuItem("ElVarus.Harasssfsass.E", ""));
             hMenu.AddItem(new MenuItem("minmanaharass", "Mana needed to clear ")).SetValue(new Slider(55));
-            hMenu.AddItem(
-                new MenuItem("ElVarus.hitChance", "Hitchance Q").SetValue(
-                    new StringList(new[] { "Low", "Medium", "High", "Very High" }, 3)));
+
             Menu.AddSubMenu(hMenu);
 
             var itemMenu = new Menu("Items", "Items");
