@@ -80,6 +80,12 @@
                                     Console.WriteLine("2. E 5 ferocity cast");
                                 }
                             }
+
+                            if (!RengarR && !spells[Spells.E].IsReady() && IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
+                            {
+                                spells[Spells.Q].Cast();
+                                Console.WriteLine("3. Q cast E CD");
+                            }
                             break;
                         case 1:
                             if (spells[Spells.W].IsReady() && !RengarR
