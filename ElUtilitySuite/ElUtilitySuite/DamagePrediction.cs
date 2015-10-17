@@ -1,4 +1,4 @@
-﻿namespace ElUtilitySuite
+﻿/*namespace ElUtilitySuite
 {
     using LeagueSharp;
     using LeagueSharp.Common;
@@ -59,4 +59,4 @@
 
         #endregion
     }
-}
+}*/

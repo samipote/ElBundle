@@ -117,6 +117,7 @@
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+       
             if (sender.Type == GameObjectType.obj_AI_Hero && sender.IsEnemy)
             {
                 var heroSender = ObjectManager.Get<Obj_AI_Hero>().First(x => x.NetworkId == sender.NetworkId);

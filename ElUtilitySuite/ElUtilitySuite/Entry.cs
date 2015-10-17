@@ -88,7 +88,7 @@
                 Notifications.AddNotification(string.Format("El Utility Suite by jQuery v{0}", ScriptVersion), 10000);
 
                 Game.OnUpdate += OnUpdate;
-                Obj_AI_Base.OnLevelUp += OnLevelUp;
+                //Obj_AI_Base.OnLevelUp += OnLevelUp;
 
                 var type = Type.GetType("ElUtilitySuite.Plugins." + Player.ChampionName);
                 if (type != null)
@@ -107,7 +107,7 @@
 
         #region Methods
 
-        private static bool ChampionCheck()
+        /*private static bool ChampionCheck()
         {
             return Player.ChampionName == "Udyr" || Player.ChampionName == "Elise" || Player.ChampionName == "Jayce";
         }
@@ -123,7 +123,7 @@
             {
                 Player.Spellbook.LevelSpell(SpellSlot.R);
             }
-        }
+        }*/
 
         private static void OnUpdate(EventArgs args)
         {
