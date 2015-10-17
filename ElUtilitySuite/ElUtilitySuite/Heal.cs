@@ -92,7 +92,7 @@
             var target = Entry.Allies();
             var iDamagePercent = (int)((incdmg / Entry.Player.MaxHealth) * 100);
 
-            if (target.Distance(Entry.Player.ServerPosition) <= 700f && Entry.Player.CountEnemiesInRange(1000) > 0)
+            if (target.Distance(Entry.Player.ServerPosition) <= 700f && Entry.Player.CountEnemiesInRange(1000) >= 0)
             {
                 var aHealthPercent = (int)((target.Health / target.MaxHealth) * 100);
                 if (aHealthPercent <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value
