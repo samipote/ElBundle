@@ -320,7 +320,7 @@ namespace ElTristana
 
             //70 E AoE radius
 
-            if (spells[Spells.E].IsReady() && IsActive("ElTristana.JungleClear.E") && minions.Count > 2
+            if (spells[Spells.E].IsReady() && IsActive("ElTristana.JungleClear.E")
                 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.JungleClear.E.Mana").GetValue<Slider>().Value)
             {
                 foreach (var minion in
@@ -331,7 +331,7 @@ namespace ElTristana
                             && minion.IsValidTarget() && minion.Distance(Player.ServerPosition) < spells[Spells.E].Range)
                     )
                 {
-                    spells[Spells.E].Cast(minion);
+                    spells[Spells.E].CastOnUnit(minion);
                 }
             }
 
