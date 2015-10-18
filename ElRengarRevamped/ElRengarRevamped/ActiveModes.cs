@@ -42,6 +42,11 @@
                     return;
                 }
 
+                if (Rengar._selectedEnemy.IsValidTarget())
+                {
+                    Rengar._selectedEnemy = target;
+                }
+
                 if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
                 {
                     return;
@@ -50,8 +55,9 @@
                 if (Youmuu.IsReady() && Player.Distance(target) <= spells[Spells.Q].Range)
                 {
                     Youmuu.Cast(Player);
-                    Console.WriteLine("Yoummu cast " + target.SkinName + "");
                 }
+
+                UseItems(target);
 
                 #region RengarR
 
@@ -60,32 +66,17 @@
                     switch (IsListActive("Combo.Prio").SelectedIndex)
                     {
                         case 0:
-                            if (!RengarR && (int)(Game.Time * 1000) - SendTime < (700 + Game.Ping))
+                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount)
                             {
                                 var prediction = spells[Spells.E].GetPrediction(target);
                                 if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                                 {
                                     spells[Spells.E].Cast(target);
-                                    Console.WriteLine("1. E 5 ferocity cast");
-                                }
-                            }
-                            else if (!RengarR && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
-                                     && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                     <= spells[Spells.E].Range)
-                            {
-                                var prediction = spells[Spells.E].GetPrediction(target);
-                                if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
-                                {
-                                    spells[Spells.E].Cast(target);
-                                    Console.WriteLine("2. E 5 ferocity cast");
+                                    Rengar.LastE = Environment.TickCount;
+                                    return;
                                 }
                             }
 
-                            if (!RengarR && !spells[Spells.E].IsReady() && IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
-                            {
-                                spells[Spells.Q].Cast();
-                                Console.WriteLine("3. Q cast E CD");
-                            }
                             break;
                         case 1:
                             if (spells[Spells.W].IsReady() && !RengarR
@@ -93,21 +84,16 @@
                                 < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing() && !HasPassive)
                             {
                                 spells[Spells.W].Cast();
-                                Console.WriteLine("1. W 5 ferocity cast");
+                                return;
                             }
                             break;
                         case 2:
                             if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
                             {
-                                if (Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000)
+                                if (Rengar.LastQ + 200 < Environment.TickCount)
                                 {
                                     spells[Spells.Q].Cast();
-                                    Console.WriteLine("1. Q 5 ferocity cast" + " with: " + Player.Mana + " Ferocity");
-                                }
-                                else if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1))
-                                {
-                                    spells[Spells.Q].Cast();
-                                    Console.WriteLine("2. Q 5 ferocity cast" + " with: " + Player.Mana + " Ferocity");
+                                    return;
                                 }
                             }
                             break;
@@ -121,17 +107,11 @@
                         return;
                     }
 
-                    //target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) - 1
-                    if (IsActive("Combo.Use.Q") && Utils.GameTimeTickCount - Rengar.Lastrengarq < 1000
-                        && spells[Spells.Q].IsInRange(target))
+                    if (IsActive("Combo.Use.Q") && Rengar.LastQ + 200 < Environment.TickCount
+                        && target.Distance(Player) < spells[Spells.Q].Range)
                     {
                         spells[Spells.Q].Cast();
-                        Console.WriteLine("Default < 5 stacks Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
-                    }
-                    else if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
-                    {
-                        spells[Spells.Q].Cast();
-                        Console.WriteLine("2. Default < 5 stacks Q casted on " + target.SkinName + " with: " + Player.Mana + " Ferocity");
+                        return;
                     }
 
                     if (RengarR)
@@ -139,19 +119,22 @@
                         return;
                     }
 
-
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
-                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.W].Range * 1 / 3
-                        && !Player.IsDashing() && !HasPassive)
+                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                        <= spells[Spells.W].Range * 1 / 3 && !Player.IsDashing() && !HasPassive
+                        && Rengar.LastW < Environment.TickCount)
                     {
                         spells[Spells.W].Cast(Player);
                         Utility.DelayAction.Add(100, () => UseHydra());
-                        Console.WriteLine("W Cast with Hydra " + Player.Mana);
+                        return;
                     }
-                    else if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target) && !Player.IsDashing())
+
+                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target)
+                        && Rengar.LastW < Environment.TickCount)
                     {
-                        spells[Spells.W].Cast(Player);
+                        spells[Spells.W].Cast();
                         Utility.DelayAction.Add(100, () => UseHydra());
+                        return;
                     }
 
                     if (!HasPassive && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
@@ -161,24 +144,18 @@
                         if (prediction.Hitchance >= HitChance.Medium && prediction.CollisionObjects.Count == 0)
                         {
                             spells[Spells.E].Cast(target);
-                            Console.WriteLine("Default <" + Player.Mana + " 5 stacks E casted on " + target.SkinName + "");
+                            return;
                         }
                     }
-
-                    if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < 255f)
+                    else if (Rengar.LastE + 200 < Environment.TickCount
+                             && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range)
                     {
-                        UseHydra();
-                        Console.WriteLine("Hydra standalone " + target.SkinName + "");
+                        spells[Spells.E].Cast(target);
+                        return;
                     }
 
-                    if (target.IsValidTarget(250f))
-                    {
-                        UseHydra();
-                        Console.WriteLine("1. Hydra standalone " + target.SkinName + "");
-                    }
-
-                    if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100 && !RengarR
-                        && Ferocity == 5)
+                    if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100
+                        && !RengarR && Ferocity == 5)
                     {
                         var prediction = spells[Spells.E].GetPrediction(target);
                         if (prediction.Hitchance >= HitChance.VeryHigh && prediction.CollisionObjects.Count == 0)
@@ -194,14 +171,12 @@
                     && IgniteDamage(target) >= target.Health)
                 {
                     Player.Spellbook.CastSpell(Ignite, target);
-                    Console.WriteLine("Used ignite (Combo) on " + target.SkinName + " (" + target.Health / target.MaxHealth * 100 + "%)!");
                 }
 
                 if (IsActive("Combo.Use.Smite") && Smite != SpellSlot.Unknown
                     && Player.Spellbook.CanUseSpell(Smite) == SpellState.Ready)
                 {
                     Player.Spellbook.CastSpell(Smite, target);
-                    Console.WriteLine("Used smite (Combo) on " + target.SkinName + " (" + target.Health / target.MaxHealth * 100 + "%)!");
                 }
 
                 #endregion
@@ -213,6 +188,56 @@
         }
 
         #endregion
+
+        #endregion
+
+        #region Methods
+
+        private static void UseItems(Obj_AI_Base target)
+        {
+            if (ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady()
+                && ItemData.Ravenous_Hydra_Melee_Only.Range > Player.Distance(target))
+            {
+                ItemData.Ravenous_Hydra_Melee_Only.GetItem().Cast();
+            }
+            if (ItemData.Tiamat_Melee_Only.GetItem().IsReady()
+                && ItemData.Tiamat_Melee_Only.Range > Player.Distance(target))
+            {
+                ItemData.Tiamat_Melee_Only.GetItem().Cast();
+            }
+
+            if (ItemData.Blade_of_the_Ruined_King.GetItem().IsReady()
+                && ItemData.Blade_of_the_Ruined_King.Range > Player.Distance(target))
+            {
+                ItemData.Blade_of_the_Ruined_King.GetItem().Cast(target);
+            }
+
+            if (ItemData.Youmuus_Ghostblade.GetItem().IsReady()
+                && Orbwalking.GetRealAutoAttackRange(Player) > Player.Distance(target))
+            {
+                ItemData.Youmuus_Ghostblade.GetItem().Cast();
+            }
+        }
+
+        private static void UseItemstest(Obj_AI_Base target)
+        {
+            if (ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady()
+                && ItemData.Ravenous_Hydra_Melee_Only.Range > Player.Distance(target))
+            {
+                ItemData.Ravenous_Hydra_Melee_Only.GetItem().Cast();
+            }
+            if (ItemData.Tiamat_Melee_Only.GetItem().IsReady()
+                && ItemData.Tiamat_Melee_Only.Range > Player.Distance(target))
+            {
+                ItemData.Tiamat_Melee_Only.GetItem().Cast();
+            }
+
+            if (ItemData.Blade_of_the_Ruined_King.GetItem().IsReady()
+                && ItemData.Blade_of_the_Ruined_King.Range > Player.Distance(target))
+            {
+                ItemData.Blade_of_the_Ruined_King.GetItem().Cast(target);
+            }
+        }
 
         #endregion
 
@@ -328,6 +353,8 @@
                 return;
             }*/
 
+            UseItemstest(minion);
+
             if (Ferocity == 5 && IsActive("Jungle.Save.Ferocity"))
             {
                 if (Vector3.Distance(Player.ServerPosition, minion.ServerPosition) < spells[Spells.W].Range)
@@ -337,9 +364,10 @@
                 return;
             }
 
-            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady())
+            if (IsActive("Jungle.Use.Q") && spells[Spells.Q].IsReady() && Rengar.LastQ + 200 < Environment.TickCount)
             {
                 spells[Spells.Q].Cast();
+                return;
             }
 
             if (IsActive("Jungle.Use.W") && spells[Spells.W].IsReady()

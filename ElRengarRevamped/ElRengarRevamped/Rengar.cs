@@ -25,13 +25,35 @@
     {
         #region Static Fields
 
+        public static Obj_AI_Base _selectedEnemy;
+
         public static bool justDoIt;
 
         public static int LastAutoAttack, Lastrengarq;
 
+        public static int LastQ, LastE, LastW, LastSpell;
+
         #endregion
 
         #region Public Methods and Operators
+
+        public static void OnClick(WndEventArgs args)
+        {
+            if (args.Msg != (uint)WindowsMessages.WM_LBUTTONDOWN)
+            {
+                return;
+            }
+            var unit2 =
+                ObjectManager.Get<Obj_AI_Base>()
+                    .FirstOrDefault(
+                        a =>
+                        (a.IsValid<Obj_AI_Hero>()) && a.IsEnemy && a.Distance(Game.CursorPos) < a.BoundingRadius + 80
+                        && a.IsValidTarget());
+            if (unit2 != null)
+            {
+                _selectedEnemy = unit2;
+            }
+        }
 
         public static void OnLoad(EventArgs args)
         {
@@ -58,6 +80,7 @@
                 Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
                 Orbwalking.BeforeAttack += OrbwalkingBeforeAttack;
                 Orbwalking.AfterAttack += AfterAttack;
+                Game.OnWndProc += OnClick;
             }
             catch (Exception e)
             {
@@ -113,7 +136,7 @@
             if (sender.IsMe && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
             {
                 if (spells[Spells.Q].IsReady() && target.Distance(Player) < Player.AttackRange && HasPassive
-                   && Player.IsDashing() && Ferocity == 5 && IsListActive("Combo.Prio").SelectedIndex == 2)
+                    && Player.IsDashing() && Ferocity == 5 && IsListActive("Combo.Prio").SelectedIndex == 2)
                 {
                     spells[Spells.Q].Cast();
                 }
@@ -153,7 +176,7 @@
                         }
                         break;
 
-                   case 1:
+                    case 1:
                         if (IsActive("Beta.Cast.Q") && RengarR)
                         {
                             spells[Spells.E].Cast(target);
@@ -185,7 +208,7 @@
                         break;
                 }
 
-               /*if (spells[Spells.W].IsReady() && !HasPassive)
+                /*if (spells[Spells.W].IsReady() && !HasPassive)
                 {
                     Utility.DelayAction.Add(100, () => spells[Spells.W].Cast());
                 }
@@ -214,6 +237,15 @@
 
             var drawsearchrangeQ = MenuInit.Menu.Item("Beta.Search.QCastRange").GetValue<Circle>();
             var searchrangeQCastRange = MenuInit.Menu.Item("Beta.searchrange.Q").GetValue<Slider>().Value;
+
+            if (_selectedEnemy.IsValidTarget() && _selectedEnemy.IsVisible && !_selectedEnemy.IsDead)
+            {
+                Drawing.DrawText(
+                    Drawing.WorldToScreen(_selectedEnemy.Position).X - 40,
+                    Drawing.WorldToScreen(_selectedEnemy.Position).Y + 10,
+                    Color.White,
+                    "Selected Target");
+            }
 
             if (IsActive("Misc.Drawings.Off"))
             {
@@ -326,14 +358,29 @@
                             });
                 }
 
+                //Console.Write(args.SData.Name.ToLower());
+
+                switch (args.SData.Name.ToLower())
+                {
+                    case "rengarq":
+                        LastQ = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        break;
+
+                    case "rengare":
+                        LastE = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        break;
+
+                    case "rengarw":
+                        LastW = Environment.TickCount;
+                        LastSpell = Environment.TickCount;
+                        break;
+                }
+
                 if (args.SData.IsAutoAttack())
                 {
                     LastAutoAttack = Utils.GameTimeTickCount;
-                }
-
-                if (RengarQ)
-                {
-                    Lastrengarq = Environment.TickCount;
                 }
             }
         }
@@ -346,6 +393,7 @@
             }
             try
             {
+                //Console.WriteLine(LastE);
 
                 //Console.WriteLine(IsListActive("Combo.Prio").SelectedIndex);
                 SwitchCombo();
@@ -395,7 +443,7 @@
                         //Console.WriteLine("RengarLogs: CASTED Q WHILE R ");
                     }
                 }
-               
+
                 //Console.WriteLine(GetEnemy());
                 spells[Spells.R].Range = 1000 + spells[Spells.R].Level * 1000;
             }
@@ -409,7 +457,8 @@
         {
             if (args.Target is Obj_AI_Hero && args.Target.IsValidTarget())
             {
-                if (Ferocity <= 4 && Orbwalking.InAutoAttackRange(args.Target) && IsListActive("Combo.Prio").SelectedIndex == 2)
+                if (Ferocity <= 4 && Orbwalking.InAutoAttackRange(args.Target)
+                    && IsListActive("Combo.Prio").SelectedIndex == 2)
                 {
                     spells[Spells.Q].Cast();
                 }
