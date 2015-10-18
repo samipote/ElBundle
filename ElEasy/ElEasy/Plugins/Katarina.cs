@@ -16,6 +16,10 @@ namespace ElEasy.Plugins
     {
         #region Static Fields
 
+        public static Vector2 JumpPos;
+
+        private static readonly bool castWardAgain = true;
+
         private static readonly Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>
                                                                        {
                                                                            { Spells.Q, new Spell(SpellSlot.Q, 675) },
@@ -32,7 +36,11 @@ namespace ElEasy.Plugins
 
         private static Vector3 lastWardPos;
 
+        private static bool reCheckWard = true;
+
         private static float rStart;
+
+        private static float wcasttime;
 
         #endregion
 
@@ -86,32 +94,32 @@ namespace ElEasy.Plugins
             }
         }
 
-        private static void DoWardJump()
+        private static void CastEWard(Obj_AI_Base obj)
         {
-            if (Environment.TickCount <= lastPlaced + 3000 || !spells[Spells.E].IsReady())
+            if (500 >= Environment.TickCount - wcasttime)
             {
                 return;
             }
 
-            var cursorPos = Game.CursorPos;
-            var myPos = Player.ServerPosition;
-            var delta = cursorPos - myPos;
+            spells[Spells.E].CastOnUnit(obj);
+            wcasttime = Environment.TickCount;
+        }
 
-            delta.Normalize();
-
-            var wardPosition = myPos + delta * (600 - 5);
-            var invSlot = GetBestWardSlot();
-
-            if (invSlot == null)
+        private static InventorySlot FindBestWardItem()
+        {
+            var slot = Items.GetWardSlot();
+            if (slot == default(InventorySlot))
             {
-                return;
+                return null;
             }
 
-            Items.UseItem((int)invSlot.Id, wardPosition);
-            lastWardPos = wardPosition;
-            lastPlaced = Environment.TickCount;
+            var sdi = GetItemSpell(slot);
 
-            spells[Spells.E].Cast();
+            if (sdi != default(SpellDataInst) && sdi.State == SpellState.Ready)
+            {
+                return slot;
+            }
+            return slot;
         }
 
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
@@ -220,6 +228,11 @@ namespace ElEasy.Plugins
             return target.Health;
         }
 
+        private static SpellDataInst GetItemSpell(InventorySlot invSlot)
+        {
+            return Player.Spellbook.Spells.FirstOrDefault(spell => (int)spell.Slot == invSlot.Slot + 4);
+        }
+
         private static bool HasRBuff()
         {
             return Player.HasBuff("KatarinaR") || Player.IsChannelingImportantSpell()
@@ -278,6 +291,10 @@ namespace ElEasy.Plugins
             wMenu.AddItem(
                 new MenuItem("ElEasy.Katarina.Wardjump", "Wardjump key").SetValue(
                     new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
+
+            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Mouse", "Move to mouse").SetValue(true));
+            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Minions", "Jump to minions").SetValue(true));
+            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Champions", "Jump to champions").SetValue(true));
             Menu.AddSubMenu(wMenu);
 
             var hMenu = new Menu("Harass", "Harass");
@@ -369,7 +386,6 @@ namespace ElEasy.Plugins
 
             Menu.AddToMainMenu();
         }
-
 
         private static bool KatarinaQ(Obj_AI_Base target)
         {
@@ -843,7 +859,7 @@ namespace ElEasy.Plugins
 
             if (Menu.Item("ElEasy.Katarina.Wardjump").GetValue<KeyBind>().Active)
             {
-                DoWardJump();
+                WardjumpToMouse();
             }
 
             var autor = new[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
@@ -879,6 +895,11 @@ namespace ElEasy.Plugins
             }
         }
 
+        private static void Orbwalk(Vector3 pos, Obj_AI_Hero target = null)
+        {
+            Player.IssueOrder(GameObjectOrder.MoveTo, pos);
+        }
+
         private static void UseItems(Obj_AI_Base target)
         {
             var useHextech = Menu.Item("ElEasy.Katarina.Items.hextech").GetValue<bool>();
@@ -897,6 +918,140 @@ namespace ElEasy.Plugins
                     hextech.Cast(target);
                 }
             }
+        }
+
+        private static void WardJump(
+            Vector3 pos,
+            bool m2M = true,
+            bool maxRange = false,
+            bool reqinMaxRange = false,
+            bool minions = true,
+            bool champions = true)
+        {
+            if (!spells[Spells.E].IsReady())
+            {
+                return;
+            }
+
+            var basePos = Player.Position.To2D();
+            var newPos = (pos.To2D() - Player.Position.To2D());
+
+            if (JumpPos == new Vector2())
+            {
+                if (reqinMaxRange)
+                {
+                    JumpPos = pos.To2D();
+                }
+                else if (maxRange || Player.Distance(pos) > 590)
+                {
+                    JumpPos = basePos + (newPos.Normalized() * (590));
+                }
+                else
+                {
+                    JumpPos = basePos + (newPos.Normalized() * (Player.Distance(pos)));
+                }
+            }
+            if (JumpPos != new Vector2() && reCheckWard)
+            {
+                reCheckWard = false;
+                Utility.DelayAction.Add(
+                    20,
+                    () =>
+                        {
+                            if (JumpPos != new Vector2())
+                            {
+                                JumpPos = new Vector2();
+                                reCheckWard = true;
+                            }
+                        });
+            }
+            if (m2M)
+            {
+                Orbwalk(pos);
+            }
+            if (!spells[Spells.E].IsReady() || reqinMaxRange && Player.Distance(pos) > spells[Spells.W].Range)
+            {
+                return;
+            }
+
+            if (minions || champions)
+            {
+                if (champions)
+                {
+                    var champs = (from champ in ObjectManager.Get<Obj_AI_Hero>()
+                                  where
+                                      champ.IsAlly && champ.Distance(Player) < spells[Spells.E].Range
+                                      && champ.Distance(pos) < 200 && !champ.IsMe
+                                  select champ).ToList();
+                    if (champs.Count > 0 && spells[Spells.E].IsReady())
+                    {
+                        if (500 >= Environment.TickCount - wcasttime || !spells[Spells.E].IsReady())
+                        {
+                            return;
+                        }
+
+                        CastEWard(champs[0]);
+                        return;
+                    }
+                }
+                if (minions)
+                {
+                    var minion2 = (from minion in ObjectManager.Get<Obj_AI_Minion>()
+                                   where
+                                       minion.IsAlly && minion.Distance(Player) < spells[Spells.W].Range
+                                       && minion.Distance(pos) < 200 && !minion.Name.ToLower().Contains("ward")
+                                   select minion).ToList();
+                    if (minion2.Count > 0)
+                    {
+                        if (500 >= Environment.TickCount - wcasttime || !spells[Spells.E].IsReady())
+                        {
+                            return;
+                        }
+
+                        CastEWard(minion2[0]);
+                        return;
+                    }
+                }
+            }
+
+            var isWard = false;
+            foreach (var ward in ObjectManager.Get<Obj_AI_Base>())
+            {
+                if (ward.IsAlly && ward.Name.ToLower().Contains("ward") && ward.Distance(JumpPos) < 200)
+                {
+                    isWard = true;
+                    if (500 >= Environment.TickCount - wcasttime || !spells[Spells.E].IsReady())
+                    {
+                        return;
+                    }
+
+                    CastEWard(ward);
+                    wcasttime = Environment.TickCount;
+                }
+            }
+
+            if (!isWard && castWardAgain)
+            {
+                var ward = FindBestWardItem();
+                if (ward == null || !spells[Spells.E].IsReady())
+                {
+                    return;
+                }
+
+                Player.Spellbook.CastSpell(ward.SpellSlot, JumpPos.To3D());
+                lastWardPos = JumpPos.To3D();
+            }
+        }
+
+        private static void WardjumpToMouse()
+        {
+            WardJump(
+                Game.CursorPos,
+                Menu.Item("ElEasy.Wardjump.Mouse").GetValue<bool>(),
+                false,
+                false,
+                Menu.Item("ElEasy.Wardjump.Minions").GetValue<bool>(),
+                Menu.Item("ElEasy.Wardjump.Champions").GetValue<bool>());
         }
 
         #endregion
