@@ -15,6 +15,8 @@
     {
         #region Public Methods and Operators
 
+        public static int kappa = 1;
+
         public static void Combo()
         {
             try
@@ -41,11 +43,14 @@
                 {
                     return;
                 }
+                //if (!Rengar._selectedEnemy.IsValidTarget() || Rengar._selectedEnemy == null) return;
 
                 if (Rengar._selectedEnemy.IsValidTarget())
                 {
                     Rengar._selectedEnemy = target;
                 }
+
+
 
                 if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
                 {
@@ -66,16 +71,30 @@
                     switch (IsListActive("Combo.Prio").SelectedIndex)
                     {
                         case 0:
-                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount)
+                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount && !HasPassive || HasPassive && !Player.IsDashing()) // && !HasPassive
                             {
                                 var prediction = spells[Spells.E].GetPrediction(target);
                                 if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                                 {
                                     spells[Spells.E].Cast(target);
                                     Rengar.LastE = Environment.TickCount;
+                                    kappa = 0;
                                     return;
                                 }
                             }
+                            //XDDDDDDDDDDDDDDDDDDDDDDDDD
+                            if (kappa == 0)
+                            {
+                                if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
+                                {
+                                    Console.WriteLine("used prio 0 Q {0}", Player.Mana);
+
+                                    spells[Spells.Q].Cast();
+                                    kappa = 1;
+                                    return;
+                                }
+                            }
+                            //XDDDDDDDDDDDDDDDDDDDDDDDDD
 
                             break;
                         case 1:
@@ -83,8 +102,11 @@
                                 && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
                                 < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing() && !HasPassive)
                             {
-                                spells[Spells.W].Cast();
-                                return;
+                                if (Rengar.LastW + 200 < Environment.TickCount)
+                                {
+                                    spells[Spells.W].Cast();
+                                    return;
+                                }
                             }
                             break;
                         case 2:
@@ -194,32 +216,6 @@
         #region Methods
 
         private static void UseItems(Obj_AI_Base target)
-        {
-            if (ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady()
-                && ItemData.Ravenous_Hydra_Melee_Only.Range > Player.Distance(target))
-            {
-                ItemData.Ravenous_Hydra_Melee_Only.GetItem().Cast();
-            }
-            if (ItemData.Tiamat_Melee_Only.GetItem().IsReady()
-                && ItemData.Tiamat_Melee_Only.Range > Player.Distance(target))
-            {
-                ItemData.Tiamat_Melee_Only.GetItem().Cast();
-            }
-
-            if (ItemData.Blade_of_the_Ruined_King.GetItem().IsReady()
-                && ItemData.Blade_of_the_Ruined_King.Range > Player.Distance(target))
-            {
-                ItemData.Blade_of_the_Ruined_King.GetItem().Cast(target);
-            }
-
-            if (ItemData.Youmuus_Ghostblade.GetItem().IsReady()
-                && Orbwalking.GetRealAutoAttackRange(Player) > Player.Distance(target))
-            {
-                ItemData.Youmuus_Ghostblade.GetItem().Cast();
-            }
-        }
-
-        private static void UseItemstest(Obj_AI_Base target)
         {
             if (ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady()
                 && ItemData.Ravenous_Hydra_Melee_Only.Range > Player.Distance(target))
@@ -353,7 +349,7 @@
                 return;
             }*/
 
-            UseItemstest(minion);
+            UseItems(minion);
 
             if (Ferocity == 5 && IsActive("Jungle.Save.Ferocity"))
             {

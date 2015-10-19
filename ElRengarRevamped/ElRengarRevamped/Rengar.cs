@@ -164,7 +164,7 @@
                 }
 
                 SendTime = TickCount;
-                Orbwalker.SetMovement(false);
+                //Orbwalker.SetMovement(false);
 
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
@@ -172,7 +172,8 @@
                         if (spells[Spells.E].IsReady() && spells[Spells.E].CanCast(target) && Ferocity == 5)
                         {
                             spells[Spells.E].Cast(target);
-                            Console.WriteLine("E Cast on OnDash" + Player.Mana);
+                            ActiveModes.kappa = 0;
+                            return;
                         }
                         break;
 
@@ -180,7 +181,6 @@
                         if (IsActive("Beta.Cast.Q") && RengarR)
                         {
                             spells[Spells.E].Cast(target);
-                            Console.WriteLine("BETA CAST E ON DASH");
                             return;
                         }
 
@@ -208,22 +208,13 @@
                         break;
                 }
 
-                /*if (spells[Spells.W].IsReady() && !HasPassive)
-                {
-                    Utility.DelayAction.Add(100, () => spells[Spells.W].Cast());
-                }
-                if (spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
-                {
-                    spells[Spells.E].Cast(target);
-                }
-                */
                 if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.W].Range)
                 {
                     UseHydra();
                 }
 
                 // Broscience?
-                Utility.DelayAction.Add(400, () => Orbwalker.SetMovement(true));
+                //Utility.DelayAction.Add(400, () => Orbwalker.SetMovement(true));
             }
         }
 
