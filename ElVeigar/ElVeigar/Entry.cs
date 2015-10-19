@@ -409,7 +409,7 @@
                 {
                     foreach (var target in ObjectManager.Get<Obj_AI_Hero>())
                     {
-                        if (target.IsEnemy && target.IsValidTarget())
+                        if (target.IsEnemy && target.IsValidTarget() && Player.Distance(target) < spells[Spells.W].Range)
                         {
                             var predictionQ = spells[Spells.Q].GetPrediction(target);
                             if (spells[Spells.Q].GetDamage(target) > target.Health
