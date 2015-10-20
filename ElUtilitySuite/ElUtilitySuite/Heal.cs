@@ -92,25 +92,31 @@
             var target = Entry.Allies();
             var iDamagePercent = (int)((incdmg / Entry.Player.MaxHealth) * 100);
 
-            if (target.Distance(Entry.Player.ServerPosition) <= 700f && Entry.Player.CountEnemiesInRange(1000) >= 0)
+            if (target.Distance(Entry.Player.ServerPosition) <= 700f && Entry.Player.CountEnemiesInRange(900) >= 1)
             {
                 var aHealthPercent = (int)((target.Health / target.MaxHealth) * 100);
                 if (aHealthPercent <= InitializeMenu.Menu.Item("Heal.HP").GetValue<Slider>().Value
                     && InitializeMenu.Menu.Item("healon" + target.ChampionName).GetValue<bool>()
                     && !Entry.Player.IsRecalling() && !Entry.Player.InFountain())
                 {
-                    if ((iDamagePercent >= 1 || incdmg >= target.Health) && AggroTarget.NetworkId == target.NetworkId)
+                    if ((iDamagePercent >= 1 || incdmg >= target.Health))
                     {
-                        Entry.Player.Spellbook.CastSpell(summonerHeal);
+                        if (AggroTarget.NetworkId == target.NetworkId)
+                        {
+                            Entry.Player.Spellbook.CastSpell(summonerHeal);
+                        }
                     }
                 }
 
                 else if (iDamagePercent >= InitializeMenu.Menu.Item("Heal.Damage").GetValue<Slider>().Value
                          && InitializeMenu.Menu.Item("healon" + target.ChampionName).GetValue<bool>()
-                         && AggroTarget.NetworkId == target.NetworkId && !Entry.Player.IsRecalling()
+                         && !Entry.Player.IsRecalling()
                          && !Entry.Player.InFountain())
                 {
-                    Entry.Player.Spellbook.CastSpell(summonerHeal);
+                    if (AggroTarget.NetworkId == target.NetworkId)
+                    {
+                        Entry.Player.Spellbook.CastSpell(summonerHeal);
+                    }
                 }
             }
         }
