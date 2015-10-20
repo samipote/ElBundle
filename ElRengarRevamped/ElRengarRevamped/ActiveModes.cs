@@ -180,17 +180,17 @@
                         && Player.Distance(target) <= spells[Spells.E].Range)
                     {
                         var prediction = spells[Spells.E].GetPrediction(target);
-                        if (prediction.CollisionObjects.Count == 0)
+                        if (prediction.CollisionObjects.Count == 0 && prediction.Hitchance >= HitChance.VeryHigh)
                         {
                             spells[Spells.E].Cast(target);
-                            return;
+                            //return;
                         }
                     }
                     else if (Rengar.LastE + 200 < Environment.TickCount
                              && Player.Distance(target) <= spells[Spells.E].Range)
                     {
                         spells[Spells.E].Cast(target);
-                        return;
+                        //return;
                     }
 
                     if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100
@@ -200,7 +200,7 @@
                         if (prediction.Hitchance >= HitChance.VeryHigh && prediction.CollisionObjects.Count == 0)
                         {
                             spells[Spells.E].Cast(target);
-                            return;
+                            //return;
                         }
                     }
                 }
