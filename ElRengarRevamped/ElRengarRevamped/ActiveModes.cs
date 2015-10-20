@@ -73,6 +73,7 @@
                         case 0:
                             if (!RengarR && Rengar.LastE + 200 < Environment.TickCount && !HasPassive || HasPassive && !Player.IsDashing()) // && !HasPassive
                             {
+                                if (Player.IsDashing()) return;
                                 var prediction = spells[Spells.E].GetPrediction(target);
                                 if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                                 {
