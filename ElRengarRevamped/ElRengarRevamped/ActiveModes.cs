@@ -13,9 +13,13 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     public class ActiveModes : Standards
     {
-        #region Public Methods and Operators
+        #region Static Fields
 
-        public static int kappa = 1;
+        public static int Kappa = 1;
+
+        #endregion
+
+        #region Public Methods and Operators
 
         public static void Combo()
         {
@@ -33,8 +37,6 @@
                     {
                         target = TargetSelector.GetSelectedTarget();
                         TargetSelector.SetTarget(target);
-                        //Hud.SelectedUnit = target;
-                        //Console.WriteLine("Selected target: {0}", target.ChampionName);
                     }
                 }
 
@@ -43,14 +45,11 @@
                 {
                     return;
                 }
-                //if (!Rengar._selectedEnemy.IsValidTarget() || Rengar._selectedEnemy == null) return;
 
                 if (Rengar._selectedEnemy.IsValidTarget())
                 {
                     Rengar._selectedEnemy = target;
                 }
-
-
 
                 if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
                 {
@@ -71,32 +70,41 @@
                     switch (IsListActive("Combo.Prio").SelectedIndex)
                     {
                         case 0:
-                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount && !HasPassive || HasPassive && !Player.IsDashing()) // && !HasPassive
+                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount)
                             {
-                                if (Player.IsDashing()) return;
                                 var prediction = spells[Spells.E].GetPrediction(target);
                                 if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                                 {
                                     spells[Spells.E].Cast(target);
-                                    Rengar.LastE = Environment.TickCount;
-                                    kappa = 0;
+                                    Kappa = 0;
+                                    return;
+                                }
+                            }
+                            else if (!RengarR && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
+                                     && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                                     <= spells[Spells.E].Range)
+                            {
+                                var prediction = spells[Spells.E].GetPrediction(target);
+                                if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
+                                {
+                                    spells[Spells.E].Cast(target);
+                                    Kappa = 0;
                                     return;
                                 }
                             }
                             //XDDDDDDDDDDDDDDDDDDDDDDDDD
-                            if (kappa == 0)
+                            if (Kappa == 0)
                             {
                                 if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
                                 {
                                     Console.WriteLine("used prio 0 Q {0}", Player.Mana);
 
                                     spells[Spells.Q].Cast();
-                                    kappa = 1;
+                                    Kappa = 1;
                                     return;
                                 }
                             }
                             //XDDDDDDDDDDDDDDDDDDDDDDDDD
-
                             break;
                         case 1:
                             if (spells[Spells.W].IsReady() && !RengarR
@@ -142,36 +150,44 @@
                         return;
                     }
 
+                    Console.WriteLine(Rengar.LastW + 100 < Environment.TickCount);
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
                         && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
                         <= spells[Spells.W].Range * 1 / 3 && !Player.IsDashing() && !HasPassive
+                        && Rengar.LastW + 100 < Environment.TickCount)
+                    {
+                        spells[Spells.W].Cast(Player);
+                        return;
+                    }
+
+                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
+                        && Player.Distance(target) < spells[Spells.W].Range && !Player.IsDashing()
                         && Rengar.LastW < Environment.TickCount)
                     {
                         spells[Spells.W].Cast(Player);
-                        Utility.DelayAction.Add(100, () => UseHydra());
                         return;
                     }
 
-                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target)
-                        && Rengar.LastW < Environment.TickCount)
+                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
+                        && Player.Distance(target) < spells[Spells.W].Range
+                        && Rengar.LastW + 200 < Environment.TickCount)
                     {
                         spells[Spells.W].Cast();
-                        Utility.DelayAction.Add(100, () => UseHydra());
                         return;
                     }
 
-                    if (!HasPassive && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
-                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range)
+                    if (!Player.IsDashing() && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
+                        && Player.Distance(target) <= spells[Spells.E].Range)
                     {
                         var prediction = spells[Spells.E].GetPrediction(target);
-                        if (prediction.Hitchance >= HitChance.Medium && prediction.CollisionObjects.Count == 0)
+                        if (prediction.CollisionObjects.Count == 0)
                         {
                             spells[Spells.E].Cast(target);
                             return;
                         }
                     }
                     else if (Rengar.LastE + 200 < Environment.TickCount
-                             && Vector3.Distance(Player.ServerPosition, target.ServerPosition) <= spells[Spells.E].Range)
+                             && Player.Distance(target) <= spells[Spells.E].Range)
                     {
                         spells[Spells.E].Cast(target);
                         return;
@@ -184,6 +200,7 @@
                         if (prediction.Hitchance >= HitChance.VeryHigh && prediction.CollisionObjects.Count == 0)
                         {
                             spells[Spells.E].Cast(target);
+                            return;
                         }
                     }
                 }
@@ -194,6 +211,7 @@
                     && IgniteDamage(target) >= target.Health)
                 {
                     Player.Spellbook.CastSpell(Ignite, target);
+                    return;
                 }
 
                 if (IsActive("Combo.Use.Smite") && Smite != SpellSlot.Unknown
@@ -233,6 +251,15 @@
                 && ItemData.Blade_of_the_Ruined_King.Range > Player.Distance(target))
             {
                 ItemData.Blade_of_the_Ruined_King.GetItem().Cast(target);
+            }
+
+            if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
+            {
+                if (ItemData.Youmuus_Ghostblade.GetItem().IsReady()
+                    && Orbwalking.GetRealAutoAttackRange(Player) > Player.Distance(target))
+                {
+                    ItemData.Youmuus_Ghostblade.GetItem().Cast();
+                }
             }
         }
 
@@ -344,11 +371,6 @@
             {
                 return;
             }
-
-            /*if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
-            {
-                return;
-            }*/
 
             UseItems(minion);
 

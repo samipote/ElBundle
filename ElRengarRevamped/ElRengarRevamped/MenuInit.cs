@@ -69,6 +69,13 @@
                 healMenu.AddItem(new MenuItem("Heal.HP", "Self heal at >= ").SetValue(new Slider(25, 1, 100)));
             }
 
+            var killstealMenu = Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
+            {
+                killstealMenu.AddItem(new MenuItem("Killsteal.On", "Active").SetValue(true));
+                //killstealMenu.AddItem(new MenuItem("Killsteal.Use.E", "Use E").SetValue(true));
+                killstealMenu.AddItem(new MenuItem("Killsteal.Use.W", "Use W").SetValue(true));
+            }
+
             var betaMenu = Menu.AddSubMenu(new Menu("Beta options", "BetaOptions"));
             {
                 betaMenu.AddItem(new MenuItem("Beta.Cast.Q", "Use beta Q").SetValue(false));
