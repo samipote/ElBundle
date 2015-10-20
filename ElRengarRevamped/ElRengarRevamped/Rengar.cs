@@ -115,7 +115,6 @@
                 && spells[Spells.W].IsReady())
             {
                 spells[Spells.W].Cast();
-                // Console.WriteLine("Casted heal 5 ferocity HP: " + Player.Health );
             }
         }
 
@@ -160,8 +159,6 @@
                 }
 
                 SendTime = TickCount;
-                //Orbwalker.SetMovement(false);
-
                 switch (IsListActive("Combo.Prio").SelectedIndex)
                 {
                     case 0:
@@ -208,9 +205,6 @@
                 {
                     UseHydra();
                 }
-
-                // Broscience?
-                //Utility.DelayAction.Add(400, () => Orbwalker.SetMovement(true));
             }
         }
 
@@ -344,8 +338,6 @@
                                 }
                             });
                 }
-
-                //Console.Write(args.SData.Name.ToLower());
 
                 switch (args.SData.Name.ToLower())
                 {
@@ -489,7 +481,6 @@
                 {
                     case 0:
                         MenuInit.Menu.Item("Combo.Prio").SetValue(new StringList(new[] { "E", "W", "Q" }, 2));
-                        Console.WriteLine("yeee");
                         LastSwitch = Utils.GameTimeTickCount;
                         break;
                     case 1:
