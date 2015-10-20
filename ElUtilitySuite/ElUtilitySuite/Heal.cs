@@ -73,11 +73,7 @@
 
         private static void CheckHeal(float incdmg = 0)
         {
-            if (!InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>())
-            {
-                return;
-            }
-
+           
             var heal = Entry.Player.GetSpellSlot("summonerheal");
             if (heal == SpellSlot.Unknown)
             {
@@ -85,6 +81,11 @@
             }
 
             if (Entry.Player.Spellbook.CanUseSpell(heal) != SpellState.Ready)
+            {
+                return;
+            }
+
+            if (!InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>())
             {
                 return;
             }
@@ -185,10 +186,7 @@
 
             try
             {
-                if (InitializeMenu.Menu.Item("Heal.Activated").GetValue<bool>())
-                {
-                    CheckHeal(incomingDamage);
-                }
+                CheckHeal(incomingDamage);
             }
             catch (Exception e)
             {
