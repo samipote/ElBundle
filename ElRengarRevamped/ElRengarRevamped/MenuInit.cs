@@ -29,6 +29,7 @@
                 comboMenu.SubMenu("Combo").AddItem(new MenuItem("Combo.Use.Q", "Use Q").SetValue(true));
                 comboMenu.SubMenu("Combo").AddItem(new MenuItem("Combo.Use.W", "Use W").SetValue(true));
                 comboMenu.SubMenu("Combo").AddItem(new MenuItem("Combo.Use.E", "Use E").SetValue(true));
+                comboMenu.SubMenu("Combo").AddItem(new MenuItem("Combo.Switch.E", "Switch E prio to Q after E cast").SetValue(true));
                 comboMenu.SubMenu("Combo")
                     .AddItem(new MenuItem("Combo.Use.E.OutOfRange", "Use E when out of range").SetValue(false));
                 comboMenu.SubMenu("Combo")

@@ -25,22 +25,22 @@
         {
             try
             {
-                var target = TargetSelector.GetSelectedTarget();
+               /* var target = TargetSelector.GetSelectedTarget();
                 if (target == null || !target.IsValidTarget() || TargetSelector.GetSelectedTarget() == null)
                 {
-                    target = TargetSelector.GetTarget(spells[Spells.R].Range, TargetSelector.DamageType.Physical);
+                    target = TargetSelector.GetTarget(spells[Spells.Q].Range, TargetSelector.DamageType.Physical);
                 }
 
                 if (TargetSelector.GetSelectedTarget() != null)
                 {
-                    if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.R].Range)
+                    if (Vector3.Distance(Player.ServerPosition, target.ServerPosition) < spells[Spells.Q].Range)
                     {
                         target = TargetSelector.GetSelectedTarget();
                         TargetSelector.SetTarget(target);
                     }
-                }
+                }*/
 
-                target = TargetSelector.GetTarget(spells[Spells.R].Range, TargetSelector.DamageType.Physical);
+                var target = TargetSelector.GetTarget(spells[Spells.R].Range, TargetSelector.DamageType.Physical);
                 if (!target.IsValidTarget() || target == null)
                 {
                     return;
@@ -56,7 +56,7 @@
                     return;
                 }
 
-                if (Youmuu.IsReady() && Player.Distance(target) <= spells[Spells.Q].Range)
+                if (Youmuu.IsReady() && Player.Distance(target) <= spells[Spells.Q].Range && target.IsValidTarget())
                 {
                     Youmuu.Cast(Player);
                 }
@@ -70,13 +70,21 @@
                     switch (IsListActive("Combo.Prio").SelectedIndex)
                     {
                         case 0:
-                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount)
+                            if (!RengarR && Rengar.LastE + 200 < Environment.TickCount && target.IsValidTarget())
                             {
                                 var prediction = spells[Spells.E].GetPrediction(target);
                                 if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
                                 {
-                                    spells[Spells.E].Cast(target);
-                                    Kappa = 0;
+                                    if (spells[Spells.E].Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                                    {
+                                        if (IsActive("Combo.Switch.E") && Utils.GameTimeTickCount - LastSwitch >= 350)
+                                        {
+                                            Console.WriteLine("SWITCH COMBO");
+                                            MenuInit.Menu.Item("Combo.Prio")
+                                                .SetValue(new StringList(new[] { "E", "W", "Q" }, 2));
+                                            LastSwitch = Utils.GameTimeTickCount;
+                                        }
+                                    }
                                     return;
                                 }
                             }
@@ -85,33 +93,28 @@
                                      <= spells[Spells.E].Range)
                             {
                                 var prediction = spells[Spells.E].GetPrediction(target);
-                                if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0)
+                                if (prediction.Hitchance >= HitChance.High && prediction.CollisionObjects.Count == 0 && target.IsValidTarget())
                                 {
-                                    spells[Spells.E].Cast(target);
-                                    Kappa = 0;
+                                    if (spells[Spells.E].Cast(target) == Spell.CastStates.SuccessfullyCasted)
+                                    {
+                                        if (IsActive("Combo.Switch.E") && Utils.GameTimeTickCount - LastSwitch >= 350)
+                                        {
+                                            Console.WriteLine("SWITCH COMBO");
+                                            MenuInit.Menu.Item("Combo.Prio")
+                                                .SetValue(new StringList(new[] { "E", "W", "Q" }, 2));
+                                            LastSwitch = Utils.GameTimeTickCount;
+                                        }
+                                    }
                                     return;
                                 }
                             }
-                            //XDDDDDDDDDDDDDDDDDDDDDDDDD
-                            if (Kappa == 0)
-                            {
-                                if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
-                                {
-                                    Console.WriteLine("used prio 0 Q {0}", Player.Mana);
-
-                                    spells[Spells.Q].Cast();
-                                    Kappa = 1;
-                                    return;
-                                }
-                            }
-                            //XDDDDDDDDDDDDDDDDDDDDDDDDD
                             break;
                         case 1:
                             if (spells[Spells.W].IsReady() && !RengarR
                                 && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
                                 < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing() && !HasPassive)
                             {
-                                if (Rengar.LastW + 200 < Environment.TickCount)
+                                if (Rengar.LastW + 200 < Environment.TickCount && target.IsValidTarget())
                                 {
                                     spells[Spells.W].Cast();
                                     return;
@@ -119,7 +122,7 @@
                             }
                             break;
                         case 2:
-                            if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target))
+                            if (IsActive("Combo.Use.Q") && spells[Spells.Q].IsInRange(target) && target.IsValidTarget())
                             {
                                 if (Rengar.LastQ + 200 < Environment.TickCount)
                                 {
@@ -139,7 +142,7 @@
                     }
 
                     if (IsActive("Combo.Use.Q") && Rengar.LastQ + 200 < Environment.TickCount
-                        && target.Distance(Player) < spells[Spells.Q].Range)
+                        && target.Distance(Player) < spells[Spells.Q].Range && target.IsValidTarget())
                     {
                         spells[Spells.Q].Cast();
                         return;
@@ -150,47 +153,53 @@
                         return;
                     }
 
-                    Console.WriteLine(Rengar.LastW + 100 < Environment.TickCount);
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
                         && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
                         <= spells[Spells.W].Range * 1 / 3 && !Player.IsDashing() && !HasPassive
-                        && Rengar.LastW + 100 < Environment.TickCount)
+                        && Rengar.LastW + 100 < Environment.TickCount && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast(Player);
                         return;
                     }
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
-                        && Player.Distance(target) < spells[Spells.W].Range && !Player.IsDashing()
-                        && Rengar.LastW < Environment.TickCount)
+                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                            < spells[Spells.W].Range * 0x1 / 0x3 && target.IsValidTarget())
                     {
-                        spells[Spells.W].Cast(Player);
+                        spells[Spells.W].Cast();
                         return;
                     }
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
-                        && Player.Distance(target) < spells[Spells.W].Range
-                        && Rengar.LastW + 200 < Environment.TickCount)
+                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                                < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing()
+                        && Rengar.LastW < Environment.TickCount && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast();
                         return;
                     }
 
                     if (!Player.IsDashing() && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
-                        && Player.Distance(target) <= spells[Spells.E].Range)
+                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
+                                     <= spells[Spells.E].Range)
                     {
                         var prediction = spells[Spells.E].GetPrediction(target);
-                        if (prediction.CollisionObjects.Count == 0 && prediction.Hitchance >= HitChance.VeryHigh)
+                        if (prediction.CollisionObjects.Count == 0 && prediction.Hitchance >= HitChance.High && target.IsValidTarget())
                         {
                             spells[Spells.E].Cast(target);
-                            //return;
+                            return;
                         }
                     }
-                    else if (Rengar.LastE + 200 < Environment.TickCount
+
+                    if (Rengar.LastE + 200 < Environment.TickCount
                              && Player.Distance(target) <= spells[Spells.E].Range)
                     {
-                        spells[Spells.E].Cast(target);
-                        //return;
+                        var prediction = spells[Spells.E].GetPrediction(target);
+                        if (prediction.CollisionObjects.Count == 0 && prediction.Hitchance >= HitChance.High && target.IsValidTarget())
+                        {
+                            spells[Spells.E].Cast(target.ServerPosition);
+                            return;
+                        }
                     }
 
                     if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100
