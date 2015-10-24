@@ -309,41 +309,28 @@ namespace ElTristana
 
         private static void OnJungleClear()
         {
-            var minions = MinionManager.GetMinions(
-                ObjectManager.Player.ServerPosition,
-                700,
-                MinionTypes.All,
-                MinionTeam.Neutral,
-                MinionOrderTypes.MaxHealth);
-            if (minions.Count <= 0)
+
+            var minions =
+               MinionManager.GetMinions(
+                   spells[Spells.Q].Range,
+                   MinionTypes.All,
+                   MinionTeam.Neutral,
+                   MinionOrderTypes.MaxHealth).FirstOrDefault();
+
+            if (!minions.IsValidTarget() || minions == null)
             {
                 return;
             }
 
-            //70 E AoE radius
-
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.JungleClear.E")
                 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.JungleClear.E.Mana").GetValue<Slider>().Value)
             {
-                foreach (var minion in
-                    ObjectManager.Get<Obj_AI_Minion>()
-                        .Where(
-                            minion =>
-                            minion.Health > spells[Spells.E].GetDamage(minion) + Player.TotalAttackDamage
-                            && minion.IsValidTarget() && minion.Distance(Player.ServerPosition) < spells[Spells.E].Range)
-                    )
-                {
-                    spells[Spells.E].CastOnUnit(minion);
-                }
+                spells[Spells.E].CastOnUnit(minions);
             }
 
             if (spells[Spells.Q].IsReady() && IsActive("ElTristana.JungleClear.Q"))
             {
-                var eMob = minions.FindAll(x => x.IsValidTarget() && x.HasBuff("TristanaECharge"));
-                if (eMob.Any())
-                {
-                    spells[Spells.Q].Cast();
-                }
+                spells[Spells.Q].Cast();
             }
         }
 
