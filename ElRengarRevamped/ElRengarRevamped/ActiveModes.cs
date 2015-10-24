@@ -159,7 +159,7 @@
                         && Rengar.LastW + 100 < Environment.TickCount && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast(Player);
-                        return;
+                        //return;
                     }
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
@@ -167,7 +167,7 @@
                             < spells[Spells.W].Range * 0x1 / 0x3 && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast();
-                        return;
+                        //return;
                     }
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
@@ -176,7 +176,7 @@
                         && Rengar.LastW < Environment.TickCount && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast();
-                        return;
+                        //return;
                     }
 
                     if (!Player.IsDashing() && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
