@@ -112,11 +112,11 @@ namespace ElRengarRevamped
                         case 1:
                             if (spells[Spells.W].IsReady() && !RengarR
                                 && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing() && !HasPassive)
+                                < spells[Spells.W].Range && !Player.IsDashing() && !HasPassive)
                             {
                                 if (Rengar.LastW + 200 < Environment.TickCount && target.IsValidTarget())
                                 {
-                                    spells[Spells.W].Cast();
+                                    CastW(target);
                                     return;
                                 }
                             }
@@ -136,16 +136,16 @@ namespace ElRengarRevamped
 
                 if (Ferocity <= 4)
                 {
-                    if (Player.Spellbook.IsAutoAttacking || Player.IsWindingUp)
-                    {
-                        return;
-                    }
-
                     if (IsActive("Combo.Use.Q") && Rengar.LastQ + 200 < Environment.TickCount
-                        && target.Distance(Player) < spells[Spells.Q].Range && target.IsValidTarget())
+                        && target.Distance(Player) < spells[Spells.Q].Range && target.IsValidTarget(spells[Spells.Q].Range))
                     {
+
+                        if (target.IsValidTarget(spells[Spells.Q].Range) && !Orbwalking.IsAutoAttack(Player.LastCastedSpellName()))
+                        {
+                            return;
+                        }
+
                         spells[Spells.Q].Cast();
-                        return;
                     }
 
                     if (RengarR)
@@ -153,53 +153,20 @@ namespace ElRengarRevamped
                         return;
                     }
 
-                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
-                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                        <= spells[Spells.W].Range * 1 / 3 && !Player.IsDashing() && !HasPassive
-                        && Rengar.LastW + 100 < Environment.TickCount && target.IsValidTarget())
+                   if (IsActive("Combo.Use.W"))
                     {
-                        spells[Spells.W].Cast(Player);
-                        //return;
+                        CastW(target);
                     }
-
-                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
-                    && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                            < spells[Spells.W].Range * 0x1 / 0x3 && target.IsValidTarget())
+                    
+                    if (IsActive("Combo.Use.E"))
                     {
-                        spells[Spells.W].Cast();
-                        //return;
-                    }
-
-                    if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
-                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing()
-                        && Rengar.LastW < Environment.TickCount && target.IsValidTarget())
-                    {
-                        spells[Spells.W].Cast();
-                        //return;
-                    }
-
-                    if (!Player.IsDashing() && IsActive("Combo.Use.E") && spells[Spells.E].IsReady()
-                        && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                     <= spells[Spells.E].Range)
-                    {
-                        var prediction = spells[Spells.E].GetPrediction(target);
-                        if (prediction.CollisionObjects.Count == 0 && prediction.Hitchance >= HitChance.High && target.IsValidTarget())
+                        if (!target.IsValidTarget(spells[Spells.E].Range) && !HasPassive)
                         {
-                            spells[Spells.E].Cast(target);
                             return;
                         }
-                    }
 
-                    if (Rengar.LastE + 200 < Environment.TickCount
-                             && Player.Distance(target) <= spells[Spells.E].Range)
-                    {
-                        var prediction = spells[Spells.E].GetPrediction(target);
-                        if (prediction.CollisionObjects.Count == 0 && prediction.Hitchance >= HitChance.High && target.IsValidTarget())
-                        {
-                            spells[Spells.E].Cast(target.ServerPosition);
-                            return;
-                        }
+                        CastE(target);
+                        return;
                     }
 
                     if (IsActive("Combo.Use.E.OutOfRange") && Player.Distance(target) > Player.AttackRange + 100
@@ -209,7 +176,7 @@ namespace ElRengarRevamped
                         if (prediction.Hitchance >= HitChance.VeryHigh && prediction.CollisionObjects.Count == 0)
                         {
                             spells[Spells.E].Cast(target);
-                            //return;
+                            return;
                         }
                     }
                 }
@@ -243,6 +210,32 @@ namespace ElRengarRevamped
 
         #region Methods
 
+        private static void CastW(Obj_AI_Base target)
+        {
+            if (!spells[Spells.W].IsReady() || !target.IsValidTarget(range: spells[Spells.W].Range) && !HasPassive)
+            {
+                return;
+            }
+
+            spells[Spells.W].Cast();
+        }
+
+
+        private static void CastE(Obj_AI_Base target)
+        {
+            if (!spells[Spells.E].IsReady() || !target.IsValidTarget(spells[Spells.E].Range) || Player.IsDashing())
+            {
+                return;
+            }
+
+            var prediction = spells[Spells.E].GetPrediction(target);
+
+            if (prediction.Hitchance != HitChance.Impossible && prediction.Hitchance != HitChance.OutOfRange && prediction.Hitchance != HitChance.Collision)
+            {
+                spells[Spells.E].Cast(prediction.CastPosition);
+            }
+        }
+
         private static void UseItems(Obj_AI_Base target)
         {
             if (ItemData.Ravenous_Hydra_Melee_Only.GetItem().IsReady()
@@ -260,6 +253,12 @@ namespace ElRengarRevamped
                 && ItemData.Blade_of_the_Ruined_King.Range > Player.Distance(target))
             {
                 ItemData.Blade_of_the_Ruined_King.GetItem().Cast(target);
+            }
+
+            if (ItemData.Bilgewater_Cutlass.GetItem().IsReady()
+                && ItemData.Bilgewater_Cutlass.Range > Player.Distance(target))
+            {
+                ItemData.Bilgewater_Cutlass.GetItem().Cast(target);
             }
 
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)

@@ -1,6 +1,7 @@
 ﻿namespace ElRengarRevamped
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using LeagueSharp;
@@ -64,6 +65,7 @@
 
             try
             {
+
                 Youmuu = new Items.Item(3142, 0f);
 
                 Ignite = Player.GetSpellSlot("summonerdot");
@@ -146,14 +148,12 @@
                     if (spells[Spells.E].IsReady() && Player.IsDashing())
                     {
                         spells[Spells.E].Cast(target);
-                        Console.WriteLine("here");
                         return;
                     }
 
                     if (!spells[Spells.E].IsReady() && spells[Spells.Q].IsReady() && Player.IsDashing())
                     {
                         spells[Spells.Q].Cast();
-                        Console.WriteLine("here 2");
                         return;
                     }
                 }
@@ -250,7 +250,7 @@
             {
                 if (spells[Spells.W].Level > 0)
                 {
-                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spells[Spells.W].Range, Color.White);
+                    Render.Circle.DrawCircle(ObjectManager.Player.Position, spells[Spells.W].Range, Color.Purple);
                 }
             }
 
@@ -364,6 +364,7 @@
             }
         }
 
+
         private static void OnUpdate(EventArgs args)
         {
             if (Player.IsDead)
@@ -372,7 +373,6 @@
             }
             try
             {
-
                 SwitchCombo();
                 SmiteCombo();
                 Heal();
@@ -428,23 +428,25 @@
         }
 
 
+        private static IEnumerable<Obj_AI_Hero> Enemies
+        {
+            get
+            {
+                return HeroManager.Enemies;
+            }
+        }
+
         private static void KillstealHandler()
         {
-            if (!IsActive("Killsteal.On")) return;
-
-            foreach (var target in ObjectManager.Get<Obj_AI_Hero>())
+            if (!IsActive("Killsteal.On"))
             {
-                if (target.IsEnemy && target.IsValidTarget() && Player.Distance(target) < spells[Spells.W].Range && IsActive("Killsteal.Use.W"))
-                {
-                    var wTarget = TargetSelector.GetTarget(spells[Spells.W].Range, TargetSelector.DamageType.Physical);
-                    if (!wTarget.IsValidTarget()) return;
+                return;
+            }
 
-                    if (spells[Spells.W].GetDamage(wTarget) > target.Health)
-                    {
-                        spells[Spells.W].Cast();
-                        return;
-                    }
-                }
+            var target = Enemies.FirstOrDefault(x => x.IsValidTarget(spells[Spells.W].Range) && x.Health < spells[Spells.W].GetDamage(x));
+            if (target != null)
+            {
+                spells[Spells.W].Cast();
             }
         }
 
