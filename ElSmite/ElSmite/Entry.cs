@@ -157,8 +157,6 @@
                 return;
             }
 
-            //Mob = minion;
-
             if (InitializeMenu.Menu.Item(minion.CharData.BaseSkinName).GetValue<bool>())
             {
                 if (SmiteDamage() > minion.Health + 10)
