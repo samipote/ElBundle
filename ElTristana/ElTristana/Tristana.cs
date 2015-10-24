@@ -23,8 +23,6 @@ namespace ElTristana
     {
         Q,
 
-        W,
-
         E,
 
         R
