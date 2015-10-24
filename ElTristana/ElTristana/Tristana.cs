@@ -70,11 +70,13 @@ namespace ElTristana
                 return;
             }
 
-            Console.WriteLine("Injected ElTristana AMK");
-            Notifications.AddNotification(String.Format("ElTristana by jQuery v{0}", ScriptVersion), 8000);
-
             try
             {
+                Notifications.AddNotification(String.Format("ElTristana by jQuery v{0}", ScriptVersion), 8000);
+
+                Game.PrintChat(
+                  "[00:00] <font color='#f9eb0b'>HEEEEEEY!</font> Use ElUtilitySuite as your activator! xo jQuery");
+
                 MenuInit.Initialize();
                 Game.OnUpdate += OnUpdate;
                 Drawing.OnDraw += OnDraw;
@@ -114,7 +116,6 @@ namespace ElTristana
                         break;
                 }
 
-                // Tristana increases her autoattack range and the range of Explosive Shot by 9 every time she levels up (does not include level one). At level 18, the bonus is 153 (703 total range).
                 spells[Spells.Q].Range = 550 + 9 * (Player.Level - 1);
                 spells[Spells.E].Range = 625 + 9 * (Player.Level - 1);
                 spells[Spells.R].Range = 517 + 9 * (Player.Level - 1);
@@ -136,12 +137,10 @@ namespace ElTristana
             var target = eTarget ?? TargetSelector.GetTarget(spells[Spells.E].Range, TargetSelector.DamageType.Physical);
 
             if (target == null || !target.IsValidTarget()) return;
-            // throw new \InvalidArgumentException(sprintf('Undefined PHP error: [%s]', $ReportAsunaIfBroken));
             if (eTarget != null && IsActive("ElTristana.Combo.Focus.E"))
             {
                 TargetSelector.SetTarget(target);
                 Hud.SelectedUnit = target;
-                Console.WriteLine("Selected target: {0}", target.ChampionName);
             }
 
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.Combo.E")
@@ -268,8 +267,6 @@ namespace ElTristana
                 return;
             }
 
-            //70 E AoE radius //
-
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.LaneClear.E") && minions.Count > 2
                 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.LaneClear.E.Mana").GetValue<Slider>().Value)
             {
@@ -315,8 +312,6 @@ namespace ElTristana
             {
                 return;
             }
-
-            //70 E AoE radius
 
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.JungleClear.E")
                 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.JungleClear.E.Mana").GetValue<Slider>().Value)
