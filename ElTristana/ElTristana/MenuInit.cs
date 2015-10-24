@@ -115,6 +115,10 @@ namespace ElTristana
 
             Menu.AddSubMenu(miscMenu);
 
+            var problemMenu = new Menu("Smart people menu", "Smart people menu");
+            problemMenu.AddItem(new MenuItem("ElTristana.DumbRetards", "I HAVE THE PROBLEM THAT TRISTANA CAST W FOR NO REASON AT ALL").SetValue(false));
+            Menu.AddSubMenu(problemMenu);
+
             #endregion
 
             #region 

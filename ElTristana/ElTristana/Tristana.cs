@@ -72,14 +72,15 @@ namespace ElTristana
 
             try
             {
+                Console.WriteLine("Injected ElTristana AMK");
                 Notifications.AddNotification(String.Format("ElTristana by jQuery v{0}", ScriptVersion), 8000);
-
                 Game.PrintChat(
-                  "[00:00] <font color='#f9eb0b'>HEEEEEEY!</font> Use ElUtilitySuite as your activator! xo jQuery");
+                        "[00:00] <font color='#f9eb0b'>HEEEEEEY!</font> Use ElUtilitySuite for optimal results! xo jQuery");
 
                 MenuInit.Initialize();
                 Game.OnUpdate += OnUpdate;
                 Drawing.OnDraw += OnDraw;
+                Spellbook.OnCastSpell += OnSpellCast;
                 AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
                 Interrupter2.OnInterruptableTarget += Interrupter2_OnInterruptableTarget;
             }
@@ -92,6 +93,14 @@ namespace ElTristana
         #endregion
 
         #region OnUpdate    
+
+        private static void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
+        {
+            if (Orbwalker.ActiveMode != Orbwalking.OrbwalkingMode.None && args.Slot == SpellSlot.W && IsActive("ElTristana.DumbRetards"))
+            {
+                args.Process = false;
+            }
+        }
 
         private static void OnUpdate(EventArgs args)
         {
@@ -141,6 +150,7 @@ namespace ElTristana
             {
                 TargetSelector.SetTarget(target);
                 Hud.SelectedUnit = target;
+                Console.WriteLine("Selected target: {0}", target.ChampionName);
             }
 
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.Combo.E")
@@ -166,7 +176,6 @@ namespace ElTristana
 
             if (spells[Spells.R].IsReady() && IsActive("ElTristana.Combo.R"))
             {
-                //check if target has E buff
                 if (IsECharged(target) && IsActive("ElTristana.Combo.Always.RE"))
                 {
                     if (IsBusterShotable(target))
@@ -175,7 +184,6 @@ namespace ElTristana
                     }
                 }
 
-                // Broscience amk
                 if (GetExecuteDamage(target) > target.Health + 50)
                 {
                     if (IsActive("ElTristana.Combo.Always.R") && GetExecuteDamage(target) > target.Health + 50)
@@ -222,8 +230,7 @@ namespace ElTristana
                 }
             }
 
-            if (spells[Spells.Q].IsReady() && IsActive("ElTristana.Harass.Q")
-                && target.IsValidTarget(spells[Spells.E].Range))
+            if (spells[Spells.Q].IsReady() && IsActive("ElTristana.Harass.Q")  && target.IsValidTarget(spells[Spells.E].Range))
             {
                 if (IsECharged(target) && IsActive("ElTristana.Harass.QE"))
                 {
@@ -312,6 +319,8 @@ namespace ElTristana
             {
                 return;
             }
+
+            //70 E AoE radius
 
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.JungleClear.E")
                 && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.JungleClear.E.Mana").GetValue<Slider>().Value)
