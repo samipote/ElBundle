@@ -164,8 +164,6 @@
             settingsMenu.AddItem(new MenuItem("xxx", ""));
             settingsMenu.AddItem(new MenuItem("ElEasy.Leona.Interrupt.Activated", "Interrupt spells").SetValue(true));
             settingsMenu.AddItem(new MenuItem("ElEasy.Leona.GapCloser.Activated", "Anti gapcloser").SetValue(true));
-            //settingsMenu.SubMenu("Automatic ult").AddItem(new MenuItem("ElEasy.Leona.AutoUlt.Activated", "Auto ult").SetValue(false));
-            //settingsMenu.SubMenu("Automatic ult").AddItem(new MenuItem("ElEasy.Leona.AutoUlt.Count", "Min targets for R").SetValue(new Slider(3, 1, 5)));
 
             Menu.AddSubMenu(settingsMenu);
 
@@ -220,11 +218,12 @@
             var useI = Menu.Item("ElEasy.Leona.Combo.Ignite").GetValue<bool>();
             var countEnemies = Menu.Item("ElEasy.Leona.Combo.Count.Enemies").GetValue<Slider>().Value;
 
-            if (useQ && InAutoAttackRange(target) && spells[Spells.Q].IsReady() && !target.HasBuff("BlackShield")
-                || !target.HasBuff("SivirShield") || !target.HasBuff("BansheesVeil")
-                || !target.HasBuff("ShroudofDarkness"))
+            if (useQ)
             {
-                spells[Spells.Q].Cast();
+                if (InAutoAttackRange(target) && spells[Spells.Q].IsReady() && !target.HasBuff("BlackShield") || !target.HasBuff("SivirShield") || !target.HasBuff("BansheesVeil") || !target.HasBuff("ShroudofDarkness"))
+                {
+                    spells[Spells.Q].Cast();
+                }
             }
 
             if (useW && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target))
@@ -235,7 +234,7 @@
             if (useE && spells[Spells.E].IsReady())
             {
                 var pred = spells[Spells.E].GetPrediction(target).Hitchance;
-                if (pred >= CustomHitChance)
+                if (pred >= HitChance.VeryHigh)
                 {
                     spells[Spells.E].Cast(target);
                 }
@@ -245,11 +244,10 @@
                 && Player.CountEnemiesInRange(spells[Spells.R].Range) >= countEnemies)
             {
                 var pred = spells[Spells.R].GetPrediction(target);
-                if (pred.Hitchance >= CustomHitChance)
+                if (pred.Hitchance >= HitChance.VeryHigh)
                 {
                     spells[Spells.R].CastIfHitchanceEquals(target, HitChance.Immobile);
                 }
-                //spells[Spells.R].Cast(target);
             }
 
             if (Player.Distance(target) <= 600 && IgniteDamage(target) >= target.Health && useI)
@@ -349,8 +347,6 @@
                     OnHarass();
                     break;
             }
-
-            //AutoUlt();
         }
 
         #endregion
