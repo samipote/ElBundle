@@ -1,4 +1,4 @@
-﻿namespace ElRengarRevamped
+namespace ElRengarRevamped
 {
     using System;
     using System.Linq;
@@ -112,7 +112,7 @@
                         case 1:
                             if (spells[Spells.W].IsReady() && !RengarR
                                 && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                < spells[Spells.W].Range && !Player.IsDashing() && !HasPassive)
+                                < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing() && !HasPassive)
                             {
                                 if (Rengar.LastW + 200 < Environment.TickCount && target.IsValidTarget())
                                 {
@@ -155,7 +155,7 @@
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
                         && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                        <= spells[Spells.W].Range && !Player.IsDashing() && !HasPassive
+                        <= spells[Spells.W].Range * 1 / 3 && !Player.IsDashing() && !HasPassive
                         && Rengar.LastW + 100 < Environment.TickCount && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast(Player);
@@ -164,7 +164,7 @@
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
                     && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                            < spells[Spells.W].Range && target.IsValidTarget())
+                            < spells[Spells.W].Range * 0x1 / 0x3 && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast();
                         //return;
@@ -172,7 +172,7 @@
 
                     if (IsActive("Combo.Use.W") && spells[Spells.W].IsReady()
                         && Vector3.Distance(Player.ServerPosition, target.ServerPosition)
-                                < spells[Spells.W].Range && !Player.IsDashing()
+                                < spells[Spells.W].Range * 0x1 / 0x3 && !Player.IsDashing()
                         && Rengar.LastW < Environment.TickCount && target.IsValidTarget())
                     {
                         spells[Spells.W].Cast();
