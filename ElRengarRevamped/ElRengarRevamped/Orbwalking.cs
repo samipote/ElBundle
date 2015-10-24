@@ -394,7 +394,7 @@ namespace ElRengarRevamped
 
                         if (!Player.IssueOrder(GameObjectOrder.AttackUnit, target))
                         {
-                            //ResetAutoAttackTimer();
+                            ResetAutoAttackTimer();
                         }
 
                         _lastTarget = target;
