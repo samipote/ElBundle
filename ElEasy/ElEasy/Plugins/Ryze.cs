@@ -226,8 +226,8 @@
 
             if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
             {
-                var pred = spells[Spells.Q].GetPrediction(target);
-                if (pred.Hitchance >= HitChance.High && pred.CollisionObjects.Count == 0)
+                var prediction = spells[Spells.Q].GetPrediction(target);
+                if (prediction.Hitchance != HitChance.Impossible && prediction.Hitchance != HitChance.OutOfRange && prediction.Hitchance != HitChance.Collision)
                 {
                     spells[Spells.Q].Cast(target);
                 }
@@ -261,14 +261,24 @@
 
             if (Player.Buffs.Count(buf => buf.Name == "RyzePassiveStack") <= 2)
             {
+                var prediction = spells[Spells.Q].GetPrediction(target);
                 if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
+                {
+                    if (prediction.Hitchance != HitChance.Impossible && prediction.Hitchance != HitChance.OutOfRange && prediction.Hitchance != HitChance.Collision)
+                    {
+                        spells[Spells.Q].Cast(target);
+                    }
+                }
+               
+
+                /*if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
                 {
                     var pred = spells[Spells.Q].GetPrediction(target);
                     if (pred.Hitchance >= HitChance.High && pred.CollisionObjects.Count == 0)
                     {
                         spells[Spells.Q].Cast(target);
                     }
-                }
+                }*/
 
                 if (useE && spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
                 {
@@ -293,8 +303,8 @@
 
                 if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
                 {
-                    var pred = spells[Spells.Q].GetPrediction(target);
-                    if (pred.Hitchance >= HitChance.High && pred.CollisionObjects.Count == 0)
+                    var prediction = spells[Spells.Q].GetPrediction(target);
+                    if (prediction.Hitchance != HitChance.Impossible && prediction.Hitchance != HitChance.OutOfRange && prediction.Hitchance != HitChance.Collision)
                     {
                         spells[Spells.Q].Cast(target);
                     }
@@ -307,8 +317,8 @@
 
                 if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
                 {
-                    var pred = spells[Spells.Q].GetPrediction(target);
-                    if (pred.Hitchance >= HitChance.High && pred.CollisionObjects.Count == 0)
+                    var prediction = spells[Spells.Q].GetPrediction(target);
+                    if (prediction.Hitchance != HitChance.Impossible && prediction.Hitchance != HitChance.OutOfRange && prediction.Hitchance != HitChance.Collision)
                     {
                         spells[Spells.Q].Cast(target);
                     }
@@ -328,8 +338,8 @@
 
                 if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
                 {
-                    var pred = spells[Spells.Q].GetPrediction(target);
-                    if (pred.Hitchance >= HitChance.High && pred.CollisionObjects.Count == 0)
+                    var prediction = spells[Spells.Q].GetPrediction(target);
+                    if (prediction.Hitchance != HitChance.Impossible && prediction.Hitchance != HitChance.OutOfRange && prediction.Hitchance != HitChance.Collision)
                     {
                         spells[Spells.Q].Cast(target);
                     }
