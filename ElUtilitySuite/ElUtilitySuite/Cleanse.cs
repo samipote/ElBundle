@@ -277,7 +277,7 @@
             if (DangerousSpells())
             {
                 if (Entry.Player.HasBuff("ZedR")
-                    || Entry.Player.HasBuff("zedrdeathmark")
+                    || Entry.Player.HasBuff("zedulttargetmark")
                     && InitializeMenu.Menu.Item("Protect.Cleanse.Specials.ZedR").GetValue<bool>())
                 {
                     Utility.DelayAction.Add(delay + 1800, () => CleanseItems());
