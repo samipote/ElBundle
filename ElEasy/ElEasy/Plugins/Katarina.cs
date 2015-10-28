@@ -141,16 +141,6 @@ namespace ElEasy.Plugins
             }
         }
 
-        private static InventorySlot GetBestWardSlot()
-        {
-            var slot = Items.GetWardSlot();
-            if (slot == default(InventorySlot))
-            {
-                return null;
-            }
-            return slot;
-        }
-
         private static float GetComboDamage(Obj_AI_Base enemy)
         {
             var damage = 0d;
@@ -293,8 +283,8 @@ namespace ElEasy.Plugins
                     new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
 
             wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Mouse", "Move to mouse").SetValue(true));
-            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Minions", "Jump to minions").SetValue(true));
-            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Champions", "Jump to champions").SetValue(true));
+            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Minions", "Jump to minions").SetValue(false));
+            wMenu.AddItem(new MenuItem("ElEasy.Wardjump.Champions", "Jump to champions").SetValue(false));
             Menu.AddSubMenu(wMenu);
 
             var hMenu = new Menu("Harass", "Harass");
@@ -414,17 +404,20 @@ namespace ElEasy.Plugins
                         && Player.Distance(hero) < spells[Spells.W].Range)
                     {
                         spells[Spells.W].Cast();
+                        return;
                     }
 
                     if (GetHealth(hero) - qDamage < 0 && spells[Spells.Q].IsReady()
                         && Player.Distance(hero) < spells[Spells.Q].Range)
                     {
                         spells[Spells.Q].Cast(hero);
+                        return;
                     }
 
                     if (GetHealth(hero) - eDamage < 0 && spells[Spells.E].IsReady())
                     {
                         spells[Spells.E].Cast(hero);
+                        return;
                     }
 
                     if (GetHealth(hero) - eDamage - wDamage < 0 && spells[Spells.E].IsReady()
@@ -432,6 +425,7 @@ namespace ElEasy.Plugins
                     {
                         CastE(hero);
                         spells[Spells.W].Cast();
+                        return;
                     }
 
                     if (hero.Health - eDamage - wDamage - qDamage - IgniteDamage(hero) < 0 && spells[Spells.E].IsReady()
@@ -441,6 +435,7 @@ namespace ElEasy.Plugins
                         spells[Spells.Q].Cast(hero);
                         spells[Spells.W].Cast();
                         Player.Spellbook.CastSpell(Ignite, hero);
+                        return;
                     }
 
                     if (Player.Distance(hero.ServerPosition) <= spells[Spells.E].Range
@@ -474,7 +469,7 @@ namespace ElEasy.Plugins
 
         private static void Obj_AI_Hero_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
         {
-            if (sender.IsMe && Environment.TickCount < rStart + 300)
+            if (sender.IsMe && Environment.TickCount < rStart + 300 && args.Order == GameObjectOrder.MoveTo)
             {
                 args.Process = false;
             }
@@ -529,20 +524,30 @@ namespace ElEasy.Plugins
                 if (HeroManager.Enemies.Any(x => x.IsValidTarget(spells[Spells.R].Range))
                     && spells[Spells.R].Instance.Name == "KatarinaR")
                 {
-                    if (target.Health - rdmg < 0 && rSort.SelectedIndex == 1 && !spells[Spells.E].IsReady())
+                    switch (rSort.SelectedIndex)
                     {
-                        Orbwalker.SetMovement(false);
-                        Orbwalker.SetAttack(false);
-                        spells[Spells.R].Cast();
-                        rStart = Environment.TickCount;
-                    }
-                    else if (rSort.SelectedIndex == 0 && !spells[Spells.E].IsReady()
-                             || forceR && Player.CountEnemiesInRange(spells[Spells.R].Range) <= forceRCount)
-                    {
-                        Orbwalker.SetMovement(false);
-                        Orbwalker.SetAttack(false);
-                        spells[Spells.R].Cast();
-                        rStart = Environment.TickCount;
+                        case 0:
+                            if (target.Health - rdmg < 0 && !spells[Spells.E].IsReady())
+                            {
+                                Orbwalker.SetMovement(false);
+                                Orbwalker.SetAttack(false);
+                                spells[Spells.R].Cast();
+                                rStart = Environment.TickCount;
+                                return;
+                            }
+                            break;
+
+                        case 1:
+                            if (!spells[Spells.E].IsReady()
+                                || forceR && Player.CountEnemiesInRange(spells[Spells.R].Range) <= forceRCount)
+                            {
+                                Orbwalker.SetMovement(false);
+                                Orbwalker.SetAttack(false);
+                                spells[Spells.R].Cast();
+                                rStart = Environment.TickCount;
+                                return;
+                            }
+                            break;
                     }
                 }
             }
@@ -555,11 +560,13 @@ namespace ElEasy.Plugins
             if (useQ && spells[Spells.Q].IsReady() && spells[Spells.Q].IsInRange(target))
             {
                 spells[Spells.Q].Cast(target);
+                return;
             }
 
             if (useE && spells[Spells.E].IsReady() && spells[Spells.E].IsInRange(target))
             {
                 CastE(target);
+                return;
             }
 
             if (useW && spells[Spells.W].IsReady() && spells[Spells.W].IsInRange(target))
@@ -571,6 +578,7 @@ namespace ElEasy.Plugins
             if (Player.Distance(target) <= 600 && IgniteDamage(target) >= target.Health && useI)
             {
                 Player.Spellbook.CastSpell(Ignite, target);
+                return;
             }
         }
 
@@ -648,11 +656,13 @@ namespace ElEasy.Plugins
                         if (spells[Spells.Q].IsReady())
                         {
                             spells[Spells.Q].Cast(target);
+                            return;
                         }
 
                         if (spells[Spells.W].IsInRange(target) && spells[Spells.W].IsReady())
                         {
                             spells[Spells.W].Cast();
+                            return;
                         }
                     }
                     break;
@@ -663,17 +673,19 @@ namespace ElEasy.Plugins
                         if (spells[Spells.Q].IsReady())
                         {
                             spells[Spells.Q].Cast(target);
+                            return;
                         }
 
                         if (spells[Spells.E].IsReady())
-                            //&& !target.UnderTurret(true) -- need to create a on/off for this
                         {
                             CastE(target);
+                            return;
                         }
 
                         if (spells[Spells.W].IsReady())
                         {
                             spells[Spells.W].Cast();
+                            return;
                         }
                     }
                     break;
@@ -813,7 +825,7 @@ namespace ElEasy.Plugins
 
         private static void OnUpdate(EventArgs args)
         {
-            if (Player.IsDead)
+            if (Player.IsDead || MenuGUI.IsChatOpen)
             {
                 return;
             }
@@ -860,38 +872,6 @@ namespace ElEasy.Plugins
             if (Menu.Item("ElEasy.Katarina.Wardjump").GetValue<KeyBind>().Active)
             {
                 WardjumpToMouse();
-            }
-
-            var autor = new[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-            int qOff = 0, wOff = 0, eOff = 0, rOff = 0;
-
-            var qL = Player.Spellbook.GetSpell(SpellSlot.Q).Level + qOff;
-            var wL = Player.Spellbook.GetSpell(SpellSlot.W).Level + wOff;
-            var eL = Player.Spellbook.GetSpell(SpellSlot.E).Level + eOff;
-            var rL = Player.Spellbook.GetSpell(SpellSlot.R).Level + rOff;
-            if (qL + wL + eL + rL < ObjectManager.Player.Level)
-            {
-                var level = new[] { 0, 0, 0, 0 };
-                for (var i = 0; i < ObjectManager.Player.Level; i++)
-                {
-                    level[autor[i] - 1] = level[autor[i] - 1] + 1;
-                }
-                if (qL < level[0])
-                {
-                    ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.Q);
-                }
-                if (wL < level[1])
-                {
-                    ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.W);
-                }
-                if (eL < level[2])
-                {
-                    ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.E);
-                }
-                if (rL < level[3])
-                {
-                    ObjectManager.Player.Spellbook.LevelSpell(SpellSlot.R);
-                }
             }
         }
 
@@ -969,7 +949,7 @@ namespace ElEasy.Plugins
             {
                 Orbwalk(pos);
             }
-            if (!spells[Spells.E].IsReady() || reqinMaxRange && Player.Distance(pos) > spells[Spells.W].Range)
+            if (!spells[Spells.E].IsReady() || reqinMaxRange && Player.Distance(pos) > spells[Spells.E].Range)
             {
                 return;
             }
@@ -998,7 +978,7 @@ namespace ElEasy.Plugins
                 {
                     var minion2 = (from minion in ObjectManager.Get<Obj_AI_Minion>()
                                    where
-                                       minion.IsAlly && minion.Distance(Player) < spells[Spells.W].Range
+                                       minion.IsAlly && minion.Distance(Player) < spells[Spells.E].Range
                                        && minion.Distance(pos) < 200 && !minion.Name.ToLower().Contains("ward")
                                    select minion).ToList();
                     if (minion2.Count > 0)
