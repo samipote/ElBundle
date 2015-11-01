@@ -154,7 +154,7 @@
 
         private static void OnAutoStack()
         {
-            if (Player.IsRecalling() || Player.InFountain())
+            if (Player.IsRecalling() || Player.InFountain() || MenuGUI.IsChatOpen || MenuGUI.IsShopOpen)
             {
                 return;
             }
@@ -353,8 +353,7 @@
 
                 if (minions.Count > 1)
                 {
-                    var farmLocation = spells[Spells.E].GetCircularFarmLocation(minions);
-                    spells[Spells.E].Cast(farmLocation.Position);
+                    spells[Spells.E].Cast();
                 }
             }
         }
@@ -389,15 +388,13 @@
                 }
             }
 
-            var autoHarass =
-                ElVladimirMenu._menu.Item("ElVladimir.AutoHarass.Activated", true).GetValue<KeyBind>().Active;
-            if (autoHarass)
+        
+            if (ElVladimirMenu._menu.Item("ElVladimir.AutoHarass.Activated").GetValue<KeyBind>().Active)
             {
                 OnAutoHarass();
             }
 
-            var autoStack = ElVladimirMenu._menu.Item("ElVladimir.Settings.Stack.E", true).GetValue<KeyBind>().Active;
-            if (autoStack)
+            if (ElVladimirMenu._menu.Item("ElVladimir.Settings.Stack.E").GetValue<KeyBind>().Active)
             {
                 OnAutoStack();
             }

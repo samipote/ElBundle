@@ -72,13 +72,13 @@
             clearMenu.AddItem(new MenuItem("ElVladimir.JungleClear.Q", "Use Q in jungle").SetValue(true));
             clearMenu.AddItem(new MenuItem("ElVladimir.JungleClear.E", "Use E in jungle").SetValue(true));
             clearMenu.AddItem(
-                new MenuItem("ElVladimir.WaveClear.Health.E", "Minimum Health for E").SetValue(new Slider(20)));
+                new MenuItem("ElVladimir.WaveClear.Health.E", "Minimum health for E").SetValue(new Slider(20)));
 
             _menu.AddSubMenu(clearMenu);
 
             var settingsMenu = new Menu("Settings", "Settings");
             settingsMenu.AddItem(
-                new MenuItem("ElVladimir.Settings.Stack.E", "Automatic stack E", true).SetValue(
+                new MenuItem("ElVladimir.Settings.Stack.E", "Automatic stack E").SetValue(
                     new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
             settingsMenu.AddItem(new MenuItem("ElVladimir.Settings.Stack.HP", "Minimum automatic stack HP"))
                 .SetValue(new Slider(20));
