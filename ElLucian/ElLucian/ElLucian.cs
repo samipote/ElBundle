@@ -45,7 +45,7 @@ namespace ElLucian
 
         public static void OnLoad(EventArgs args)
         {
-            if (ObjectManager.Player.CharData.BaseSkinName != "Lucian")
+            if (ObjectManager.Player.CharData.BaseSkinName != "Trundle")
             {
                 return;
             }
