@@ -98,7 +98,7 @@
             }
 
             Menu.AddItem(new MenuItem("422442fsaafs4242f", ""));
-            Menu.AddItem(new MenuItem("422442fsaafsf", (string.Format("ElKalista by jQuery v{0}", Lux.ScriptVersion))));
+            Menu.AddItem(new MenuItem("422442fsaafsf", (string.Format("ElLux by jQuery v{0}", Lux.ScriptVersion))));
             Menu.AddItem(new MenuItem("fsasfafsfsafsa", "Made By jQuery"));
 
             Menu.AddToMainMenu();
