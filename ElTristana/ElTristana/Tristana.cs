@@ -156,13 +156,21 @@ namespace ElTristana
             if (spells[Spells.E].IsReady() && IsActive("ElTristana.Combo.E")
                     && Player.ManaPercent > MenuInit.Menu.Item("ElTristana.Combo.E.Mana").GetValue<Slider>().Value)
             {
-                foreach (var enemy in from enemy in ObjectManager.Get<Obj_AI_Hero>().Where(hero => hero.IsEnemy)
-                                      let getEnemies =
-                                          MenuInit.Menu.Item("ElTristana.E.On" + enemy.CharData.BaseSkinName)
-                                      where getEnemies != null && getEnemies.GetValue<bool>()
-                                      select enemy)
+                foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
                 {
-                    spells[Spells.E].Cast(enemy);
+                    if (hero.IsEnemy)
+                    {
+                        MenuItem getEnemies = MenuInit.Menu.Item("ElTristana.E.On" + hero.CharData.BaseSkinName);
+                        if (getEnemies != null && getEnemies.GetValue<bool>())
+                        {
+                            spells[Spells.E].Cast(hero);
+                        }
+
+                        if (getEnemies != null && !getEnemies.GetValue<bool>() && Player.CountEnemiesInRange(1500) == 1)
+                        {
+                            spells[Spells.E].Cast(hero);
+                        }
+                    }
                 }
             }
 
