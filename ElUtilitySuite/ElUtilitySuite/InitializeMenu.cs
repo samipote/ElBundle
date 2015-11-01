@@ -243,6 +243,7 @@
 
             CreateMenuItem("Muramana", "Muramana", 90, 30, true);
             CreateMenuItem("Tiamat/Hydra", "Hydra", 90, 30);
+            CreateMenuItem("Titanic Hydra", "Titanic", 90, 30);
             CreateMenuItem("Hextech Gunblade", "Hextech", 90, 30);
             CreateMenuItem("Youmuu's Ghostblade", "Youmuus", 90, 30);
             CreateMenuItem("Bilgewater's Cutlass", "Cutlass", 90, 30);

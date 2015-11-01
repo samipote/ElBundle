@@ -93,6 +93,7 @@
                 UseItem("Hextech", 3146, 700f, true);
                 UseItem("Cutlass", 3144, 450f, true);
                 UseItem("Botrk", 3153, 450f, true);
+                UseItem("Titanic", 3748, 450f);
             }
         }
 
