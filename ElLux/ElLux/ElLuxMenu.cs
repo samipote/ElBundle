@@ -34,6 +34,7 @@
                 cMenu.AddItem(new MenuItem("ElLux.Combo.E", "Use E").SetValue(true));
 
                 cMenu.SubMenu("Ultimate").AddItem(new MenuItem("ElLux.Combo.R", "Use R").SetValue(true));
+
                 cMenu.SubMenu("Ultimate")
                     .AddItem(new MenuItem("ElLux.Combo.R.Rooted", "Use R when rooted").SetValue(false));
                 cMenu.SubMenu("Ultimate")
@@ -96,6 +97,11 @@
                 credits.AddItem(new MenuItem("ElLux.Paypal", "if you would like to donate via paypal:"));
                 credits.AddItem(new MenuItem("ElLux.Email", "info@zavox.nl"));
             }
+
+            Menu.AddItem(new MenuItem("422442fssddsaafs4242f", ""));
+            Menu.AddItem(new MenuItem("ElLux.Combo.Semi.R", "Semi-manual R").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            Menu.AddItem(new MenuItem("ElLux.Combo.Semi.Q", "Semi-manual Q").SetValue(new KeyBind("Y".ToCharArray()[0], KeyBindType.Press)));
+
 
             Menu.AddItem(new MenuItem("422442fsaafs4242f", ""));
             Menu.AddItem(new MenuItem("422442fsaafsf", (string.Format("ElLux by jQuery v{0}", Lux.ScriptVersion))));

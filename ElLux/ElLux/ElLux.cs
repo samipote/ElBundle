@@ -223,11 +223,42 @@
 
             if (spells[Spells.R].GetDamage(target) > GetHealth(target) && IsActive("ElLux.Combo.R.Kill"))
             {
-                var prediction = spells[Spells.Q].GetPrediction(target);
+                var prediction = spells[Spells.R].GetPrediction(target);
                 if (prediction.Hitchance >= HitChance.High)
                 {
                     spells[Spells.R].Cast(target.Position);
                 }
+            }
+        }
+
+        private static void SemiQ()
+        {
+            var target = TargetSelector.GetTarget(spells[Spells.Q].Range, TargetSelector.DamageType.Magical);
+            if (target == null || !target.IsValidTarget())
+            {
+                return;
+            }
+
+            CastQ(target);
+        }
+
+        private static void SemiR()
+        {
+            var target = TargetSelector.GetTarget(spells[Spells.R].Range, TargetSelector.DamageType.Magical);
+            if (target == null || !target.IsValidTarget())
+            {
+                return;
+            }
+
+            if (!spells[Spells.R].IsReady() || !target.IsValidTarget(spells[Spells.R].Range))
+            {
+                return;
+            }
+
+            var prediction = spells[Spells.R].GetPrediction(target);
+            if (prediction.Hitchance >= HitChance.High)
+            {
+                spells[Spells.R].Cast(target.Position);
             }
         }
 
@@ -587,6 +618,16 @@
             }
 
             CheckWDamage(incomingDamage);
+
+            if (ElLuxMenu.Menu.Item("ElLux.Combo.Semi.R").GetValue<KeyBind>().Active)
+            {
+                SemiR();
+            }
+
+            if (ElLuxMenu.Menu.Item("ElLux.Combo.Semi.Q").GetValue<KeyBind>().Active)
+            {
+                SemiQ();
+            }
         }
 
         private static int Passive(Obj_AI_Base target)
