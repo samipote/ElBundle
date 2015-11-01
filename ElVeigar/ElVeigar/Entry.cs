@@ -296,6 +296,7 @@
                     MinionTypes.All,
                     MinionTeam.Neutral,
                     MinionOrderTypes.MaxHealth);
+
                 var minionerinos2 = (from minions in jungleWMinions select minions.Position.To2D()).ToList();
 
                 var minionPosition =
@@ -311,6 +312,14 @@
                         spells[Spells.W].Range).MinionsHit > 0)
                 {
                     spells[Spells.W].Cast(minionPosition);
+                }
+
+                if (MenuInit.IsActive("ElVeigar.jungleclearMenu.Q"))
+                {
+                    if (!Player.IsWindingUp)
+                    {
+                        spells[Spells.Q].Cast(minionPosition);
+                    }
                 }
             }
             catch (Exception e)

@@ -68,7 +68,7 @@
 
             var jungleclearMenu = Menu.AddSubMenu(new Menu("Jungleclear", "Jungleclear"));
             {
-                //jungleclearMenu.AddItem(new MenuItem("ElVeigar.jungleclearMenu.Q", "Use Q").SetValue(true));
+                jungleclearMenu.AddItem(new MenuItem("ElVeigar.jungleclearMenu.Q", "Use Q").SetValue(false));
                 jungleclearMenu.AddItem(new MenuItem("ElVeigar.jungleclearMenu.W", "Use W").SetValue(true));
                 jungleclearMenu.AddItem(
                     new MenuItem("ElVeigar.JungleClear.Mana", "Minimum mana").SetValue(new Slider(20)));
