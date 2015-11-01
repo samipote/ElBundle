@@ -218,16 +218,18 @@
             }
         }
 
+        /* || Entry.Player.ChampionName == "Ashe"
+                  || Entry.Player.ChampionName == "Leesin" || Entry.Player.ChampionName == "Janna"
+                  || Entry.Player.ChampionName == "Fiddlesticks" || Entry.Player.ChampionName == "Braum"
+                  || Entry.Player.ChampionName == "Thresh" || Entry.Player.ChampionName == "Urgot"
+                  || Entry.Player.ChampionName == "VelKoz" || Entry.Player.ChampionName == "Morgana";*/
         private static bool SupportedChampions()
         {
             return Entry.Player.ChampionName == "Vayne" || Entry.Player.ChampionName == "Tristana"
-                   || Entry.Player.ChampionName == "Draven" || Entry.Player.ChampionName == "Ashe"
-                   || Entry.Player.ChampionName == "Leesin" || Entry.Player.ChampionName == "Janna"
-                   || Entry.Player.ChampionName == "Fiddlesticks" || Entry.Player.ChampionName == "Braum"
-                   || Entry.Player.ChampionName == "Thresh" || Entry.Player.ChampionName == "Urgot"
-                   || Entry.Player.ChampionName == "VelKoz" || Entry.Player.ChampionName == "Morgana";
+                   || Entry.Player.ChampionName == "Draven" || Entry.Player.ChampionName == "Fiddlesticks" || Entry.Player.ChampionName == "Thresh" || Entry.Player.ChampionName == "Janna";
         }
 
         #endregion
     }
 }
+ 
