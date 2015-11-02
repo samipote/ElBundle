@@ -32,10 +32,10 @@
 
         public static Dictionary<Spells, Spell> spells = new Dictionary<Spells, Spell>
                                                              {
-                                                                 { Spells.Q, new Spell(SpellSlot.Q, 1300f) },
+                                                                 { Spells.Q, new Spell(SpellSlot.Q, 1175f) },
                                                                  { Spells.W, new Spell(SpellSlot.W, 1075f) },
-                                                                 { Spells.E, new Spell(SpellSlot.E, 1100f) },
-                                                                 { Spells.R, new Spell(SpellSlot.R, 3500f) }
+                                                                 { Spells.E, new Spell(SpellSlot.E, 1000f) }, //1100
+                                                                 { Spells.R, new Spell(SpellSlot.R, 3340f) }
                                                              };
 
         private static float incomingDamage, minionDamage;
@@ -152,10 +152,12 @@
                 return false;
             }
 
+            var prediction = Prediction.GetPrediction(target, 0.2f);
+
             var cast = spells[Spells.E].GetPrediction(target);
             var castPos = spells[Spells.E].IsInRange(cast.CastPosition) ? cast.CastPosition : target.ServerPosition;
 
-            return spells[Spells.E].Cast(castPos);
+            return cast.Hitchance >= HitChance.High && spells[Spells.E].Cast(castPos);
         }
 
         private static void CastQ(Obj_AI_Hero target)
@@ -347,6 +349,7 @@
             if (!EState && Troy != null && Troy.Position.CountEnemiesInRange(spells[Spells.E].Width) >= 1)
             {
                 spells[Spells.E].Cast();
+                Player.IssueOrder(GameObjectOrder.AttackUnit, target);
             }
 
             if (IsActive("ElLux.Combo.Q"))
@@ -422,9 +425,11 @@
                 }
             }
 
+
             if (!EState && Troy != null && Troy.Position.CountEnemiesInRange(spells[Spells.E].Width) >= 1)
             {
                 spells[Spells.E].Cast();
+                Player.IssueOrder(GameObjectOrder.AttackUnit, target);
             }
 
             if (IsActive("ElLux.Harass.Q"))
@@ -549,21 +554,6 @@
                 {
                     AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
                     incomingDamage = (float)heroSender.GetAutoAttackDamage(AggroTarget);
-                }
-            }
-
-            if (sender.Type == GameObjectType.obj_AI_Minion && sender.IsEnemy)
-            {
-                if (args.Target.NetworkId == Player.NetworkId)
-                {
-                    AggroTarget = ObjectManager.GetUnitByNetworkId<Obj_AI_Hero>(args.Target.NetworkId);
-
-                    minionDamage =
-                        (float)
-                        sender.CalcDamage(
-                            AggroTarget,
-                            Damage.DamageType.Physical,
-                            sender.BaseAttackDamage + sender.FlatPhysicalDamageMod);
                 }
             }
 
