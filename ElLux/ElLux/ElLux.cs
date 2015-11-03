@@ -264,6 +264,34 @@
             }
         }
 
+        private static void KillstealHandler()
+        {
+            try
+            {
+                if (IsActive("ElLux.KS.R"))
+                {
+                    foreach (var target in ObjectManager.Get<Obj_AI_Hero>())
+                    {
+                        if (target.IsEnemy && target.IsValidTarget() && Player.Distance(target) < spells[Spells.R].Range)
+                        {
+                            if (spells[Spells.R].GetDamage(target) > target.Health)
+                            {
+                                var prediction = spells[Spells.R].GetPrediction(target);
+                                if (prediction.Hitchance >= HitChance.High)
+                                {
+                                    spells[Spells.R].Cast(target.Position);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: '{0}'", e);
+            }
+        }
+
         private static void CheckWDamage(float incdmg = 0)
         {
             if (!IsActive("W.Activated"))
@@ -608,6 +636,7 @@
             }
 
             CheckWDamage(incomingDamage);
+            KillstealHandler();
 
             if (ElLuxMenu.Menu.Item("ElLux.Combo.Semi.R").GetValue<KeyBind>().Active)
             {

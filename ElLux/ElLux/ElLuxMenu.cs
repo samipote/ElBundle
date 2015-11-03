@@ -83,6 +83,11 @@
                 miscMenu.AddItem(new MenuItem("ElLux.Auto.E", "Auto E on stuns").SetValue(true));
             }
 
+            var ksMenu = Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
+            {
+                ksMenu.AddItem(new MenuItem("ElLux.KS.R", "KS with R").SetValue(true));
+            }
+
             var drawMenu = Menu.AddSubMenu(new Menu("Drawings", "Drawings"));
             {
                 drawMenu.AddItem(new MenuItem("ElLux.Draw.off", "Turn drawings off").SetValue(false));
