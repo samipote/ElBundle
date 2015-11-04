@@ -185,12 +185,18 @@
                 spells[Spells.Q].Cast(prediction.CastPosition);
             }
 
-            if (collision.Count != 2)
+            if (collision.Count == 2)
             {
-                return;
+                if (collision[0].IsChampion() || collision[1].IsChampion())
+                {
+                    spells[Spells.Q].Cast(prediction.CastPosition);
+                }
             }
-
-            if (collision[0].IsChampion() || collision[1].IsChampion())
+            else if (collision.Count == 1 && collision[0].IsChampion())
+            {
+                spells[Spells.Q].Cast(prediction.CastPosition);
+            }
+            else if (collision.Count <= 1)
             {
                 spells[Spells.Q].Cast(prediction.CastPosition);
             }
@@ -199,7 +205,7 @@
         private static void CastR(Obj_AI_Base target)
         {
             if (!spells[Spells.R].IsReady() || !target.IsValidTarget(spells[Spells.R].Range)
-                || !IsActive("ElLux.Combo.R"))
+                || !IsActive("ElLux.Combo.R") || target.IsZombie || target.IsDead)
             {
                 return;
             }
