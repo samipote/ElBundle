@@ -447,31 +447,13 @@ namespace ElEasy.Plugins
                             Orbwalker.SetMovement(false);
                             Orbwalker.SetAttack(false);
                             spells[Spells.R].Cast();
-                            return;
                         }
+                      else {
+                        Orbwalker.SetMovement(true);
+                        Orbwalker.SetAttack(true);
+                    }
                     }
                 }
-            }
-        }
-
-        private static void Obj_AI_Base_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (!sender.IsMe || args.SData.Name != "KatarinaR" || !Player.HasBuff("katarinarsound"))
-            {
-                return;
-            }
-
-            isChanneling = true;
-            Orbwalker.SetMovement(false);
-            Orbwalker.SetAttack(false);
-            Utility.DelayAction.Add(1, () => isChanneling = false);
-        }
-
-        private static void Obj_AI_Hero_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
-        {
-            if (sender.IsMe && Environment.TickCount < rStart + 300)
-            {
-                args.Process = false;
             }
         }
 
