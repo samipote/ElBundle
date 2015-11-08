@@ -469,7 +469,7 @@ namespace ElEasy.Plugins
 
         private static void Obj_AI_Hero_OnIssueOrder(Obj_AI_Base sender, GameObjectIssueOrderEventArgs args)
         {
-            if (sender.IsMe && Environment.TickCount < rStart + 300 && args.Order == GameObjectOrder.MoveTo)
+            if (sender.IsMe && Environment.TickCount < rStart + 300)
             {
                 args.Process = false;
             }
