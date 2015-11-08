@@ -448,10 +448,6 @@ namespace ElEasy.Plugins
                             Orbwalker.SetAttack(false);
                             spells[Spells.R].Cast();
                         }
-                      else {
-                        Orbwalker.SetMovement(true);
-                        Orbwalker.SetAttack(true);
-                    }
                     }
                 }
             }
